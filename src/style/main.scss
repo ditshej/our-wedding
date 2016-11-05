@@ -1,0 +1,41 @@
+/********************************************************************************
+ *   Main Styling-sheet
+ *
+ * All SCSS-stylesheets get connected there.
+ * Additional find all general styles and variables here.
+ ********************************************************************************/
+@import "functions";
+@import "nav";
+@import "brautpaar";
+
+/*** Variables ***/
+/* Colors */
+$text-color: #fff;
+
+/* fonts */
+$font:  'Raleway', sans-serif;
+$font-header: 'Amatic SC', cursive;
+
+/*** general stylings ***/
+body {
+  font-family: $font;
+  margin: 0;
+  color: $text-color;
+}
+
+#{headings(1,6)} {
+  font-family: $font-header;
+}
+
+a {
+  text-decoration: none;
+  color: $text-color;
+}
+
+
+
+
+
+
+
+

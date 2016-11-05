@@ -1,0 +1,75 @@
+/********************************************************************************
+ *   Main Styling-sheet
+ *
+ * All SCSS-stylesheets get connected there.
+ * Additional find all general styles and variables here.
+ ********************************************************************************/
+/********************************************************************************
+ *   SCSS functions
+ *
+ * Find all SCSS functions here.
+ ********************************************************************************/
+/********************************************************************************
+ *   Stylings for the navigation
+ *
+ * Find all the styles for the navigation here.
+ ********************************************************************************/
+/*** Variables ***/
+/* Sizes */
+/*** Styling ***/
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+
+/* nav items */
+nav {
+  position: absolute;
+  width: 100%; }
+  nav ul {
+    display: flex;
+    justify-content: space-around; }
+    nav ul li ul {
+      display: flex;
+      flex-direction: column; }
+
+/* logo */
+.logo {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0; }
+  .logo img {
+    width: 100px;
+    margin: 0 -50px; }
+
+/********************************************************************************
+ *   Stylings for brautpaar-side
+ *
+ * find all styles for brautpaar-side here.
+ ********************************************************************************/
+our-brautpaar .starter img {
+  width: 100%; }
+our-brautpaar .starter h1 {
+  margin: -20% auto 0;
+  text-align: center; }
+our-brautpaar .starter blockquote {
+  text-align: center; }
+
+/*** Variables ***/
+/* Colors */
+/* fonts */
+/*** general stylings ***/
+body {
+  font-family: "Raleway", sans-serif;
+  margin: 0;
+  color: #fff; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Amatic SC", cursive; }
+
+a {
+  text-decoration: none;
+  color: #fff; }
+
+/*# sourceMappingURL=main.css.map */
