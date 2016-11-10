@@ -16,23 +16,6 @@
  ********************************************************************************/
 /*** Variables ***/
 /* Sizes */
-/*** Styling ***/
-ul, li {
-  list-style: none;
-  margin: 0;
-  padding: 0; }
-
-/* nav items */
-nav {
-  position: absolute;
-  width: 100%; }
-  nav ul {
-    display: flex;
-    justify-content: space-around; }
-    nav ul li ul {
-      display: flex;
-      flex-direction: column; }
-
 /* logo */
 .logo {
   position: absolute;
@@ -48,13 +31,11 @@ nav {
  *
  * find all styles for brautpaar-side here.
  ********************************************************************************/
-our-brautpaar .starter img {
-  width: 100%; }
-our-brautpaar .starter h1 {
-  margin: -20% auto 0;
-  text-align: center; }
-our-brautpaar .starter blockquote {
-  text-align: center; }
+our-brautpaar .page-section {
+  width: 100%;
+  height: 100vh; }
+  our-brautpaar .page-section:nth-child(2n) {
+    background: gray; }
 
 /*** Variables ***/
 /* Colors */
@@ -63,13 +44,13 @@ our-brautpaar .starter blockquote {
 body {
   font-family: "Raleway", sans-serif;
   margin: 0;
-  color: #fff; }
+  color: #ff9ae7; }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Amatic SC", cursive; }
 
 a {
   text-decoration: none;
-  color: #fff; }
+  color: #ff9ae7; }
 
 /*# sourceMappingURL=main.css.map */

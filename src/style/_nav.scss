@@ -8,26 +8,26 @@
 /* Sizes */
 $logo-width: 100px;
 
-/*** Styling ***/
-ul, li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-/* nav items */
-nav {
-  position: absolute;
-  width: 100%;
-  ul {
-    display: flex;
-    justify-content: space-around;
-
-    li ul {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-}
+///*** Styling ***/
+//ul, li {
+//  list-style: none;
+//  margin: 0;
+//  padding: 0;
+//}
+///* nav items */
+//nav {
+//  position: absolute;
+//  width: 100%;
+//  ul {
+//    display: flex;
+//    justify-content: space-around;
+//
+//    li ul {
+//      display: flex;
+//      flex-direction: column;
+//    }
+//  }
+//}
 
 /* logo */
 .logo {
