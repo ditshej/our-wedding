@@ -35,16 +35,16 @@
           </li>
           <li><a data-page="trauung" href="#/trauung">Trauung</a>
             <ul>
-              <li><a data-page="trauung" href="#/trauung#zivil">Zivile Trauung</a></li>
-              <li><a href="#">Kirchliche Trauung</a></li>
-              <li><a href="#">Festlichkeiten</a></li>
+              <li><a data-page="zivil" href="#/trauung/zivil">Zivile Trauung</a></li>
+              <li><a data-page="kirchlich" href="#/trauung/kirchlich">Kirchliche Trauung</a></li>
+              <li><a data-page="festlichkeiten" href="#/trauung/festlichkeiten">Festlichkeiten</a></li>
             </ul>
           </li>
           <li><a data-page="organisation" href="#/organisation">Organisation</a>
             <ul>
-              <li><a href="#">Trauzeugen</a></li>
-              <li><a href="#">OK-Team</a></li>
-              <li><a href="#">Helfer</a></li>
+              <li><a data-page="trauzeugen" href="#/organisation/trauzeugen">Trauzeugen</a></li>
+              <li><a data-page="ok" href="#/organisation/ok">OK-Team</a></li>
+              <li><a data-page="helfer" href="#/organisation/helfer">Helfer</a></li>
             </ul>
           </li>
           <li><a data-page="geschenke" href="#/geschenke">Geschenke</a>
@@ -59,20 +59,24 @@
             selected="[[pageData.page]]"
             attr-for-selected="data-page"
             fallback-selection="view404">
-      <our-homepage data-page="homepage"
-                    route="{{pageTail}}"></our-homepage>
-      <our-brautpaar data-page="brautpaar"
-                     route="{{pageTail}}"
-                     items="{{menu1}}">
-      </our-brautpaar>
-      <our-trauung data-page="trauung"
-                   route="{{pageTail}}"></our-trauung>
-      <our-organisation data-page="organisation"
-                        route="{{pageTail}}"></our-organisation>
-      <our-geschenke data-page="geschenke"
-                     route="{{pageTail}}"></our-geschenke>
-      <our-anmeldung data-page="anmeldung"
-                     route="{{pageTail}}"></our-anmeldung>
+      <our-wedding-page data-page="homepage"
+                        route="{{pageTail}}"
+                        items="{{menu.homepage}}"></our-wedding-page>
+      <our-wedding-page data-page="brautpaar"
+                        route="{{pageTail}}"
+                        items="{{menu.brautpaar}}"></our-wedding-page>
+      <our-wedding-page data-page="trauung"
+                        route="{{pageTail}}"
+                        items="{{menu.trauung}}"></our-wedding-page>
+      <our-wedding-page data-page="organisation"
+                        route="{{pageTail}}"
+                        items="{{menu.organisation}}"></our-wedding-page>
+      <our-wedding-page data-page="geschenke"
+                        route="{{pageTail}}"
+                        items="{{menu.geschenke}}"></our-wedding-page>
+      <our-wedding-page data-page="anmeldung"
+                        route="{{pageTail}}"
+                        items="{{menu.anmeldung}}"></our-wedding-page>
       <my-view404 data-page="view404"></my-view404>
     </iron-pages>
 
@@ -88,7 +92,22 @@
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged'
+        },
+        menu: {
+          type: Object,
+          value: function () {
+            return {
+              homepage: [],
+              brautpaar: ['starter', 'geschichte', 'braut', 'braeutigam'],
+              trauung: ['zivil', 'kirchlich', 'festlichkeiten'],
+              organisation: ['trauzeugen', 'ok', 'helfer'],
+              geschichte: [],
+              anmeldung: []
+            }
+          }
         }
+
+
       },
 
       observers: [
@@ -101,7 +120,7 @@
 
       _pageChanged: function (page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('our-' + page + '.html');
+        var resolvedPageUrl = this.resolveUrl('our-wedding-page.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
 
@@ -109,13 +128,6 @@
         this.page = 'view404';
       },
 
-      ready: function () {
-        this.menu1 = [
-          'geschichte',
-          'braut',
-          'braeutigam'
-        ]
-      }
     });
   </script>
 </dom-module>
