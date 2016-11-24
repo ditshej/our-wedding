@@ -33,10 +33,6 @@
         }
       },
 
-      created: function () {
-
-      },
-
       observers: [
         '_routePageChanged(subpageData.subpage)'
       ],
@@ -46,6 +42,25 @@
       },
 
       _pageChanged: function (subpage) {
+
+
+        /* jump to page-section */
+//        this.querySelector('#' + subpage).scrollIntoView();
+      },
+
+      created: function() {
+        console.log(this.localName + '#' + this.id + ' was created');
+      },
+
+      ready: function (subpage) {
+
+        console.log(this.localName + '#' + this.id + ' has local DOM initialized');
+
+
+//        console.log("this.subpage: " + this.subpage);
+//        console.log("subpage: " + subpage);
+//        console.log("itmes:" + this.items);
+//        console.log("itmes-length:" + this.items.length);
 
         for (var x = 0, y = this.items.length; x < y; x += 1) {
 
@@ -62,15 +77,21 @@
           containerElement.className = 'page-section';
           containerElement.appendChild(dynamicElement);
           Polymer.dom(this.$.main).appendChild(containerElement);
-        } //TODO: irgendwie ist es komisch, dass ich jedes Mal, wenn die subpage ändert, den ganzen DOM aufbauen muss. Eigentlich sollte das doch vorher geschehen, aber ich bringes es nicht hin...
+        } //TODO: irgendwie ist es komisch, dass ich jedes Mal, wenn die subpage ändert, den ganzen DOM aufbauen muss. Eigentlich sollte das doch vorher geschehen, aber ich bringes es nicht hin... Ich glaube hier liegt auch das Problem, dass bei jedem Laden einer subpage der ganze Content hinzugefügt wird. Irgendiwe muss ich die Erstellung des Contents auf das "ready" oder "created" auslagern...
 
-        /* jump to page-section */
-        this.querySelector('#' + subpage).scrollIntoView();
       },
 
-      ready: function (subpage) {
+      attached: function() {
+        console.log(this.localName + '#' + this.id + ' was attached');
+      },
 
+      detached: function() {
+        console.log(this.localName + '#' + this.id + ' was detached');
+      },
 
+      attributeChanged: function(name, type) {
+        console.log(this.localName + '#' + this.id + ' attribute ' + name +
+                ' was changed to ' + this.getAttribute(name));
       }
 
     });
