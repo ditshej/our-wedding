@@ -31,10 +31,10 @@
  *
  * find all styles for brautpaar-side here.
  ********************************************************************************/
-our-wedding-page .page-section {
+dj-sub-pages .page-section {
   width: 100%;
   height: 100vh; }
-  our-wedding-page .page-section:nth-child(2n) {
+  dj-sub-pages .page-section:nth-child(2n) {
     background: gray; }
 
 /*** Variables ***/

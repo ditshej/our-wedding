@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 
+<link rel="import" href="dj-sub-pages.html">
+<link rel="import" href="our-view404.html">
 
 <dom-module id="our-wedding-app">
   <template>
@@ -26,6 +28,10 @@
                tail="{{pageTail}}"></app-route>
 
     <!-- NAVIGATION -->
+    <!-- Configuration of Nav-Items anchor-tags:
+           all: "data-page"-attribute = "item-name" (is used by <iron-selector> to load related Content - is connected to "attr-for-selected"-attribute)
+           main-items: "href"-attribute = "/main-item-name"
+           sub-items: "href"-attribute = "/main-item-name/sub-item-name" -->
     <iron-selector selected="[[pageData.page]]"
                    attr-for-selected="data-page">
       <nav>
@@ -57,33 +63,34 @@
       </nav>
     </iron-selector>
 
-
     <!-- CONTENT PAGES -->
+    <!-- use <js-sub-pages> to load pages and subpages
+         Configuration:
+           "data-page"-attribute = "page-name" (same as "item-name" in NAVIGATION)
+           "route"-attribute = {{pageTail}} => deliver "app-route-property for the url-tail after the main Page" to <dj-sub-pages>
+           "items"-attribute = {{menu."page-name"}} => deliver subpages to <dj-sub-pages> defined in "Polymer's js-properties" -->
     <iron-pages selected="[[pageData.page]]"
                 attr-for-selected="data-page">
-
-      <our-wedding-page data-page="homepage"
+      <dj-sub-pages data-page="homepage"
                         route="{{pageTail}}"
-                        items="{{menu.homepage}}"></our-wedding-page>
-      <our-wedding-page data-page="brautpaar"
+                        items="{{menu.homepage}}"></dj-sub-pages>
+      <dj-sub-pages data-page="brautpaar"
                         route="{{pageTail}}"
-                        items="{{menu.brautpaar}}"></our-wedding-page>
-      <our-wedding-page data-page="trauung"
+                        items="{{menu.brautpaar}}"></dj-sub-pages>
+      <dj-sub-pages data-page="trauung"
                         route="{{pageTail}}"
-                        items="{{menu.trauung}}"></our-wedding-page>
-      <our-wedding-page data-page="organisation"
+                        items="{{menu.trauung}}"></dj-sub-pages>
+      <dj-sub-pages data-page="organisation"
                         route="{{pageTail}}"
-                        items="{{menu.organisation}}"></our-wedding-page>
-      <our-wedding-page data-page="geschenke"
+                        items="{{menu.organisation}}"></dj-sub-pages>
+      <dj-sub-pages data-page="geschenke"
                         route="{{pageTail}}"
-                        items="{{menu.geschenke}}"></our-wedding-page>
-      <our-wedding-page data-page="anmeldung"
+                        items="{{menu.geschenke}}"></dj-sub-pages>
+      <dj-sub-pages data-page="anmeldung"
                         route="{{pageTail}}"
-                        items="{{menu.anmeldung}}"></our-wedding-page>
+                        items="{{menu.anmeldung}}"></dj-sub-pages>
       <our-view404 data-page="view404"></our-view404>
-
     </iron-pages>
-
 
   </template>
 
@@ -92,12 +99,12 @@
       is: 'our-wedding-app',
 
       properties: {
+        /* variable for current page to display */
         page: {
-          /* variable for current page to display */
           type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
+          reflectToAttribute: true
         },
+        /* menu-items defined for <dj-sub-pages> */
         menu: {
           type: Object,
           value: function () {
@@ -121,21 +128,6 @@
       _routePageChanged: function (page) {
         /* the page-variable will be set to the new page (data-page-attribute of selected navigation point) */
         this.page = page || 'homepage';
-      },
-
-      /* as soon as the page-variable changes, this function will be executed */
-      _pageChanged: function (page) {
-        console.log("this.page: " + this.page);
-        console.log("page: " + page);
-        /* Load our-wedding-page import. Show 404 page if fails */
-        var resolvedPageUrl = this.resolveUrl('our-wedding-page.html');
-        this.importHref(resolvedPageUrl, null, this._showPage404, true);
-      },
-
-      /* if our-wedding-page.html isn't available the 404-error-page will be displayed */
-      _showPage404: function () {
-        var resolvedPageErrorUrl = this.resolveUrl('our-view404.html');
-        this.importHref(resolvedPageErrorUrl, null, null, true);
       }
 
     });
