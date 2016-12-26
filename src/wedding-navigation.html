@@ -1,0 +1,47 @@
+<dom-module id="wedding-navigation">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <!-- local DOM -->
+    <nav>
+      <ul>
+        <li><a href="../brautpaar.html">Brautpaar</a>
+          <ul>
+            <li><a href="#geschichte">Geschichte</a></li>
+            <li><a href="#braut">Braut</a></li>
+            <li><a href="#braeutigam">Bräutigam</a></li>
+          </ul>
+        </li>
+        <li><a href="../trauung.html">Trauung</a>
+          <ul>
+            <li><a href="#zivil">Zivile Trauung</a></li>
+            <li><a href="#kirchlich">Kirchliche Trauung</a></li>
+            <li><a href="#festlichkeiten">Festlichkeiten</a></li>
+          </ul>
+        </li>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../organisation.html">Organisation</a>
+          <ul>
+            <li><a href="#trauzeugen">Trauzeugen</a></li>
+            <li><a href="#ok">OK-Team</a></li>
+            <li><a href="#helfer">Helfer</a></li>
+          </ul>
+        </li>
+        <li><a href="../geschenke.html">Geschenke</a>
+        <li><a href="../anmeldung.html">Anmeldung</a>
+      </ul>
+    </nav>
+
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'wedding-navigation'
+    });
+  </script>
+</dom-module>

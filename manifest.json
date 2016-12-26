@@ -1,7 +1,0 @@
-{
-  "name": "our-wedding",
-  "short_name": "our-wedding",
-  "description": "Webpage for our wedding.",
-  "start_url": "/",
-  "display": "standalone"
-}

@@ -1,0 +1,25 @@
+<dom-module id="wedding-eyecatcher">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      img {
+        width: 100%;
+      }
+    </style>
+
+    <!-- local DOM -->
+    <img src="image/brautpaar.jpg" alt="das Brautpaar">
+    <h1>[[title]]</h1>
+
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'wedding-eyecatcher'
+    });
+  </script>
+</dom-module>
