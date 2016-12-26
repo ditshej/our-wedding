@@ -2,6 +2,7 @@
 
 <link rel="import" href="wedding-navigation.html">
 <link rel="import" href="wedding-eyecatcher.html">
+<link rel="import" href="wedding-portrait.html">
 
 <dom-module id="wedding-brautpaar">
   <template>
@@ -12,8 +13,24 @@
     </style>
 
     <wedding-navigation></wedding-navigation>
-    <wedding-eyecatcher title="Brautpaar"></wedding-eyecatcher>
+    <wedding-eyecatcher title="Das Brautpaar"
+                        img="/src/image/brautpaar.jpg"
+                        quote="Jesus sagt in Johannes 8,12: «Ich bin das Licht der Welt; wer mir nachfolgt, wird nicht in der Finsternis wandeln, sondern wird das Licht des Lebens haben.»"></wedding-eyecatcher>
+    <div id="geschichte">
 
+    </div>
+    <div id="braut">
+      <wedding-portrait title="Die Braut"
+                        content="lorem ipsum"
+                        img="/src/image/braut.jpg"
+                        align="right"></wedding-portrait>
+    </div>
+    <div id="braeutigam">
+      <wedding-portrait title="Der Bräutigam"
+                        content="lorem ipsum"
+                        img="/src/image/braeutigam.jpg"
+                        align="left"></wedding-portrait>
+    </div>
 
   </template>
 

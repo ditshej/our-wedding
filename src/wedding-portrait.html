@@ -1,35 +1,22 @@
-<dom-module id="wedding-eyecatcher">
+<dom-module id="wedding-portrait">
   <!-- Defines the element's style and local DOM -->
   <template>
     <style>
       :host {
         display: block;
-        text-align: center;
-      }
-
-      img {
-        width: 100%;
-      }
-
-      h1 {
-        margin: -300px 0 0 0;
-      }
-
-     blockquote {
-        margin: 20px 20% 0  ;
       }
     </style>
 
     <!-- local DOM -->
-    <img src="{{img}}">
     <h1>[[title]]</h1>
-    <blockquote>[[quote]]</blockquote>
+    <p>[[content]]</p>
+    <img src="{{img}}">
 
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'wedding-eyecatcher'
+      is: 'wedding-portrait'
     });
   </script>
 </dom-module>
