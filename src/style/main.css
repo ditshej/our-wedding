@@ -16,6 +16,25 @@
  ********************************************************************************/
 /*** Variables ***/
 /* Sizes */
+nav {
+  position: fixed;
+  width: 100%; }
+  nav ul {
+    list-style-type: none;
+    padding: 0; }
+  nav a {
+    padding: 8px;
+    background-color: #6aff85; }
+  nav > ul > li {
+    display: block;
+    float: left;
+    width: 20%;
+    text-align: center; }
+    nav > ul > li > ul {
+      margin-top: 20px; }
+      nav > ul > li > ul > li {
+        padding: 10px; }
+
 /* logo */
 .logo {
   position: absolute;

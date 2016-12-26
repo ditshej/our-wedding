@@ -7,27 +7,41 @@
 /*** Variables ***/
 /* Sizes */
 $logo-width: 100px;
+$anchor-padding: 8px;
 
 ///*** Styling ***/
-//ul, li {
-//  list-style: none;
-//  margin: 0;
-//  padding: 0;
-//}
-///* nav items */
-//nav {
-//  position: absolute;
-//  width: 100%;
-//  ul {
-//    display: flex;
-//    justify-content: space-around;
-//
-//    li ul {
-//      display: flex;
-//      flex-direction: column;
-//    }
-//  }
-//}
+
+nav {
+  position: fixed;
+  width: 100%;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  a {
+    padding: $anchor-padding;
+    background-color: #6aff85;
+
+  }
+
+  > ul > li {
+    display: block;
+    float: left;
+    width: 20%;
+    text-align: center;
+
+    > ul {
+      margin-top: 20px;
+
+      > li {
+        padding: $anchor-padding + 2px;
+      }
+    }
+  }
+
+}
 
 /* logo */
 .logo {
