@@ -50,10 +50,10 @@ nav {
  *
  * find all styles for brautpaar-side here.
  ********************************************************************************/
-dj-sub-pages .page-section {
+.page-section {
   width: 100%;
-  height: 100vh; }
-  dj-sub-pages .page-section:nth-child(2n) {
+  height: 56.25%; }
+  .page-section:nth-child(2n) {
     background: gray; }
 
 /*** Variables ***/

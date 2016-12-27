@@ -3,28 +3,12 @@
  *
  * find all styles for brautpaar-side here.
  ********************************************************************************/
-dj-sub-pages {
 
+.page-section {
+  width: 100%;
+  height: 56.25%;
 
-  .starter {
-    img {
-      //height: inherit;
-    }
-    h1 {
-      //margin: -20% auto 0;
-      //text-align: center;
-    }
-    blockquote {
-      //text-align: center;
-    }
-  }
-
-  .page-section {
-    width:100%;
-    height: 100vh;
-
-    &:nth-child(2n) {
-      background: gray;
-    }
+  &:nth-child(2n) {
+    background: gray;
   }
 }

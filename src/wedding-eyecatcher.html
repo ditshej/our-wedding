@@ -8,22 +8,44 @@
       }
 
       img {
-        width: 100%;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .image {
+        position: relative;
       }
 
       h1 {
-        margin: -300px 0 0 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 90%;
+        font-size: 3em;
       }
 
-     blockquote {
-        margin: 20px 20% 0  ;
+      blockquote {
+        margin: 0;
+        padding: 0;
       }
+
+      .content-wrapper {
+        margin-top: -5px;
+        background: var(--wedding-eyecatcher-banner-color);
+        padding: 10px 0;
+      }
+
     </style>
 
     <!-- local DOM -->
-    <img src="{{img}}">
-    <h1>[[title]]</h1>
-    <blockquote>[[quote]]</blockquote>
+    <div class="image">
+      <img src="{{img}}">
+      <h1>[[title]]</h1>
+    </div>
+    <div class="content-wrapper">
+      <content></content>
+    </div>
 
   </template>
   <!-- Creates the element's prototype and registers it -->
