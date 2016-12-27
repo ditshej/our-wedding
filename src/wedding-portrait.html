@@ -3,14 +3,35 @@
   <template>
     <style>
       :host {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .image-wrapper {
+        /*flex-grow: 2;*/
+        min-width: 300px;
+        max-width: 600px;
+      }
+
+      .content-wrapper {
+        min-width: 200px;
+        max-width: 400px;
+      }
+
+      img {
+        width: 100%;
       }
     </style>
 
     <!-- local DOM -->
-    <h1>[[title]]</h1>
-    <p>[[content]]</p>
+    <div class="content-wrapper">
+      <h1>[[title]]</h1>
+      <content></content>
+    </div>
+    <div class="image-wrapper">
     <img src="{{img}}">
+    </div>
 
   </template>
   <!-- Creates the element's prototype and registers it -->
