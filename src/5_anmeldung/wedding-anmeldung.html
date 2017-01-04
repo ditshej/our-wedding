@@ -1,0 +1,26 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/src/elements/wedding-navigation.html">
+<link rel="import" href="/src/elements/wedding-eyecatcher.html">
+
+<dom-module id="wedding-anmeldung">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <wedding-navigation></wedding-navigation>
+    <wedding-eyecatcher title="Anmeldung"
+                        img="/src/5_anmeldung/anmeldung.jpg"></wedding-eyecatcher>
+
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wedding-anmeldung'
+    });
+  </script>
+</dom-module>

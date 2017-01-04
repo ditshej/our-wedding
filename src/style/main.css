@@ -13,6 +13,11 @@
 /* Colors */
 /* fonts */
 /*** general stylings ***/
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
 body {
   font-family: "Raleway", sans-serif;
   margin: 0;

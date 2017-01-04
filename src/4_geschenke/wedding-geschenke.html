@@ -1,0 +1,25 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/src/elements/wedding-navigation.html">
+<link rel="import" href="/src/elements/wedding-eyecatcher.html">
+
+<dom-module id="wedding-geschenke">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <wedding-navigation></wedding-navigation>
+    <wedding-eyecatcher title="Geschenke"
+                        img="/src/4_geschenke/geschenke.jpg"></wedding-eyecatcher>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wedding-geschenke'
+    });
+  </script>
+</dom-module>

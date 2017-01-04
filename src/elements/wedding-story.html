@@ -1,0 +1,66 @@
+<dom-module id="wedding-story">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+        text-align: center;
+        padding: 50px 20px;
+      }
+
+      .image-wrapper {
+        min-width: 40%;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      .horizontal {
+        display: flex;
+        justify-content: space-between;
+      }
+
+    </style>
+    <div class="element-wrapper">
+      <!-- image fetching the element-attribute "img" -->
+      <div class="image-wrapper">
+        <img src="{{img}}">
+      </div>
+
+      <!-- Text Content fetching the element-attribute "title" and the content of the elements -->
+      <div class="content-wrapper">
+        <h3>[[title]]</h3>
+        <content></content>
+      </div>
+    </div>
+
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'wedding-story',
+
+      properties: {
+        size: {
+          type: Number
+        },
+        arrangement: {
+          type: String
+        }
+      },
+
+      ready: function () {
+        /* configure size */
+        if (this.size) {
+          this.style.width = this.size + '%'
+        }
+
+        if (this.arrangement == 'horizontal') {
+          console.log(this.arrangement);
+          this.querySelector('.element-wrapper').classList.add('horizontal');
+        }
+      }
+    });
+  </script>
+</dom-module>
