@@ -9,53 +9,6 @@
  *
  * Find all SCSS functions here.
  ********************************************************************************/
-/********************************************************************************
- *   Stylings for the navigation
- *
- * Find all the styles for the navigation here.
- ********************************************************************************/
-/*** Variables ***/
-/* Sizes */
-nav {
-  position: fixed;
-  width: 100%; }
-  nav ul {
-    list-style-type: none;
-    padding: 0; }
-  nav a {
-    padding: 8px;
-    background-color: #6aff85; }
-  nav > ul > li {
-    display: block;
-    float: left;
-    width: 20%;
-    text-align: center; }
-    nav > ul > li > ul {
-      margin-top: 20px; }
-      nav > ul > li > ul > li {
-        padding: 10px; }
-
-/* logo */
-.logo {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0; }
-  .logo img {
-    width: 100px;
-    margin: 0 -50px; }
-
-/********************************************************************************
- *   Stylings for brautpaar-side
- *
- * find all styles for brautpaar-side here.
- ********************************************************************************/
-.page-section {
-  width: 100%;
-  height: 56.25%; }
-  .page-section:nth-child(2n) {
-    background: gray; }
-
 /*** Variables ***/
 /* Colors */
 /* fonts */

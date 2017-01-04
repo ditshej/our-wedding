@@ -4,44 +4,122 @@
     <style>
       :host {
         display: block;
+        position: fixed;
+        z-index: 1000;
+        width: 100%;
+        --wedding-nav-anchor-padding: 8px;
       }
+
+      /** navigation */
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      a {
+        padding: var(--wedding-nav-anchor-padding);
+      }
+
+      :host > ul > li {
+        float: left;
+        width: 20%;
+        text-align: center;
+      }
+
+      :host > ul > li > ul {
+        margin-top: 20px;
+        display: none;
+      }
+
+      :host > ul > li > ul > li {
+        padding: var(--wedding-nav-anchor-padding);
+        margin: 2px;
+      }
+
+      /* nav: hover effects */
+
+      :host > ul > li:hover > ul {
+        display: block;
+      }
+
+      /** logo */
+      .logo {
+        display: inline-block;
+        width: 40%;
+      }
+
+      img {
+        width: 100%;
+      }
+
+      /* help-class for hiding items */
+      .js-nav-hide {
+        display: none;
+      }
+
     </style>
 
     <!-- local DOM -->
-    <nav>
-      <ul>
-        <li><a href="../brautpaar.html">Brautpaar</a>
-          <ul>
-            <li><a href="#geschichte">Geschichte</a></li>
-            <li><a href="#braut">Braut</a></li>
-            <li><a href="#braeutigam">Bräutigam</a></li>
-          </ul>
-        </li>
-        <li><a href="../trauung.html">Trauung</a>
-          <ul>
-            <li><a href="#zivil">Zivile Trauung</a></li>
-            <li><a href="#kirchlich">Kirchliche Trauung</a></li>
-            <li><a href="#festlichkeiten">Festlichkeiten</a></li>
-          </ul>
-        </li>
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../organisation.html">Organisation</a>
-          <ul>
-            <li><a href="#trauzeugen">Trauzeugen</a></li>
-            <li><a href="#ok">OK-Team</a></li>
-            <li><a href="#helfer">Helfer</a></li>
-          </ul>
-        </li>
-        <li><a href="../geschenke.html">Geschenke</a>
-        <li><a href="../anmeldung.html">Anmeldung</a>
-      </ul>
-    </nav>
+
+    <ul>
+      <li id="nav-brautpaar">
+        <a href="/brautpaar.html">Brautpaar</a>
+        <ul>
+          <li><a href="#geschichte">Geschichte</a></li>
+          <li><a href="#braut">Braut</a></li>
+          <li><a href="#braeutigam">Bräutigam</a></li>
+        </ul>
+      </li>
+
+      <li id="nav-trauung">
+        <a href="/trauung.html">Trauung</a>
+        <ul>
+          <li><a href="#zivil">Zivile Trauung</a></li>
+          <li><a href="#kirchlich">Kirchliche Trauung</a></li>
+          <li><a href="#festlichkeiten">Festlichkeiten</a></li>
+        </ul>
+      </li>
+
+      <li id="nav-organisation">
+        <a href="/organisation.html">Organisation</a>
+        <ul>
+          <li><a href="#trauzeugen">Trauzeugen</a></li>
+          <li><a href="#ok">OK-Team</a></li>
+          <li><a href="#helfer">Helfer</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <a class="logo" href="/index.html"><img src="/src/image/chibi-logo.png" alt="Logo"></a>
+      </li>
+
+      <li id="nav-geschenke">
+        <a href="/geschenke.html">Geschenke</a>
+      </li>
+
+      <li id="nav-anmeldung">
+        <a href="/anmeldung.html">Anmeldung</a>
+      </li>
+    </ul>
+
 
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'wedding-navigation'
+      is: 'wedding-navigation',
+
+      ready: function () {
+        var url = window.location.pathname,
+          filename = url.substring(url.lastIndexOf('/') + 1),
+          fileString = filename.substring(0, filename.lastIndexOf('.'));
+
+        console.log(fileString);
+
+        this.querySelector('#nav-' + fileString).classList.add('js-nav-hide');
+
+      }
+
     });
   </script>
 </dom-module>
