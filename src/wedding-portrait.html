@@ -6,38 +6,80 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        margin-left: 20px;
+        margin-right: 20px;
       }
 
+      /* image */
       .image-wrapper {
-        /*flex-grow: 2;*/
-        min-width: 300px;
-        max-width: 600px;
-      }
-
-      .content-wrapper {
-        min-width: 200px;
-        max-width: 400px;
+        max-width: 40%;
+        display: none; /* set pictures to hidden to show the correct via script */
       }
 
       img {
         width: 100%;
       }
+
+      /* content */
+      .content-wrapper {
+        max-width: 60%;
+      }
+
+      @media (max-width: 600px) {
+        .image-wrapper, .content-wrapper {
+          max-width: 100%;
+        }
+
+        /* set the left image to visible and the right to hidden */
+        .img-left {
+          display: block;
+        }
+
+        .img-right {
+          display: none;
+        }
+      }
+
+      /* class to show the correct picture via script */
+      .js-img-show {
+        display: block;
+      }
     </style>
 
-    <!-- local DOM -->
+    <!-- image left fetching the element-attribute "img" (display: none) -->
+    <div class="image-wrapper img-left">
+      <img src="{{img}}">
+    </div>
+
+    <!-- Text Content fetching the element-attribute "title" and the content of the elements -->
     <div class="content-wrapper">
       <h1>[[title]]</h1>
       <content></content>
     </div>
-    <div class="image-wrapper">
-    <img src="{{img}}">
+
+    <!-- image right fetching the element-attribute "img" (display: none) -->
+    <div class="image-wrapper img-right">
+      <img src="{{img}}">
     </div>
 
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'wedding-portrait'
+      is: 'wedding-portrait',
+
+      properties: {
+        imgalign: {
+          type: String
+        }
+      },
+
+      ready: function () {
+        /* get the information from element-attribute "imgalign" to display the correct picture */
+        if (this.imgalign) {
+          this.querySelector('.img-' + this.imgalign).classList.add('js-img-show');
+        }
+      }
     });
   </script>
 </dom-module>
