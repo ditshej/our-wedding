@@ -3,25 +3,18 @@
   <template>
     <style>
       :host {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 50px 20px;
+        display: block;
+        padding: 6% 2%;
       }
 
       /* image */
       .image-wrapper {
-        max-width: 40%;
+        min-width: 40%;
         display: none; /* set pictures to hidden to show the correct via script */
       }
 
       img {
         width: 100%;
-      }
-
-      /* content */
-      .content-wrapper {
-        max-width: 60%;
       }
 
       @media (max-width: 600px) {
@@ -43,22 +36,32 @@
       .js-img-show {
         display: block;
       }
+
+      /* class to set arrangement horizontal via script */
+      .horizontal {
+        display: flex;
+        justify-content: space-between;
+      }
     </style>
 
-    <!-- image left fetching the element-attribute "img" (display: none) -->
-    <div class="image-wrapper img-left">
-      <img src="{{img}}">
-    </div>
+    <div class="element-wrapper">
 
-    <!-- Text Content fetching the element-attribute "title" and the content of the elements -->
-    <div class="content-wrapper">
-      <h2>[[title]]</h2>
-      <content></content>
-    </div>
+      <!-- image left fetching the element-attribute "img" (display: none) -->
+      <div class="image-wrapper img-first">
+        <img src="{{img}}">
+      </div>
 
-    <!-- image right fetching the element-attribute "img" (display: none) -->
-    <div class="image-wrapper img-right">
-      <img src="{{img}}">
+      <!-- Text Content fetching the element-attribute "title" and the content of the elements -->
+      <div class="content-wrapper">
+        <h2>[[title]]</h2>
+        <content></content>
+      </div>
+
+      <!-- image right fetching the element-attribute "img" (display: none) -->
+      <div class="image-wrapper img-last">
+        <img src="{{img}}">
+      </div>
+
     </div>
 
   </template>
@@ -68,15 +71,39 @@
       is: 'wedding-portrait',
 
       properties: {
+        textalign: {
+          type: String
+        },
         imgalign: {
+          type: String
+        },
+        size: {
+          type: Number
+        },
+        arrangement: {
           type: String
         }
       },
 
       ready: function () {
+        /* get the information from element-attribute "textalign" to configure text align */
+        if (this.textalign) {
+         this.querySelector('.content-wrapper').style.textAlign = this.textalign;
+        }
+
         /* get the information from element-attribute "imgalign" to display the correct picture */
         if (this.imgalign) {
           this.querySelector('.img-' + this.imgalign).classList.add('js-img-show');
+        }
+
+        /* get the information from element-attribute "size" to configure size */
+        if (this.size) {
+          this.style.width = this.size + '%'
+        }
+
+        /* get the information from element-attribute "arrangement" to configure arrangement */
+        if (this.arrangement == 'horizontal') {
+          this.querySelector('.element-wrapper').classList.add('horizontal');
         }
       }
     });
