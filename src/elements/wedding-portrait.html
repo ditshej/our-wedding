@@ -17,21 +17,6 @@
         width: 100%;
       }
 
-      @media (max-width: 600px) {
-        .image-wrapper, .content-wrapper {
-          max-width: 100%;
-        }
-
-        /* set the left image to visible and the right to hidden */
-        .img-left {
-          display: block;
-        }
-
-        .img-right {
-          display: none;
-        }
-      }
-
       /* class to show the correct picture via script */
       .js-img-show {
         display: block;
@@ -42,11 +27,42 @@
         display: flex;
         justify-content: space-between;
       }
+
+      /** media queries */
+      @media (max-width: 600px) {
+        /* set the left image to visible and the right to hidden */
+        .img-left {
+          display: block;
+        }
+
+        .img-right {
+          display: none;
+        }
+
+        /* unset horizonal */
+        div.horizontal {
+          display: block;
+        }
+      }
+
+      @media (min-width: 1201px) and (max-width: 2500px) {
+        /* unset horizontal */
+        div.vertical-twentyfive {
+          display: block;
+        }
+      }
+
+      @media (min-width: 601px) and (max-width: 1200px) {
+        /* unset horizontal */
+        div.vertical-fifty {
+          display: block;
+        }
+      }
     </style>
 
     <div class="element-wrapper">
 
-      <!-- image left fetching the element-attribute "img" (display: none) -->
+      <!-- image first fetching the element-attribute "img" (display: none) -->
       <div class="image-wrapper img-first">
         <img src="{{img}}">
       </div>
@@ -57,7 +73,7 @@
         <content></content>
       </div>
 
-      <!-- image right fetching the element-attribute "img" (display: none) -->
+      <!-- image last fetching the element-attribute "img" (display: none) -->
       <div class="image-wrapper img-last">
         <img src="{{img}}">
       </div>
@@ -88,7 +104,7 @@
       ready: function () {
         /* get the information from element-attribute "textalign" to configure text align */
         if (this.textalign) {
-         this.querySelector('.content-wrapper').style.textAlign = this.textalign;
+          this.querySelector('.content-wrapper').style.textAlign = this.textalign;
         }
 
         /* get the information from element-attribute "imgalign" to display the correct picture */
@@ -98,7 +114,16 @@
 
         /* get the information from element-attribute "size" to configure size */
         if (this.size) {
-          this.style.width = this.size + '%'
+          this.style.width = this.size + '%';
+
+          /* unset horizontal for small elements */
+          if (this.size <= 50) {
+            this.querySelector('.element-wrapper').classList.add('vertical-fifty');
+
+            if (this.size <= 25) {
+              this.querySelector('.element-wrapper').classList.add('vertical-twentyfive');
+            }
+          }
         }
 
         /* get the information from element-attribute "arrangement" to configure arrangement */
