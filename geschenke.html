@@ -9,6 +9,9 @@
   <title>Geschenke</title>
   <meta name="description" content="Hochzeit Raphael Nathalie Weiss">
 
+  <!-- activate webcomponents on unsuported browsers -->
+  <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
   <!-- shared header (scripts, styles, fonts) -->
   <link rel="import" href="/src/shared-header.html">
 
@@ -16,6 +19,8 @@
   <link rel="import" href="/src/4_geschenke/wedding-geschenke.html">
 </head>
 <body>
-<wedding-geschenke></wedding-brautpaar>
+<wedding-geschenke></wedding-geschenke>
+
+<link rel="import" href="/src/shared-footer.html">
 </body>
 </html>

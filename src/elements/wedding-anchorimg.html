@@ -1,0 +1,85 @@
+<dom-module id="wedding-anchorimg">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+        /* center everything */
+        text-align: center;
+      }
+
+      /* set the wrapping anchor-tag to same size as parent, that its content can get that same size too */
+      :host > a {
+        width: inherit;
+        height: inherit;
+      }
+
+      .image-wrapper {
+        position: relative;
+        height: inherit;
+      }
+
+      img {
+        width: 100%;
+        height: inherit;
+        /* crop the image always to best size */
+        object-fit: cover;
+        /* object-fit-images for IE, Edge and old browsers */
+        font-family: 'object-fit: cover';
+      }
+
+      h1 {
+        /* center the title */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        /* other title css */
+        width: 90%;
+        font-size: 3em;
+        margin: 0;
+      }
+
+    </style>
+
+    <!-- local DOM -->
+    <!-- get the information from element-attribute "anchor" to add the anchor-link -->
+    <a href="[[anchor]]">
+      <div class="image-wrapper">
+        <!-- get the information from element-attribute "img" to display the image -->
+        <img src="[[img]]">
+        <!-- get the information from element-attribute "title" to display the title -->
+        <h1>[[title]]</h1>
+      </div>
+    </a>
+
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'wedding-anchorimg',
+
+      properties: {
+        width: {
+          type: Number
+        },
+        height: {
+          type: Number
+        }
+      },
+
+      ready: function () {
+        /* get the information from element-attribute "width" to configure width */
+        if (this.width) {
+          this.style.width = this.width + '%';
+        }
+
+        /* get the information from element-attribute "height" to configure height */
+        if (this.height) {
+          this.style.height = this.height + 'vh';
+        }
+      }
+
+    });
+  </script>
+</dom-module>
