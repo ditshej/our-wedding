@@ -8,39 +8,45 @@
         position: fixed;
         z-index: 1000;
         width: 100%;
-        --wedding-nav-anchor-padding: 8px;
+        --wedding-nav-item-padding: 3px;
       }
 
       /** navigation */
-      /* top-style */
+      /* page-top-style */
       ul {
         list-style-type: none;
         padding: 0;
       }
 
       a {
-        padding: var(--wedding-nav-anchor-padding);
+        padding: inherit;
       }
 
       :host > ul > li {
         float: left;
         width: 20%;
         text-align: center;
+        padding: var(--wedding-nav-item-padding);
       }
 
       :host > ul > li > ul {
-        margin-top: 20px;
         display: none;
       }
 
       :host > ul > li > ul > li {
-        padding: var(--wedding-nav-anchor-padding);
-        margin: 2px;
+        padding: var(--wedding-nav-item-padding);
       }
 
-      /* scroll-style */
+      /* page-scroll-style */
+      :host > ul.scroll {
+        float: right;
+        width: 20%;
+      }
+
       :host > ul > li.scroll {
         float: none;
+        width: auto;
+        text-align: right;
       }
 
       /* collapse-style */
@@ -60,8 +66,13 @@
     <!-- local DOM -->
 
     <ul id="nav">
-      <li>
-        <a id="nav-brautpaar" href="/brautpaar.html">Brautpaar</a>
+
+      <li id="logo">
+        <a class="logo" href="/index.html"><img src="/src/image/chibi-logo.png" alt="Logo"></a>
+      </li>
+
+      <li id="nav-brautpaar">
+        <a href="/brautpaar.html">Brautpaar</a>
         <ul>
           <li><a href="#geschichte">Geschichte</a></li>
           <li><a href="#braut">Braut</a></li>
@@ -69,8 +80,8 @@
         </ul>
       </li>
 
-      <li>
-        <a id="nav-trauung" href="/trauung.html">Trauung</a>
+      <li id="nav-trauung">
+        <a href="/trauung.html">Trauung</a>
         <ul>
           <li><a href="#zivil">Zivile Trauung</a></li>
           <li><a href="#kirchlich">Kirchliche Trauung</a></li>
@@ -78,8 +89,8 @@
         </ul>
       </li>
 
-      <li>
-        <a id="nav-organisation" href="/organisation.html">Organisation</a>
+      <li id="nav-organisation">
+        <a href="/organisation.html">Organisation</a>
         <ul>
           <li><a href="#trauzeugen">Trauzeugen</a></li>
           <li><a href="#ok">OK-Team</a></li>
@@ -87,17 +98,14 @@
         </ul>
       </li>
 
-      <li id="logo">
-        <a class="logo" href="/index.html"><img src="/src/image/chibi-logo.png" alt="Logo"></a>
+      <li id="nav-geschenke">
+        <a href="/geschenke.html">Geschenke</a>
       </li>
 
-      <li>
-        <a id="nav-geschenke" href="/geschenke.html">Geschenke</a>
+      <li id="nav-anmeldung">
+        <a href="/anmeldung.html">Anmeldung</a>
       </li>
 
-      <li>
-        <a id="nav-anmeldung" href="/anmeldung.html">Anmeldung</a>
-      </li>
     </ul>
 
 
@@ -108,51 +116,78 @@
       is: 'wedding-navigation',
 
       ready: function () {
-        /* hide the current main nav item */
+        /** general */
+        /* Variables */
         var url = window.location.pathname,
           filename = url.substring(url.lastIndexOf('/') + 1),
           fileString = filename.substring(0, filename.lastIndexOf('.')),
-          mainAnchor = this.querySelector('#nav-' + fileString),
-          $mainAnchor = $(mainAnchor);
-        $mainAnchor.hide();
+          $mainItem = $(this.querySelector('#nav-' + fileString)),
+          $logo = $(this.$.logo),
+          $subItemList = $mainItem.children('ul'),nav = $(this.$.nav),
+          $navChildren = $nav.children(),
+          navHalf = $navChildren.length / 2;
 
-        /* add the current sub-items to the logo */
-        var $logo = $(this.$.logo),
-          $subItemList = $mainAnchor.next();
-        $subItemList.css('display', 'block');
+        /* hide the current main nav item */
+        $mainItem.hide();
+
+        /* add the current sub-items to the logo and show them */
         $logo.append($subItemList);
+        $subItemList.css('display', 'block');
 
-        /* set the current sub-items circular */
-        var $subItems = $subItemList.children();
-        $($subItems[0]).css('transform', 'translate(-50%, -250%)');
-        $($subItems[1]).css('transform', 'translate(0, -200%)');
-        $($subItems[2]).css('transform', 'translate(50%, -450%)');
+        /** on page-top */
+        /* move the logo to the center */
+        setLogo(navHalf, $mainItem, $logo);
 
-        /* move the logo to the center on "geschenke" and "anmeldung" page */
-        if (fileString == 'geschenke' || fileString == 'anmeldung') {
-          $($logo.parent().children()[1]).after($logo);
+
+        /** on page-scroll */
+        /* as soon as the user scrolls... */
+        document.onscroll = function () {
+
+          /* as soon as the scrollbar is more than 10px scrolled down.. */
+          if (window.scrollY >= 10) {
+            /* give the scroll-classes to the correct elements */
+            for (var i = 0; i < $navChildren.length; i++) {
+              $nav.addClass('scroll');
+              $($navChildren[i]).addClass('scroll');
+            }
+            /* move the logo to first position */
+            setLogo(0, $mainItem, $logo);
+
+          } else { /* if the scrollbar goes back to less than 10px scrolled down.. */
+            /* remove the scroll-classes again */
+            for (var ii = 0; ii < $navChildren.length; ii++) {
+              $nav.removeClass('scroll');
+              $($navChildren[ii]).removeClass('scroll');
+            }
+            /* move the logo back to center */
+            setLogo(navHalf, $mainItem, $logo);
+          }
+        };
+
+          /* set the current sub-items circular */
+//        var $subItems = $subItemList.children();
+//        $($subItems[0]).css('transform', 'translate(-50%, -250%)');
+//        $($subItems[1]).css('transform', 'translate(0, -200%)');
+//        $($subItems[2]).css('transform', 'translate(50%, -450%)');
+//
+
+        /** FUNCTIONS */
+        /**
+         *
+         * @param position
+         * @param $mainItem
+         * @param $logo
+         */
+        function setLogo(position, $mainItem, $logo) {
+          if ($mainItem.index() <= position) {
+            $($logo.parent().children()[(position)]).after($logo);
+          } else {
+            $($logo.parent().children()[(position)]).before($logo);
+          }
+
         }
-
-
-        /* onscroll */
-//        var nav = this.$.nav,
-//          $navChildren = $(nav).children();
-//        console.log($navChildren);
-//
-//        for (var i = 0; i < $navChildren.length; i++) {
-//          $($navChildren[i]).addClass('scroll');
-//        }
-//
-//
-//        document.onscroll = function () {
-//
-//          if (window.scrollY != 0) {
-//
-//          } else {
-//
-//          }
-//        };
       }
+
 
     });
   </script>
