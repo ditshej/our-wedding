@@ -1,3 +1,4 @@
+<link rel="import" href="/src/shared/shared-jquery.html">
 <dom-module id="wedding-navigation">
   <!-- Defines the element's style and local DOM -->
   <template>
@@ -11,6 +12,7 @@
       }
 
       /** navigation */
+      /* top-style */
       ul {
         list-style-type: none;
         padding: 0;
@@ -36,11 +38,12 @@
         margin: 2px;
       }
 
-      /* nav: hover effects */
-
-      :host > ul > li:hover > ul {
-        display: block;
+      /* scroll-style */
+      :host > ul > li.scroll {
+        float: none;
       }
+
+      /* collapse-style */
 
       /** logo */
       .logo {
@@ -52,18 +55,13 @@
         width: 100%;
       }
 
-      /* help-class for hiding items */
-      .js-nav-hide {
-        display: none;
-      }
-
     </style>
 
     <!-- local DOM -->
 
-    <ul>
-      <li id="nav-brautpaar">
-        <a href="/brautpaar.html">Brautpaar</a>
+    <ul id="nav">
+      <li>
+        <a id="nav-brautpaar" href="/brautpaar.html">Brautpaar</a>
         <ul>
           <li><a href="#geschichte">Geschichte</a></li>
           <li><a href="#braut">Braut</a></li>
@@ -71,8 +69,8 @@
         </ul>
       </li>
 
-      <li id="nav-trauung">
-        <a href="/trauung.html">Trauung</a>
+      <li>
+        <a id="nav-trauung" href="/trauung.html">Trauung</a>
         <ul>
           <li><a href="#zivil">Zivile Trauung</a></li>
           <li><a href="#kirchlich">Kirchliche Trauung</a></li>
@@ -80,8 +78,8 @@
         </ul>
       </li>
 
-      <li id="nav-organisation">
-        <a href="/organisation.html">Organisation</a>
+      <li>
+        <a id="nav-organisation" href="/organisation.html">Organisation</a>
         <ul>
           <li><a href="#trauzeugen">Trauzeugen</a></li>
           <li><a href="#ok">OK-Team</a></li>
@@ -89,16 +87,16 @@
         </ul>
       </li>
 
-      <li>
+      <li id="logo">
         <a class="logo" href="/index.html"><img src="/src/image/chibi-logo.png" alt="Logo"></a>
       </li>
 
-      <li id="nav-geschenke">
-        <a href="/geschenke.html">Geschenke</a>
+      <li>
+        <a id="nav-geschenke" href="/geschenke.html">Geschenke</a>
       </li>
 
-      <li id="nav-anmeldung">
-        <a href="/anmeldung.html">Anmeldung</a>
+      <li>
+        <a id="nav-anmeldung" href="/anmeldung.html">Anmeldung</a>
       </li>
     </ul>
 
@@ -110,14 +108,50 @@
       is: 'wedding-navigation',
 
       ready: function () {
+        /* hide the current main nav item */
         var url = window.location.pathname,
           filename = url.substring(url.lastIndexOf('/') + 1),
-          fileString = filename.substring(0, filename.lastIndexOf('.'));
+          fileString = filename.substring(0, filename.lastIndexOf('.')),
+          mainAnchor = this.querySelector('#nav-' + fileString),
+          $mainAnchor = $(mainAnchor);
+        $mainAnchor.hide();
 
-        console.log(fileString);
+        /* add the current sub-items to the logo */
+        var $logo = $(this.$.logo),
+          $subItemList = $mainAnchor.next();
+        $subItemList.css('display', 'block');
+        $logo.append($subItemList);
 
-        this.querySelector('#nav-' + fileString).classList.add('js-nav-hide');
+        /* set the current sub-items circular */
+        var $subItems = $subItemList.children();
+        $($subItems[0]).css('transform', 'translate(-50%, -250%)');
+        $($subItems[1]).css('transform', 'translate(0, -200%)');
+        $($subItems[2]).css('transform', 'translate(50%, -450%)');
 
+        /* move the logo to the center on "geschenke" and "anmeldung" page */
+        if (fileString == 'geschenke' || fileString == 'anmeldung') {
+          $($logo.parent().children()[1]).after($logo);
+        }
+
+
+        /* onscroll */
+//        var nav = this.$.nav,
+//          $navChildren = $(nav).children();
+//        console.log($navChildren);
+//
+//        for (var i = 0; i < $navChildren.length; i++) {
+//          $($navChildren[i]).addClass('scroll');
+//        }
+//
+//
+//        document.onscroll = function () {
+//
+//          if (window.scrollY != 0) {
+//
+//          } else {
+//
+//          }
+//        };
       }
 
     });
