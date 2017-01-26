@@ -1,0 +1,10 @@
+﻿/* @font-face kit by Fonts2u (http://www.fonts2u.com) */
+@font-face {
+  font-family: "Mathlete-Skinny";
+  src: url("Mathlete-Skinny.eot?") format("eot"),
+  url("Mathlete-Skinny.woff") format("woff"),
+  url("Mathlete-Skinny.ttf") format("truetype"),
+  url("Mathlete-Skinny.svg#Mathlete-Skinny") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}

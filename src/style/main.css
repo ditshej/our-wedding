@@ -10,8 +10,8 @@
  * Find all SCSS functions here.
  ********************************************************************************/
 /*** Variables ***/
-/* Colors */
 /* fonts */
+/* Colors */
 /*** general stylings ***/
 * {
   -webkit-box-sizing: border-box;
@@ -19,15 +19,17 @@
   box-sizing: border-box; }
 
 body {
-  font-family: "Raleway", sans-serif;
+  font-family: "Mathlete-Skinny";
+  text-transform: uppercase;
   margin: 0;
-  color: #ff9ae7; }
+  color: #69aba9; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Amatic SC", cursive; }
+  font-family: "Alex Brush";
+  text-transform: none; }
 
 a {
   text-decoration: none;
-  color: #ff9ae7; }
+  color: #69aba9; }
 
 /*# sourceMappingURL=main.css.map */

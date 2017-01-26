@@ -9,6 +9,13 @@
         display: flex;
         flex-wrap: wrap;
         position: relative;
+        margin: -1vmin;
+      }
+
+      .border-div {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 1vmin;
       }
 
       .flex-div {
@@ -22,37 +29,52 @@
         top: 60%;
         left: 40%;
         transform: translate(-50%, -50%);
-        width: 7.5%;
+        width: 20vmin;
+      }
+
+      @media (max-width: 600px) {
+        .logo {
+        }
+      }
+
+      @media (min-width: 601px) and (max-width: 1200px) {
+
+      }
+
+      @media (min-width: 1201px) and (max-width: 2500px) {
+
       }
 
     </style>
 
     <wedding-anchorimg title="Brautpaar"
                        anchor="/brautpaar.html"
-                       img="https://placeimg.com/1280/900/any"
+                       img="https://placeimg.com/1280/900/any/sepia"
                        width="100"
                        height="60"></wedding-anchorimg>
-    <wedding-anchorimg title="Trauung"
-                       nchor="/trauung.html"
-                       img="https://placeimg.com/1280/900/animals"
-                       width="40"
-                       height="40"></wedding-anchorimg>
-    <div class="flex-div">
-      <wedding-anchorimg title="Anmeldung"
-                         nchor="/anmeldung.html"
-                         img="https://placeimg.com/1280/900/people"
-                         width="50"
-                         height="20"></wedding-anchorimg>
-      <wedding-anchorimg title="Geschenke"
-                         nchor="/geschenke.html"
-                         img="https://placeimg.com/1280/900/tech"
-                         width="50"
-                         height="20"></wedding-anchorimg>
-      <wedding-anchorimg title="Organisation"
-                         nchor="/organisation.html"
-                         img="https://placeimg.com/1280/900/any/sepia"
-                         width="100"
-                         height="20"></wedding-anchorimg>
+    <div class="border-div">
+      <wedding-anchorimg title="Trauung"
+                         anchor="/trauung.html"
+                         img="https://placeimg.com/1280/900/animals/sepia"
+                         width="40"
+                         height="40"></wedding-anchorimg>
+      <div class="flex-div">
+        <wedding-anchorimg title="Anmeldung"
+                           anchor="/anmeldung.html"
+                           img="https://placeimg.com/1280/900/people/sepia"
+                           width="50"
+                           height="20"></wedding-anchorimg>
+        <wedding-anchorimg title="Geschenke"
+                           anchor="/geschenke.html"
+                           img="https://placeimg.com/1280/900/tech/sepia"
+                           width="50"
+                           height="20"></wedding-anchorimg>
+        <wedding-anchorimg title="Organisation"
+                           anchor="/organisation.html"
+                           img="https://placeimg.com/1280/900/any/sepia"
+                           width="100"
+                           height="20"></wedding-anchorimg>
+      </div>
     </div>
 
     <!-- Logo -->

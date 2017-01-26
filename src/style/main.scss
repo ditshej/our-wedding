@@ -7,12 +7,14 @@
 @import "functions";
 
 /*** Variables ***/
-/* Colors */
-$text-color: #ff9ae7;
-
 /* fonts */
-$font:  'Raleway', sans-serif;
-$font-header: 'Amatic SC', cursive;
+$font:  'Mathlete-Skinny';
+$font-header: 'Alex Brush';
+
+/* Colors */
+$text-color: #69aba9;
+$primary-color: #1d7aad;
+$secondary-color: #009e73;
 
 /*** general stylings ***/
 * {
@@ -23,12 +25,14 @@ $font-header: 'Amatic SC', cursive;
 
 body {
   font-family: $font;
+  text-transform: uppercase;
   margin: 0;
   color: $text-color;
 }
 
 #{headings(1,6)} {
   font-family: $font-header;
+  text-transform: none;
 }
 
 a {
