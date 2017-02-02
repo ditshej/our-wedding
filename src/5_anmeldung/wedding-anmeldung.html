@@ -1,7 +1,12 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
+
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
+<link rel="import" href="/src/elements/wedding-footer.html">
 
 <dom-module id="wedding-anmeldung">
   <template>
@@ -9,18 +14,72 @@
       :host {
         display: block;
       }
+
+      .formcontainer {
+        text-align: center;
+      }
     </style>
 
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Anmeldung"
                         img="https://placeimg.com/1280/900/any"></wedding-eyecatcher>
 
+    <div class="formcontainer">
+      <form action="/anmeldung" method="post">
+        <div class="form-element">
+          <label for="firstname">Vorname</label>
+          <input id="firstname" name="firstname" type="text" required value="Raphael">
+        </div>
+        <div class="form-element">
+          <label for="lastname">Nachname</label>
+          <input id="lastname" name="lastname" type="text" required value="Weiss">
+        </div>
+        <div class="form-element">
+          <label for="email">Email Adresse</label>
+          <input id="email" name="email" type="email" required value="raphael.92@bluewin.ch">
+        </div>
+        <div class="form-element">
+          <label for="phone">Telefon</label>
+          <input id="phone" name="phone" type="tel" placeholder="+41791234567" required value="+41793879890">
+        </div>
+        <div class="form-element">
+          <label for="address">Strasse & Nr</label>
+          <input id="address" name="address" type="text" required value="Bildfeldstrasse 2">
+        </div>
+        <div class="form-element">
+          <label for="plz">PLZ</label>
+          <input id="plz" name="plz" type="number" required value="9552">
+        </div>
+        <div class="form-element">
+          <label for="city">Stadt</label>
+          <input id="city" name="city" type="text" required value="Bronschhofen">
+        </div>
+        <div class="form-element">
+          <input id="wedding" name="wedding" type="checkbox" checked>
+          <label for="wedding">Ich komme zur Trauungszeremonie.</label>
+        </div>
+        <div class="form-element">
+          <input id="party" name="party" type="checkbox">
+          <label for="party">Ich komme zum Fest am Abend.</label>
+        </div>
+        <div class="form-element">
+          <label for="comment">Bemerkungen</label>
+          <textarea name="comment" id="comment" cols="30" rows="10">blaaa blaaa</textarea>
+        </div>
+        <input type="submit" value="anmelden">
+      </form>
+    </div>
+
+
+    <wedding-footer></wedding-footer>
 
   </template>
 
   <script>
     Polymer({
-      is: 'wedding-anmeldung'
+      is: 'wedding-anmeldung',
+
+
     });
   </script>
 </dom-module>

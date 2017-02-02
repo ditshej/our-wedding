@@ -22,7 +22,8 @@ body {
   font-family: "Mathlete-Skinny";
   text-transform: uppercase;
   margin: 0;
-  color: #69aba9; }
+  color: #69aba9;
+  font-size: 2em; }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Alex Brush";
