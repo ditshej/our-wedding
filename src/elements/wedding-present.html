@@ -1,0 +1,23 @@
+<dom-module id="wedding-present">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!-- local DOM -->
+    <h3>[[title]]</h3>
+    <img src="[[img]]" alt="present-image">
+    <p class="description">[[description]]</p>
+    <span class="cost">[[cost]]</span>
+    <button class="full"></button>
+    <button class="partly"></button>
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'wedding-present'
+    });
+  </script>
+</dom-module>

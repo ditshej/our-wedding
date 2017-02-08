@@ -2,6 +2,7 @@
 
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
+<link rel="import" href="/src/elements/wedding-present.html">
 
 <dom-module id="wedding-geschenke">
   <template>
@@ -14,12 +15,40 @@
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Geschenke"
                         img="https://placeimg.com/1280/900/any/sepia"></wedding-eyecatcher>
+    <wedding-present title="[[presents.0.title]]",
+                     img=""
+                     description="[[presents.0.description]]"
+                     cost="[[presents.0.cost]]"></wedding-present>
+    <wedding-present title="[[presents.1.title]]",
+                     img=""
+                     description="[[presents.1.description]]"
+                     cost="[[presents.1.cost]]"></wedding-present>
 
   </template>
 
   <script>
     Polymer({
-      is: 'wedding-geschenke'
+      is: 'wedding-geschenke',
+      properties: {
+        presents: {
+          type: Object,
+          notify: true,
+          value: function () {
+            return [
+              {
+                title: "present",
+                description: "This is a test present. Eifoch nur zum teste :)",
+                cost: 200
+              },
+              {
+                title: "present two",
+                description: "This is another test present. Eifoch nur zum teste :)",
+                cost: 50
+              }
+            ]
+          }
+        }
+      }
     });
   </script>
 </dom-module>
