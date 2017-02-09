@@ -10,20 +10,47 @@
       :host {
         display: block;
       }
+
+      .present-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      wedding-present {
+        width: 400px;
+      }
     </style>
 
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Geschenke"
                         img="https://placeimg.com/1280/900/any/sepia"></wedding-eyecatcher>
-    <wedding-present title="[[presents.0.title]]"
-                     img=""
-                     description="[[presents.0.description]]"
-                     cost="[[presents.0.cost]]"></wedding-present>
-    <wedding-present title="[[presents.1.title]]"
-                     img=""
-                     description="[[presents.1.description]]"
-                     cost="[[presents.1.cost]]"></wedding-present>
-
+    <div class="present-container">
+      <wedding-present title="[[presents.0.title]]"
+                       img="https://placeimg.com/1280/900/any"
+                       description="[[presents.0.description]]"
+                       cost="[[presents.0.cost]]"></wedding-present>
+      <wedding-present title="[[presents.1.title]]"
+                       img="https://placeimg.com/1280/900/any"
+                       description="[[presents.1.description]]"
+                       cost="[[presents.1.cost]]"></wedding-present>
+      <wedding-present title="[[presents.0.title]]"
+                       img="https://placeimg.com/1280/900/any"
+                       description="[[presents.0.description]]"
+                       cost="[[presents.0.cost]]"></wedding-present>
+      <wedding-present title="[[presents.1.title]]"
+                       img="https://placeimg.com/1280/900/any"
+                       description="[[presents.1.description]]"
+                       cost="[[presents.1.cost]]"></wedding-present>
+      <wedding-present title="[[presents.0.title]]"
+                       img="https://placeimg.com/1280/900/any"
+                       description="[[presents.0.description]]"
+                       cost="[[presents.0.cost]]"></wedding-present>
+      <wedding-present title="[[presents.1.title]]"
+                       img="https://placeimg.com/1280/900/any"
+                       description="[[presents.1.description]]"
+                       cost="[[presents.1.cost]]"></wedding-present>
+    </div>
   </template>
 
   <script>

@@ -1,5 +1,6 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/src/shared/shared-jquery.html">
 
 <dom-module id="wedding-present">
   <!-- Defines the element's style and local DOM -->
@@ -8,19 +9,133 @@
       :host {
         display: block;
       }
+
+      img {
+        width: 100%;
+      }
+
+      p {
+        margin-top: 0;
+      }
+
+      /* buttons */
+      paper-button {
+        background: green;
+        color: yellow;
+      }
+
+      /* modal-notification */
+      #notification {
+        max-width: 90vw;
+        width: 600px;
+        max-height: 100vh;
+        height: 430px;
+
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        background: #ffffff;
+        z-index: 1010;
+      }
+
+      .notification-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        padding: 5vw;
+
+        overflow: auto;
+      }
+
+      #notificationOverlay {
+        z-index: 1000;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        background-color: #797979;
+        opacity: .5;
+      }
+
+      /* helpclass to hide */
+      .hidden {
+        display: none;
+      }
+
     </style>
     <!-- local DOM -->
+    <!-- visible content -->
     <h3>[[title]]</h3>
     <img src="[[img]]" alt="present-image">
     <p class="description">[[description]]</p>
-    <span class="cost">[[cost]]</span>
-    <paper-button raised >ganz schenken</paper-button>
-    <paper-button raised >Anteil schenken</paper-button>
+    <p>Kosten: <span>[[cost]]</span> CHF</p>
+    <paper-button id="presentBtn" raised>ganz schenken</paper-button>
+    <paper-button id="rateBtn" raised>Anteil schenken</paper-button>
+
+    <!-- invisible content -> modal-notification -->
+    <div id="notification" class="hidden">
+      <div class="notification-container">
+        <p>Um uns
+          <span class="cost">[[cost]] CHF für</span>
+          <span class="rate">einen Anteil für</span>
+          [[title]] zu schenken, darst du hier
+          <span class="rate">den gewünschten Betrag und</span>
+          deine Email-Adresse angeben. So können wir dir unsere Kontodaten senden.
+        </p>
+        <form action="">
+          <div class="form-element rate">
+            <label for="rate">Betrag in CHF</label>
+            <input type="number" name="rate" id="rate">
+          </div>
+          <div class="form-element">
+            <label for="email">Email Adresse</label>
+            <input type="email" name="email" id="email" required>
+          </div>
+          <input type="submit" value="beschenken">
+        </form>
+      </div>
+    </div>
+    <div id="notificationOverlay" class="hidden"></div>
+
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'wedding-present'
+      is: 'wedding-present',
+
+      ready: function () {
+
+        var
+          $presentButton = $(this.$.presentBtn),
+          $rateButton = $(this.$.rateBtn),
+          $notification = $(this.$.notification),
+          $overlay = $(this.$.notificationOverlay),
+          $rate = $(this.querySelectorAll('.rate')),
+          $cost = $(this.querySelectorAll('.cost')),
+          toggleNotification = function () { /* hide and show modal-notification */
+            $notification.toggleClass('hidden');
+            $overlay.toggleClass('hidden');
+          };
+
+        $presentButton.on('click', function () {
+          $rate.toggleClass('hidden'); /* hide all that is connected to rate-information */
+          toggleNotification(); /* show modal-notification */
+        });
+        $rateButton.on('click', function () {
+          $cost.toggleClass('hidden');  /* hide all that is connected to full-cost-information */
+          toggleNotification(); /* show modal-notification */
+        });
+        $overlay.on('click', toggleNotification /* hide modal-notification */);
+
+      }
     });
   </script>
 </dom-module>
