@@ -1,3 +1,5 @@
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
 <dom-module id="wedding-present">
   <!-- Defines the element's style and local DOM -->
   <template>
@@ -11,8 +13,8 @@
     <img src="[[img]]" alt="present-image">
     <p class="description">[[description]]</p>
     <span class="cost">[[cost]]</span>
-    <button class="full"></button>
-    <button class="partly"></button>
+    <paper-button raised >ganz schenken</paper-button>
+    <paper-button raised >Anteil schenken</paper-button>
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
