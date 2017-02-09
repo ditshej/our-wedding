@@ -1,5 +1,6 @@
 .idea
-bower_components
+product/bower_components
+config/node_modules
 .sass-cache
 *.css.map
 .htaccess

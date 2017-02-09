@@ -1,0 +1,18 @@
+{
+  "name": "raphi.nahli.ch-server",
+  "version": "1.0.0",
+  "description": "nodejs-server for our wedding webpage raphi.nahli.ch",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ditshej",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "express": "^4.14.1",
+    "express-form": "^0.12.6",
+    "mysql": "^2.13.0",
+    "path": "^0.12.7"
+  }
+}
