@@ -106,3 +106,53 @@ app.post('/anmeldung', function (req, res) {
   });
 
 });
+
+
+/** POST REQUEST: form "addpresent" */
+/* tell express what to do when the /addpresent route is requested */
+app.post('/addpresent', function (req, res) {
+
+  /* set Headers */
+  res.setHeader('Content-Type', 'application/json');
+
+  /* send the results back to the user */ //TODO: anstatt dieser Ausgabe sollte hier ein redirect zu einer "Danke für die Anmeldung" Seite gemacht werden.
+  res.send(JSON.stringify({
+    title: req.body.title || null,
+    description: req.body.description || null,
+    costinit: req.body.costinit || null,
+    img: req.body.img || null
+  }));
+
+  /* debugging output for the terminal */
+  console.log(req.body);
+
+
+  /* Database Operations */
+  /* connect to Database */
+  con.connect(function (err) {
+    if (err) {
+      console.log('Error connecting to Database!');
+      return;
+    }
+    console.log('Database connection established');
+  });
+
+  /* set and modify anmeldung-query */
+  var geschenke = req.body;
+  //TODO: sold und cost hinzufügen
+  console.log(geschenke);
+
+  /* CREATE QUERY */
+  query = con.query('INSERT INTO geschenke SET ?', geschenke, function (err, res) {
+    if (err) throw err;
+  });
+  console.log(query.sql);
+
+  /* end Database connection */
+  con.end(function (err) {
+    // The connection is terminated gracefully
+    // Ensures all previously enqueued queries are still
+    // before sending a COM_QUIT packet to the MySQL server.
+  });
+
+});

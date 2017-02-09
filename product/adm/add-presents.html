@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Geschenke hinzufügen</title>
+</head>
+<body>
+<h1>Geschenke hinzufügen</h1>
+<div class="formcontainer">
+  <form action="/addpresent" method="post">
+    <div class="form-element">
+      <label for="title">Titel</label>
+      <input id="title" name="title" type="text" required value="Test Geschenk">
+    </div>
+    <div class="form-element">
+      <label for="img">Bild</label>
+      <input id="img" name="img" type="file" required>
+    </div>
+    <div class="form-element">
+      <label for="description">Beschreibung</label>
+      <textarea name="description" id="description" cols="30" rows="10" required>ganz bizle test text</textarea>
+    </div>
+    <div class="form-element">
+      <label for="costinit">Kosten</label>
+      <input id="costinit" name="costinit" type="number" required value="5000">
+    </div>
+    <input type="submit" value="abspeichern">
+  </form>
+</div>
+</body>
+</html>
