@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Geschenke ansehen</title>
+</head>
+<body>
+<h1>Geschenke ansehen</h1>
+<div class="container"></div>
+
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+
+  var $container = $('.container');
+  console.log($container);
+
+  $.ajax('/getpresent',{
+    type: 'GET',
+    contentType: 'json',
+    success: function (data) {
+      console.log('success');
+      console.log(data);
+      console.log(data[0].title);
+
+      var $title = $('<h2></h2>', {
+        text: data[0].title
+      });
+
+      $container.append($title);
+
+
+    },
+    error: function () {
+      console.log('error');
+    }
+  });
+
+});
+</script>
+</body>
+</html>

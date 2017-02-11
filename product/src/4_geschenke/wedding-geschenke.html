@@ -75,9 +75,41 @@
             ]
           }
         }
+      },
+
+      ready: function () {
+
+        console.log(this.presents);
+        console.log(this);
+
+
+        $.ajax('/getpresent', {
+          type: 'GET',
+          contentType: 'json',
+          success: function (data) {
+            console.log('success');
+
+            console.log(data);
+            console.log(this);
+
+            return data;
+
+            //TODO: use callback-function to get data out of ajax and put it into "this.presents"
+          },
+          error: function () {
+            console.log('error');
+          }
+
+        });
+
+
+
+
+
+
       }
 
-      //TODO: get Presents form Database
+
     });
   </script>
 </dom-module>

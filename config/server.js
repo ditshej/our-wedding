@@ -11,13 +11,21 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   /* require the path nodejs module */
   path = require('path'),
+  /* define port */
+  serverport = 8081,
   /* require the mysql nodejs module */
   mysql = require('mysql'),
-  /* define port */
-  port = 8081;
+  /* MYSQL Database Connection Information */
+  mysqlDB = {
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "123456",
+    database: 'sheth_raphinahlich'
+  };
 
 
-/** app server config */
+/** create server */
 /* set an instance of express */
 var app = express();
 
@@ -27,33 +35,19 @@ app.use(bodyParser.json());
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({extended: true}));
 
-
-/** define root */
 /* tell express the root of our public web folder */
 app.use(express.static(path.join('..', 'product')));
 
-
-/** run server */
-//wait for a connection
-app.listen(port, function () {
-  console.log('Server is running. Point your browser to: http://localhost:' + port);
+/* run the server */
+app.listen(serverport, function () {
+  console.log('Server is running. Point your browser to: http://localhost:' + serverport);
 });
 
-
-/** MYSQL Database Connection  */
-/* create connection to the database */
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "123456",
-  database: 'sheth_raphinahlich'
-});
 
 
 /** POST REQUEST: form "anmeldung" */
 /* tell express what to do when the /anmeldung route is requested */
 app.post('/anmeldung', function (req, res) {
-
   /* set Headers */
   res.setHeader('Content-Type', 'application/json');
 
@@ -77,6 +71,7 @@ app.post('/anmeldung', function (req, res) {
 
   /* Database Operations */
   /* connect to Database */
+  var con = mysql.createConnection(mysqlDB);
   con.connect(function (err) {
     if (err) {
       console.log('Error connecting to Database!');
@@ -99,11 +94,7 @@ app.post('/anmeldung', function (req, res) {
   console.log(query.sql);
 
   /* end Database connection */
-  con.end(function (err) {
-    // The connection is terminated gracefully
-    // Ensures all previously enqueued queries are still
-    // before sending a COM_QUIT packet to the MySQL server.
-  });
+  con.end();
 
 });
 
@@ -111,7 +102,6 @@ app.post('/anmeldung', function (req, res) {
 /** POST REQUEST: form "addpresent" */
 /* tell express what to do when the /addpresent route is requested */
 app.post('/addpresent', function (req, res) {
-
   /* set Headers */
   res.setHeader('Content-Type', 'application/json');
 
@@ -119,8 +109,7 @@ app.post('/addpresent', function (req, res) {
   res.send(JSON.stringify({
     title: req.body.title || null,
     description: req.body.description || null,
-    costinit: req.body.costinit || null,
-    img: req.body.img || null
+    costinit: req.body.costinit || null
   }));
 
   /* debugging output for the terminal */
@@ -129,6 +118,7 @@ app.post('/addpresent', function (req, res) {
 
   /* Database Operations */
   /* connect to Database */
+  var con = mysql.createConnection(mysqlDB);
   con.connect(function (err) {
     if (err) {
       console.log('Error connecting to Database!');
@@ -139,7 +129,8 @@ app.post('/addpresent', function (req, res) {
 
   /* set and modify anmeldung-query */
   var geschenke = req.body;
-  //TODO: sold und cost hinzufügen
+  geschenke.cost = geschenke.costinit;
+  geschenke.sold = false;
   console.log(geschenke);
 
   /* CREATE QUERY */
@@ -149,10 +140,40 @@ app.post('/addpresent', function (req, res) {
   console.log(query.sql);
 
   /* end Database connection */
-  con.end(function (err) {
-    // The connection is terminated gracefully
-    // Ensures all previously enqueued queries are still
-    // before sending a COM_QUIT packet to the MySQL server.
+  con.end();
+
+});
+
+app.get('/getpresent', function (req, res) {
+  /* set Headers */
+  res.setHeader('Content-Type', 'application/json');
+
+
+  /* Database Operations */
+  /* connect to Database */
+  var con = mysql.createConnection(mysqlDB);
+  con.connect(function (err) {
+    if (err) {
+      console.log('Error connecting to Database!');
+      return;
+    }
+    console.log('Database connection established');
   });
+
+  /* CREATE QUERY */
+  query = con.query('SELECT * FROM geschenke', function (err, rows) {
+    if (err) throw err;
+    console.log('Data received form Database.');
+    console.log(rows);
+
+    /* send database information to "/getpresent" */
+    res.send(rows);
+  });
+  console.log(query.sql);
+  console.log(query);
+
+  /* end Database connection */
+  con.end();
+
 
 });
