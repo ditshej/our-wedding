@@ -74,7 +74,7 @@
     <!-- local DOM -->
     <!-- visible content -->
     <h3>[[title]]</h3>
-    <img src="[[img]]" alt="present-image">
+    <img src="[[img]]" alt="[[imgalt]]">
     <p class="description">[[description]]</p>
     <p>Kosten: <span>[[cost]]</span> CHF</p>
     <paper-button id="presentBtn" raised>ganz schenken</paper-button>
@@ -84,13 +84,13 @@
     <div id="notification" class="hidden">
       <div class="notification-container">
         <p>Um uns
-          <span class="cost">[[cost]] CHF für</span>
+          <span class="full">[[cost]] CHF für</span>
           <span class="rate">einen Anteil für</span>
           [[title]] zu schenken, darst du hier
           <span class="rate">den gewünschten Betrag und</span>
           deine Email-Adresse angeben. So können wir dir unsere Kontodaten senden.
         </p>
-        <form action="">
+        <form action="/postpresentmail" method="post">
           <div class="form-element rate">
             <label for="rate">Betrag in CHF</label>
             <input type="number" name="rate" id="rate">
@@ -99,6 +99,9 @@
             <label for="email">Email Adresse</label>
             <input type="email" name="email" id="email" required>
           </div>
+          <input type="number" name="id" value="[[id]]" class="hidden">
+          <input type="text" name="title" value="[[title]]" class="hidden">
+          <input type="number" name="cost" value="[[cost]]" class="hidden">
           <input type="submit" value="beschenken">
         </form>
       </div>
@@ -114,30 +117,47 @@
       ready: function () {
 
         var
-          $presentButton = $(this.$.presentBtn),
+          $fullButton = $(this.$.presentBtn),
           $rateButton = $(this.$.rateBtn),
           $notification = $(this.$.notification),
           $overlay = $(this.$.notificationOverlay),
           $rate = $(this.querySelectorAll('.rate')),
-          $cost = $(this.querySelectorAll('.cost')),
+          $full = $(this.querySelectorAll('.full')),
           toggleNotification = function () { /* hide and show modal-notification */
             $notification.toggleClass('hidden');
             $overlay.toggleClass('hidden');
           };
 
-        $presentButton.on('click', function () {
-          $rate.toggleClass('hidden'); /* hide all that is connected to rate-information */
-          toggleNotification(); /* show modal-notification */
+        $fullButton.on('click', function () {
+          /* show modal-notification */
+          toggleNotification();
+          /* hide all that is connected to rate-cost-information */
+          $rate.addClass('hidden');
+          console.log('cost');
         });
+
         $rateButton.on('click', function () {
-          $cost.toggleClass('hidden');  /* hide all that is connected to full-cost-information */
-          toggleNotification(); /* show modal-notification */
+          /* show modal-notification */
+          toggleNotification();
+          /* hide all that is connected to full-cost-information */
+          $full.addClass('hidden');
+          console.log('rate');
         });
-        $overlay.on('click', toggleNotification /* hide modal-notification */);
+
+        $overlay.on('click', function () {
+          /* hide modal-notification */
+          toggleNotification();
+          /* show all that is connected to rate- or full-cost-information,
+           * due to the whole notification ish hidden, it's hidden anyway,
+           * but prepared to set again hidden as soon as the buttons are clicked */
+          $rate.removeClass('hidden');
+          $full.removeClass('hidden');
+        });
 
 
         //TODO: send Email
       }
-    });
+    })
+    ;
   </script>
 </dom-module>

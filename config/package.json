@@ -13,6 +13,7 @@
     "express": "^4.14.1",
     "express-form": "^0.12.6",
     "mysql": "^2.13.0",
+    "nodemailer": "^3.0.2",
     "path": "^0.12.7"
   }
 }
