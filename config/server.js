@@ -201,9 +201,8 @@ app.post('/postpresentmail', function (req, res) {
   var id = Number(req.body.id),
     title = req.body.title,
     email = req.body.email,
-    costBefore = Number(req.body.cost),
-    rate = Number(req.body.rate),
-    soldto;
+    cost = Number(req.body.cost),
+    rate = Number(req.body.rate);
 
 
   /* Database Operations 1: GET information about the Geschenk from id */
@@ -223,45 +222,56 @@ app.post('/postpresentmail', function (req, res) {
     console.log('Data received form Database.');
     console.log(row);
 
-    soldto = row.soldto;
+    /* get cost from DB */
+    var costDB = row[0].cost,
+      /* get email-addresses, which have already gift something to that item */
+      soldto = row[0].soldto,
+      /* create Object to send back to DB */
+      modifiedGeschenk = {
+        /* calculate new cost */
+        cost: costDB - rate,
+        /* set email-address, which has gift that item
+         * to not override already set email-addresses, check and add after with comma-seperation */
+        soldto: soldto ? soldto + ',' + email : email,
+        /* if there is no rate set (someone gift the whole item)
+         * or the rate of the gift is higher than the cost
+         * => set to true */
+        sold: rate == 0 || costDB <= rate
+      };
+    console.log(modifiedGeschenk);
+
+
+    /* Database Operations 2: Send back the prepared Object to update the DB */
+    /* connect to Database */
+    var con2 = mysql.createConnection(auth.mysqlDB);
+    con2.connect(function (err) {
+      if (err) {
+        console.log('Error connecting to Database!');
+        return;
+      }
+      console.log('Database connection established');
+    });
+
+    /* CREATE UPDATE QUERY */
+    query2 = con2.query('UPDATE geschenke SET ? WHERE id = ?', [modifiedGeschenk, id], function (err, res) {
+      if (err) throw err;
+    });
+    console.log(query2.sql);
+
+    /* end Database connection 2 */
+    con2.end();
+
   });
   console.log(query1.sql);
 
-  /* end Database connection */
+  /* end Database connection 1 */
   con1.end();
 
-  /* create Object to send back to DB */
-  var modifiedGeschenk = {
-    cost: costBefore - rate,
-    soldto: soldto ? soldto + ',' + email : soldto,
-    sold: rate == 0 || costBefore <= rate
-  };
 
-  console.log(modifiedGeschenk);
+  /*
 
-  /*TODO: full-button geht, ez muss ich noch rate-button testen mit kleinerer und grösserer Zahl als cost
-    TODO: und dann kommt das einspeisen in die DB, siehe gleich folgender Code, das noch getestet werden muss.
-    TODO: und schlussendlich noch das Mail richtig konfigurieren zu unterst.
+   TODO: und schlussendlich noch das Mail richtig konfigurieren zu unterst.
    */
-  // /* Database Operations 2: Send back the prepared Object to update the DB */
-  // /* connect to Database */
-  // var con2 = mysql.createConnection(auth.mysqlDB);
-  // con2.connect(function (err) {
-  //   if (err) {
-  //     console.log('Error connecting to Database!');
-  //     return;
-  //   }
-  //   console.log('Database connection established');
-  // });
-  //
-  // /* CREATE UPDATE QUERY */
-  // query2 = con2.query('UPDATE geschenke SET ? WHERE id = ?', [modifiedGeschenk, id], function (err, res) {
-  //   if (err) throw err;
-  // });
-  // console.log(query2.sql);
-  //
-  // /* end Database connection */
-  // con2.end();
 
 
   /* setup email data */
@@ -276,17 +286,21 @@ app.post('/postpresentmail', function (req, res) {
       address: 'raphael.92@bluewin.ch'
     },
     subject: 'Hochzeitsgeschenk: ' + title, // Subject line
-    text: 'Hello world ?', // plain text body
-    html: '<b>Hello world ?</b>' // html body
+    text: 'Hallo du wunderbare Person. Vielen Dank, dass du uns ein Geschenk mit in de Ehe geben möchtest. Du hast das Geschenk ' + title + ' ausgewählt. Bitte überweise uns den Betrag von ' + (rate ? rate : cost) + 'CHF au das folgende Konto: Raiffeisenbank Rickenbach-Wilen, IBAN CH21 81402 00000 17475 51, Raphael Weiss, Bildfeldstrasse 2, 9552 Bronschhofen - Hast du das Geschenk nur aus versehen angewählt oder gar nie etwas derartiges gemacht, dann bitten wir dich, kurz auf dieses Mail zu antworten. Vielen Dank und hoffentlich bis bald. Nathalie & Raphael', // plain text body
+    html: '<h1>Hallo du wunderbare Person.</h1> <br> Vielen Dank, dass du uns ein Geschenk mit in de Ehe geben möchtest. <br> Du hast das <b>Geschenk ' + title + '</b> ausgewählt. <br> Bitte überweise uns den Betrag von <b>' + (rate ? rate : cost) + 'CHF</b> au das folgende Konto: <br><br>Raiffeisenbank Rickenbach-Wilen <br>IBAN CH21 81402 00000 17475 51 <br>Raphael Weiss <br>Bildfeldstrasse 2 <br>9552 Bronschhofen <br><br>Hast du das Geschenk nur aus versehen angewählt oder gar nie etwas derartiges gemacht, dann bitten wir dich, kurz auf dieses Mail zu antworten. <br>Vielen Dank und hoffentlich bis bald. <br>Nathalie & Raphael' // html body
   };
 
-  // send mail with defined transport object
-  // transporter.sendMail(mailOptions, function (err, info) {
-  //   if (err) {
-  //     return console.log(err);
-  //   }
-  //   console.log('Message %s sent: %s', info.messageId, info.response);
-  // });
+  //TODO: weiterleitung von raphi@nahli.ch zu mir
+
+  /* send mail with defined transport object */
+  transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('Message %s sent: %s', info.messageId, info.response);
+  });
+
+  res.send('geschenke.html');
 
 });
 

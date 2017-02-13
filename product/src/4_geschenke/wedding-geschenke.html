@@ -22,6 +22,12 @@
       wedding-present {
         width: 400px;
       }
+
+      /* helpclass to hide */
+      .hidden {
+        display: none;
+      }
+
     </style>
 
     <wedding-navigation></wedding-navigation>
@@ -62,16 +68,18 @@
 
           /* for every Element in the given presentArray create a <wedding-present>-Element and add it to the Container */
           for (var i = 0; i < presentsArray.length; i++) {
-            /* define <wedding-present>-Element */
-            var $weddingPresentElement = $('<wedding-present></wedding-present>', {
-              id: presentsArray[i].id,
-              title: presentsArray[i].title,
-              img: presentsArray[i].img,
-              imgalt: presentsArray[i].img.slice(0, -4),
-              description: presentsArray[i].description,
-              cost: presentsArray[i].cost,
-              class: 'scope-style wedding-geschenke'
-            });
+            /* create class to hide element, if sold is set to true in presentArray */
+            var sold = presentsArray[i].sold ? ' hidden' : undefined,
+                    /* define <wedding-present>-Element */
+              $weddingPresentElement = $('<wedding-present></wedding-present>', {
+                id: presentsArray[i].id,
+                title: presentsArray[i].title,
+                img: presentsArray[i].img,
+                imgalt: presentsArray[i].img.slice(0, -4),
+                description: presentsArray[i].description,
+                cost: presentsArray[i].cost,
+                class: 'scope-style wedding-geschenke' + sold
+              });
             /* append <wedding-present>-Element to the Container */
             $presentContainer.append($weddingPresentElement);
           }
