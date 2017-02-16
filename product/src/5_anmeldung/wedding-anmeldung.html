@@ -4,6 +4,8 @@
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
 <link rel="import" href="/src/elements/wedding-footer.html">
 
+<link rel="import" href="/src/shared/shared-jquery.html">
+
 <dom-module id="wedding-anmeldung">
   <template>
     <style>
@@ -21,7 +23,7 @@
                         img="https://placeimg.com/1280/900/any"></wedding-eyecatcher>
 
     <div class="formcontainer">
-      <form action="/anmeldung" method="post">
+      <form action="/anmeldung" method="post" id="signUpForm">
         <div class="form-element">
           <label for="firstname">Vorname</label>
           <input id="firstname" name="firstname" type="text" required value="Raphael">
@@ -73,9 +75,7 @@
 
   <script>
     Polymer({
-      is: 'wedding-anmeldung',
-
-
+      is: 'wedding-anmeldung'
     });
   </script>
 </dom-module>

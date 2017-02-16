@@ -82,6 +82,15 @@ app.post('/anmeldung', function (req, res) {
   /* end Database connection */
   con.end();
 
+  res.redirect('/anmeldung-danke.html');
+
+
+
+
+//TODO: anstatt dieser Ausgabe sollte hier ein redirect zu einer "Danke für die Anmeldung" Seite gemacht werden.
+  //TODO: send email an Person, die sich angemeldet hat mit Bestätigung
+
+
 });
 
 /** POST REQUEST: form "addpresent" */
@@ -90,7 +99,7 @@ app.post('/addpresent', function (req, res) {
   /* set Headers */
   res.setHeader('Content-Type', 'application/json');
 
-  /* send the results back to the user */ //TODO: anstatt dieser Ausgabe sollte hier ein redirect zu einer "Danke für die Anmeldung" Seite gemacht werden.
+  /* send the results back to the user */
   res.send(JSON.stringify({
     title: req.body.title || null,
     description: req.body.description || null,
@@ -127,6 +136,7 @@ app.post('/addpresent', function (req, res) {
 
   /* end Database connection */
   con.end();
+
 
 });
 

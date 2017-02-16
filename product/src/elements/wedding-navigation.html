@@ -79,6 +79,7 @@
           <li><a href="#geschichte">Geschichte</a></li>
           <li><a href="#braut">Braut</a></li>
           <li><a href="#braeutigam">Bräutigam</a></li>
+          <!--<li><a href="#gallery">Bilder-Galerie</a></li>-->
         </ul>
       </li>
 
@@ -123,14 +124,17 @@
         var url = window.location.pathname,
           filename = url.substring(url.lastIndexOf('/') + 1),
           fileString = filename.substring(0, filename.lastIndexOf('.')),
-          $mainItem = $(this.querySelector('#nav-' + fileString)),
+          fileStringWithoutDash = fileString.lastIndexOf('-') > 0 ? fileString.substring(0, fileString.lastIndexOf('-')): fileString,
+          $mainItem = $(this.querySelector('#nav-' + fileStringWithoutDash)),
           $logo = $(this.$.logo),
           $subItemList = $mainItem.children('ul'),
           $nav = $(this.$.nav),
           $navChildren = $nav.children(),
           navHalf = $navChildren.length / 2;
 
-        /* hide the current main nav item */
+        /* hide the current main nav item depending on the filename.
+         * even if the filename is extended with "-something", it will grap just the first word.
+         * That way, it's possible to build a "page-something.html" as background-page of "page.html*/
         $mainItem.hide();
 
         /* add the current sub-items to the logo and show them */

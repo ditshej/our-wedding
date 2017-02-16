@@ -1,0 +1,42 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/src/elements/wedding-navigation.html">
+<link rel="import" href="/src/elements/wedding-eyecatcher.html">
+<link rel="import" href="/src/elements/wedding-footer.html">
+
+<link rel="import" href="/src/shared/shared-jquery.html">
+
+<dom-module id="wedding-anmeldung-danke">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+    </style>
+
+    <wedding-navigation></wedding-navigation>
+    <wedding-eyecatcher title="Anmeldung"
+                        img="https://placeimg.com/1280/400/any"></wedding-eyecatcher>
+
+    <div class="container">
+    <h2>Vielen Dank für deine Anmeldung</h2>
+    <p>Wir haben dir ein Bestätigungsmail an die angegebene E-Mail Adresse gesendet und freuen und darauf dich begrüssen
+      zu dürfen.</p>
+    </div>
+
+
+    <wedding-footer></wedding-footer>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wedding-anmeldung-danke'
+    });
+  </script>
+</dom-module>
