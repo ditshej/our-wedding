@@ -1,0 +1,44 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/src/elements/wedding-navigation.html">
+<link rel="import" href="/src/elements/wedding-eyecatcher.html">
+<link rel="import" href="/src/elements/wedding-present.html">
+
+<dom-module id="wedding-geschenke-danke">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+
+    </style>
+
+    <wedding-navigation></wedding-navigation>
+    <wedding-eyecatcher title="Geschenke"
+                        img="https://placeimg.com/1280/400/any/sepia"></wedding-eyecatcher>
+
+    <div class="container">
+      <h2>Vielen Dank für dein Geschenk</h2>
+      <p>Wir haben dir eine Bestätigungsmail mit weiteren Anweisungen an die angegebene E-Mail Adresse gesendet.
+        Solltest du weitere Fragen zu den Geschenken haben, dann schreibe doch eine Email an
+        <a href="mailto:raphi@nahli.ch">raphi@nahli.ch</a>.</p>
+
+      <a href="/geschenke.html">Möchtest du weiter in den Geschenken stöbern? Kehre hier zur Übersicht zurück.</a>
+    </div>
+
+    <wedding-footer></wedding-footer>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'wedding-geschenke-danke'
+
+    });
+  </script>
+</dom-module>

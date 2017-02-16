@@ -110,7 +110,7 @@ app.post('/anmeldung', function (req, res) {
         address: 'raphi@nahli.ch'
       },
       to: email, // list of receivers
-      bcc: {
+      cc: {
         name: 'Raphael Weiss',
         address: 'raphael.92@bluewin.ch'
       },
@@ -294,12 +294,6 @@ app.post('/postpresentmail', function (req, res) {
   con1.end();
 
 
-  /*
-
-   TODO: und schlussendlich noch das Mail richtig konfigurieren zu unterst.
-   */
-
-
   /* setup email data */
   var mailOptions = {
     from: { // sender address
@@ -307,7 +301,7 @@ app.post('/postpresentmail', function (req, res) {
       address: 'raphi@nahli.ch'
     },
     to: email, // list of receivers
-    bcc: {
+    cc: {
       name: 'Raphael Weiss',
       address: 'raphael.92@bluewin.ch'
     },
@@ -315,8 +309,6 @@ app.post('/postpresentmail', function (req, res) {
     text: 'Hallo du wunderbare Person. Vielen Dank, dass du uns ein Geschenk mit in de Ehe geben möchtest. Du hast das Geschenk ' + title + ' ausgewählt. Bitte überweise uns den Betrag von ' + (rate ? rate : cost) + 'CHF au das folgende Konto: Raiffeisenbank Rickenbach-Wilen, IBAN CH21 81402 00000 17475 51, Raphael Weiss, Bildfeldstrasse 2, 9552 Bronschhofen - Hast du das Geschenk nur aus versehen angewählt oder gar nie etwas derartiges gemacht, dann bitten wir dich, kurz auf dieses Mail zu antworten. Vielen Dank und hoffentlich bis bald. Nathalie & Raphael', // plain text body
     html: '<h1>Hallo du wunderbare Person.</h1> <br> Vielen Dank, dass du uns ein Geschenk mit in de Ehe geben möchtest. <br> Du hast das <b>Geschenk ' + title + '</b> ausgewählt. <br> Bitte überweise uns den Betrag von <b>' + (rate ? rate : cost) + 'CHF</b> au das folgende Konto: <br><br>Raiffeisenbank Rickenbach-Wilen <br>IBAN CH21 81402 00000 17475 51 <br>Raphael Weiss <br>Bildfeldstrasse 2 <br>9552 Bronschhofen <br><br>Hast du das Geschenk nur aus versehen angewählt oder gar nie etwas derartiges gemacht, dann bitten wir dich, kurz auf dieses Mail zu antworten. <br>Vielen Dank und hoffentlich bis bald. <br>Nathalie & Raphael' // html body
   };
-
-  //TODO: weiterleitung von raphi@nahli.ch zu mir
 
   /* send mail with defined transport object */
   transporter.sendMail(mailOptions, function (err, info) {
@@ -326,7 +318,9 @@ app.post('/postpresentmail', function (req, res) {
     console.log('Message %s sent: %s', info.messageId, info.response);
   });
 
-  res.redirect('/geschenke.html');
+
+  /* redirect to Thanks-Page */
+  res.redirect('/geschenke-danke.html');
 
 });
 
