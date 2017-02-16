@@ -43,9 +43,28 @@ app.listen(serverport, function () {
 
 
 /**
- * MYSQL Requests
+ * MAIL CONFIG
  */
-/** POST REQUEST: form "anmeldung" */
+/* create reusable transporter object using the default SMTP transport */
+var transporter = nodemailer.createTransport({
+  port: 587,
+  host: 'vega.uberspace.de',
+  auth: auth.nodemailerAuth
+});
+// verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Mail-Server is ready to take our messages');
+  }
+});
+
+
+/**
+ * Requests
+ */
+/** POST REQUEST: form "anmeldung" to save Data to DB and send Thanks-Mail */
 /* tell express what to do when the /anmeldung route is requested */
 app.post('/anmeldung', function (req, res) {
   /* set Headers */
@@ -82,18 +101,38 @@ app.post('/anmeldung', function (req, res) {
   /* end Database connection */
   con.end();
 
+
+  /* setup email data */
+  var email = anmeldung.email,
+    mailOptions = {
+      from: { // sender address
+        name: 'Raphael & Nathalie Weiss',
+        address: 'raphi@nahli.ch'
+      },
+      to: email, // list of receivers
+      bcc: {
+        name: 'Raphael Weiss',
+        address: 'raphael.92@bluewin.ch'
+      },
+      subject: 'Anmeldung Hochzeit Nathalie & Raphael Weiss', // Subject line
+      text: 'Vielen Dank für deine Anmeldung an unsere Hochzeit. Wir freuen uns auf dich. Für weitere Infos und Geschenkideen kannst gerne auf unsere Webseite raphi.nahli.ch herumstöbern. Liebe Grüsse Nathalie & Raphael', // plain text body
+      html: '<h2>Vielen Dank für deine Anmeldung an unsere Hochzeit</h2> <br>Wir freuen uns auf dich. <br>Für weitere Infos und Geschenkideen kannst gerne auf unsere <a href="http://raphi.nahli.ch">Webseite raphi.nahli.ch</a> herumstöbern. <br><br>Liebe Grüsse <br>Nathalie & Raphael'  // html body
+    };
+
+  /* send mail with defined transport object */
+  transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('Message %s sent: %s', info.messageId, info.response);
+  });
+
+  /* Redirect to the Thanks-Page */
   res.redirect('/anmeldung-danke.html');
-
-
-
-
-//TODO: anstatt dieser Ausgabe sollte hier ein redirect zu einer "Danke für die Anmeldung" Seite gemacht werden.
-  //TODO: send email an Person, die sich angemeldet hat mit Bestätigung
-
 
 });
 
-/** POST REQUEST: form "addpresent" */
+/** POST REQUEST: form "addpresent" to save Data to DB */
 /* tell express what to do when the /addpresent route is requested */
 app.post('/addpresent', function (req, res) {
   /* set Headers */
@@ -140,7 +179,7 @@ app.post('/addpresent', function (req, res) {
 
 });
 
-/** GET REQUEST: from "getpresent" */
+/** GET REQUEST: from "getpresent" to get Data from DB and display on Page*/
 /* tell express what to do when the /getpresent route is requested */
 app.get('/getpresent', function (req, res) {
   /* set Headers */
@@ -176,29 +215,6 @@ app.get('/getpresent', function (req, res) {
 
 });
 
-
-/**
- * MAIL CONFIG
- */
-/* create reusable transporter object using the default SMTP transport */
-var transporter = nodemailer.createTransport({
-  port: 587,
-  host: 'vega.uberspace.de',
-  auth: auth.nodemailerAuth
-});
-// verify connection configuration
-transporter.verify(function (error, success) {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Mail-Server is ready to take our messages');
-  }
-});
-
-
-/**
- * MAIL Requests
- */
 /** POST REQUEST: from "postpresentmail" to send Mail for Geschenke */
 app.post('/postpresentmail', function (req, res) {
   /* set Headers */
@@ -310,7 +326,7 @@ app.post('/postpresentmail', function (req, res) {
     console.log('Message %s sent: %s', info.messageId, info.response);
   });
 
-  res.send('geschenke.html');
+  res.redirect('/geschenke.html');
 
 });
 
