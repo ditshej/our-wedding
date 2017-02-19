@@ -1,14 +1,13 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
-
+<!-- general polymer elements -->
+<link rel="import" href="/src/shared/shared-polymer-header.html">
+<!-- specific polymer elements -->
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
 <link rel="import" href="/src/elements/wedding-footer.html">
 
-<link rel="import" href="/src/shared/shared-jquery.html">
-
 <dom-module id="wedding-anmeldung">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
       }

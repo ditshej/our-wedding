@@ -1,10 +1,11 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
-
+<!-- general polymer elements -->
+<link rel="import" href="/src/shared/shared-polymer-header.html">
+<!-- specific polymer elements -->
 <link rel="import" href="/src/elements/wedding-anchorimg.html">
 
 <dom-module id="wedding-homepage">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: flex;
         flex-wrap: wrap;

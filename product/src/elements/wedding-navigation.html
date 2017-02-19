@@ -1,10 +1,12 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<!-- general polymer elements -->
+<link rel="import" href="/src/shared/shared-polymer-header.html">
+<!-- other imports -->
 <link rel="import" href="/src/shared/shared-jquery.html">
 
 <dom-module id="wedding-navigation">
   <!-- Defines the element's style and local DOM -->
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
         position: fixed;

@@ -1,0 +1,44 @@
+<!-- fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alex+Brush">
+<link rel="stylesheet" href="/src/shared/font/malthlete-skinny.css">
+
+<!-- stylesheet -->
+<dom-module id="shared-styles">
+  <template>
+      <style>
+      :host {
+        /*** Variables ***/
+        /* fonts */
+        --font:  'Mathlete-Skinny';
+        --font-header: 'Alex Brush';
+
+        /* Colors */
+        --text-color: #69aba9;
+        --primary-color: #1d7aad;
+        --secondary-color: #009e73;
+
+        /*** general stylings ***/
+        font-family: var(--font);
+        text-transform: uppercase;
+        margin: 0;
+        color: var(--text-color);
+      }
+
+      * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-header);
+        text-transform: none;
+      }
+
+      a {
+        text-decoration: none;
+        color: var(--text-color);
+      }
+    </style>
+  </template>
+</dom-module>
