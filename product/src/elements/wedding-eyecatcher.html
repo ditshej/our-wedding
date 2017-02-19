@@ -37,16 +37,16 @@
         padding: 0;
       }
 
-      .content-wrapper {
+      #contentWrapper {
         background: var(--wedding-eyecatcher-banner-color);
         color: var(--wedding-eyecatcher-banner-text-color);
-        padding: 4vw;
         margin-top: -6px;
-        margin-bottom: -4vw;
       }
 
-
-
+      /* adapt to #contentWrapper if elements attribute "contentpadding" is set to true */
+      .content-padding {
+        padding: 4vw;
+      }
     </style>
 
     <!-- local DOM -->
@@ -54,7 +54,7 @@
       <img src="[[img]]">
       <h1>[[title]]</h1>
     </div>
-    <div class="content-wrapper">
+    <div id="contentWrapper">
       <blockquote><content></content></blockquote>
     </div>
 
@@ -62,7 +62,19 @@
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
-      is: 'wedding-eyecatcher'
+      is: 'wedding-eyecatcher',
+
+      properties: {
+        contentpadding: {
+          type: Boolean
+        }
+      },
+
+      ready: function () {
+        if (this.contentpadding) {
+          this.$.contentWrapper.classList.add('content-padding');
+        }
+      }
     });
   </script>
 </dom-module>

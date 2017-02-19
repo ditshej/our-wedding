@@ -3,7 +3,8 @@
 <!-- specific polymer elements -->
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
-<link rel="import" href="/src/elements/wedding-portrait.html">
+<link rel="import" href="/src/elements/wedding-portrait.html">$
+<link rel="import" href="/src/elements/wedding-footer.html">
 
 <dom-module id="wedding-organisation">
   <template>
@@ -12,11 +13,25 @@
         display: block;
       }
 
+      :host > div {
+        padding: 2vw 4vw;
+      }
+
+      :host > div:nth-child(2n) {
+        background: var(--secondary-color);
+        color: var(--secondary-text-color)
+      }
+
+      :host > div:nth-child(2n) a {
+        color: var(--secondary-text-color)
+      }
+
       .page-section {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
       }
+
     </style>
 
     <wedding-navigation></wedding-navigation>
@@ -221,7 +236,7 @@
         </wedding-portrait>
       </div>
     </div>
-
+  <wedding-footer></wedding-footer>
 
   </template>
 

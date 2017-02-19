@@ -3,6 +3,7 @@
 <!-- specific polymer elements -->
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
+<link rel="import" href="/bower_components/google-map/google-map.html">
 <link rel="import" href="/src/elements/wedding-footer.html">
 
 <dom-module id="wedding-trauung">
@@ -20,9 +21,20 @@
         background: var(--secondary-color);
         color: var(--secondary-text-color)
       }
+
+      :host > div:nth-child(2n) a {
+        color: var(--secondary-text-color)
+      }
+
       .horizontal {
         display: flex;
         justify-content: space-between;
+      }
+
+      google-map {
+        width: 95%;
+        height: 400px;
+        margin: 0 auto;
       }
 
     </style>
@@ -55,6 +67,23 @@
       <div class="horizontal">
         <div class="light">
           <h3>bei gutem Wetter</h3>
+          <!--TODO: auf https://console.developers.google.com/apis/credentials?project=raphi-nahli-ch den GoogleMapsApiKey auf raphi.nahli.ch eingrenzen-->
+          <a href="https://www.google.ch/maps/place/Boltshausen+12,+8561+Ottoberg">
+            <google-map latitude="47.5811795"
+                        longitude="9.0824774"
+                        zoom="10"
+                        api-key="AIzaSyDCel2Gvos95rdYcPQnzirEMVtOBS862VI">
+              <google-map-marker latitude="47.5811795"
+                                 longitude="9.0824774"
+                                 title="Hofgut Büchi"
+                                 click-events=true></google-map-marker>
+            </google-map>
+            <h4>Hofgut Büchi</h4>
+            <blockquote>
+              <p>Boltshausen 12</p>
+              <p>8561 Ottoberg</p>
+            </blockquote>
+          </a>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt
             dignissimos
             enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem facilis
@@ -66,7 +95,23 @@
             quisquam recusandae temporibus ut?</p>
         </div>
         <div class="dark">
-          <h3>bei gutem Wetter</h3>
+          <h3>bei schlechtem Wetter</h3>
+          <a href="https://www.google.ch/maps/place/Kirchweg+3,+9556+Affeltrangen">
+            <google-map latitude="47.5262918"
+                        longitude="9.0291027"
+                        zoom="10"
+                        api-key="AIzaSyDCel2Gvos95rdYcPQnzirEMVtOBS862VI">
+              <google-map-marker latitude="47.5262918"
+                                 longitude="9.0291027"
+                                 title="Hofgut Büchi"
+                                 click-events=true></google-map-marker>
+            </google-map>
+            <h4>Evangelische Kirche Affeltrangen</h4>
+            <blockquote>
+              <p>Kirchweg 3</p>
+              <p>9556 Affeltrangen</p>
+            </blockquote>
+          </a>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt
             dignissimos
             enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem facilis
@@ -98,6 +143,7 @@
         cupiditate doloribus ipsum laboriosam praesentium recusandae, rem repellat veniam? Delectus ipsam laboriosam
         modi voluptatibus. Quisquam, vitae!</p>
     </div>
+
     <wedding-footer></wedding-footer>
 
   </template>
