@@ -13,7 +13,8 @@
         --font-header: 'Alex Brush';
 
         /* Colors */
-        --text-color: #69aba9;
+        --primary-text-color: #69aba9;
+        --secondary-text-color: #ffffff;
         --primary-color: #1d7aad;
         --secondary-color: #009e73;
 
@@ -21,7 +22,7 @@
         font-family: var(--font);
         text-transform: uppercase;
         margin: 0;
-        color: var(--text-color);
+        color: var(--primary-text-color);
         font-size: 1.8rem;
       }
 
@@ -34,15 +35,16 @@
       h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-header);
         text-transform: none;
+        margin: 1rem 0 0.3rem;
+      }
+
+      p {
+        margin: 0;
       }
 
       a {
         text-decoration: none;
-        color: var(--text-color);
-      }
-
-      .page-wrapper {
-        margin: 0 4vw;
+        color: var(--primary-text-color);
       }
 
     </style>

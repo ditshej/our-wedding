@@ -4,6 +4,7 @@
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
 <link rel="import" href="/src/elements/wedding-portrait.html">
+<link rel="import" href="/src/elements/wedding-footer.html">
 
 
 <dom-module id="wedding-brautpaar">
@@ -13,6 +14,17 @@
         display: block;
         /* for wedding-eyecatcher */
         --wedding-eyecatcher-banner-color: var(--primary-color);
+        --wedding-eyecatcher-banner-text-color: var(--secondary-text-color);
+        --wedding-portrait-invert-color: var(--secondary-text-color);
+      }
+
+      :host > div {
+        padding: 4vw;
+      }
+
+      :host > div:nth-child(2n) {
+        background: var(--secondary-color);
+        color: var(--secondary-text-color)
       }
 
     </style>
@@ -23,79 +35,79 @@
       Jesus sagt in Johannes 8,12: «Ich bin das Licht der Welt; wer mir nachfolgt, wird nicht in der Finsternis wandeln,
       sondern wird das Licht des Lebens haben.»
     </wedding-eyecatcher>
-    <div class="page-wrapper">
-      <div id="geschichte">
-        <h2>Unsere Geschichte</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi beatae eaque esse est expedita facere hic id
-          in
-          labore, mollitia natus officia, perferendis saepe sed tempore voluptas voluptatum! Ab aperiam aut autem
-          commodi,
-          consequatur earum eos error, hic illo itaque laboriosam libero maxime minima necessitatibus nesciunt nihil
-          nobis
-          numquam officia officiis pariatur perferendis porro praesentium quam, quis quos rem repellendus sed sit soluta
-          sunt suscipit tempora tempore temporibus tenetur unde ut veritatis. Ab animi aperiam consequatur debitis
-          deleniti distinctio eum harum incidunt maxime mollitia officia quis, quisquam voluptatem. Cum eum excepturi
-          modi
-          quasi sint suscipit! Aliquid corporis cum delectus dolorem doloribus dolorum ea exercitationem explicabo
-          facere
-          fugit illo ipsa maxime natus nemo officiis porro praesentium, ratione rem repellat saepe sit sunt velit
-          veniam?
-          Atque dolor dolores, eius est eveniet expedita explicabo impedit, modi molestiae necessitatibus nemo nihil
-          nobis
-          quaerat quasi repudiandae, tempore voluptatum! Ad architecto dolorum expedita iusto labore numquam officiis,
-          quis quisquam ratione reiciendis sequi sint tempora tempore? A ad adipisci aperiam assumenda autem cupiditate
-          esse eum ex excepturi facilis harum illum in labore magni necessitatibus nobis, nulla odit perferendis,
-          possimus
-          quia quod ratione rem reprehenderit rerum sit sunt suscipit tempora tempore vel veniam. Accusamus alias
-          commodi
-          culpa cumque, eum hic quo repudiandae? Atque cupiditate distinctio eius ipsa, ipsam minus modi nesciunt
-          nostrum
-          nulla omnis similique sint soluta veniam! Accusamus accusantium alias architecto autem consectetur,
-          consequatur
-          culpa debitis dolor, dolores facilis, id libero magnam maiores minima molestias nam nihil quam quos suscipit
-          tenetur! Quae?</p>
-      </div>
-      <div id="braut">
-        <wedding-portrait title="Die Braut"
-                          img="/src/1_brautpaar/braut.png"
-                          textalign="right"
-                          imgalign="last"
-                          size="100"
-                          arrangement="horizontal">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque dolores excepturi facilis incidunt nam
-            neque
-            officiis ullam vitae? Aliquid aspernatur beatae consectetur, dolores eaque earum explicabo modi, molestias
-            praesentium quaerat quam reprehenderit sunt voluptatum. Magnam, mollitia, ullam! Aspernatur consequatur
-            dignissimos distinctio dolor doloribus ducimus eligendi enim eum excepturi hic id incidunt labore, maxime
-            nemo, nisi nobis numquam quos sint totam voluptatem! Blanditiis consequatur ducimus excepturi ipsa,
-            provident
-            sed similique suscipit. Commodi, esse eveniet fugit in iste, maxime minima molestiae molestias mollitia
-            repellendus totam voluptates! Ab ad autem cumque est fuga incidunt iste itaque molestias perferendis
-            recusandae rem sed, similique voluptatibus!</p>
-        </wedding-portrait>
-      </div>
-      <div id="braeutigam">
-        <wedding-portrait title="Der Bräutigam"
-                          img="/src/1_brautpaar/braeutigam.png"
-                          textalign="right"
-                          imgalign="first"
-                          size="100"
-                          arrangement="horizontal">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aperiam cumque dolore dolores dolorum eum id in
-            ipsa iste laboriosam magnam nihil odio odit quas qui, quisquam ratione similique sunt suscipit unde
-            veritatis
-            voluptas voluptatem voluptatum! Amet aperiam culpa doloremque dolorum, earum enim expedita odit perferendis
-            quod reiciendis, repellat repudiandae voluptas. A, aliquam amet animi assumenda aut consectetur cumque dicta
-            dolores et eum facilis fuga fugiat impedit in, iure iusto neque perspiciatis porro possimus quaerat, quasi
-            qui
-            quis repellendus reprehenderit sint temporibus totam unde vel voluptate voluptates. Amet, atque deleniti
-            dolorum excepturi facere magnam, magni maxime mollitia provident saepe totam.</p>
-        </wedding-portrait>
-      </div>
-      <div id="gallery">
-        <!--TODO: Gallerie erstellen!!!-->
-      </div>
+    <div id="geschichte">
+      <h2>Unsere Geschichte</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi beatae eaque esse est expedita facere hic id
+        in
+        labore, mollitia natus officia, perferendis saepe sed tempore voluptas voluptatum! Ab aperiam aut autem
+        commodi,
+        consequatur earum eos error, hic illo itaque laboriosam libero maxime minima necessitatibus nesciunt nihil
+        nobis
+        numquam officia officiis pariatur perferendis porro praesentium quam, quis quos rem repellendus sed sit soluta
+        sunt suscipit tempora tempore temporibus tenetur unde ut veritatis. Ab animi aperiam consequatur debitis
+        deleniti distinctio eum harum incidunt maxime mollitia officia quis, quisquam voluptatem. Cum eum excepturi
+        modi
+        quasi sint suscipit! Aliquid corporis cum delectus dolorem doloribus dolorum ea exercitationem explicabo
+        facere
+        fugit illo ipsa maxime natus nemo officiis porro praesentium, ratione rem repellat saepe sit sunt velit
+        veniam?
+        Atque dolor dolores, eius est eveniet expedita explicabo impedit, modi molestiae necessitatibus nemo nihil
+        nobis
+        quaerat quasi repudiandae, tempore voluptatum! Ad architecto dolorum expedita iusto labore numquam officiis,
+        quis quisquam ratione reiciendis sequi sint tempora tempore? A ad adipisci aperiam assumenda autem cupiditate
+        esse eum ex excepturi facilis harum illum in labore magni necessitatibus nobis, nulla odit perferendis,
+        possimus
+        quia quod ratione rem reprehenderit rerum sit sunt suscipit tempora tempore vel veniam. Accusamus alias
+        commodi
+        culpa cumque, eum hic quo repudiandae? Atque cupiditate distinctio eius ipsa, ipsam minus modi nesciunt
+        nostrum
+        nulla omnis similique sint soluta veniam! Accusamus accusantium alias architecto autem consectetur,
+        consequatur
+        culpa debitis dolor, dolores facilis, id libero magnam maiores minima molestias nam nihil quam quos suscipit
+        tenetur! Quae?</p>
     </div>
+    <div id="braut">
+      <wedding-portrait title="Die Braut"
+                        img="/src/1_brautpaar/braut.png"
+                        textalign="left"
+                        imgalign="last"
+                        size="100"
+                        arrangement="horizontal"
+                        invert="true">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque dolores excepturi facilis incidunt nam
+          neque
+          officiis ullam vitae? Aliquid aspernatur beatae consectetur, dolores eaque earum explicabo modi, molestias
+          praesentium quaerat quam reprehenderit sunt voluptatum. Magnam, mollitia, ullam! Aspernatur consequatur
+          dignissimos distinctio dolor doloribus ducimus eligendi enim eum excepturi hic id incidunt labore, maxime
+          nemo, nisi nobis numquam quos sint totam voluptatem! Blanditiis consequatur ducimus excepturi ipsa,
+          provident
+          sed similique suscipit. Commodi, esse eveniet fugit in iste, maxime minima molestiae molestias mollitia
+          repellendus totam voluptates! Ab ad autem cumque est fuga incidunt iste itaque molestias perferendis
+          recusandae rem sed, similique voluptatibus!</p>
+      </wedding-portrait>
+    </div>
+    <div id="braeutigam">
+      <wedding-portrait title="Der Bräutigam"
+                        img="/src/1_brautpaar/braeutigam.png"
+                        textalign="right"
+                        imgalign="first"
+                        size="100"
+                        arrangement="horizontal">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aperiam cumque dolore dolores dolorum eum id in
+          ipsa iste laboriosam magnam nihil odio odit quas qui, quisquam ratione similique sunt suscipit unde
+          veritatis
+          voluptas voluptatem voluptatum! Amet aperiam culpa doloremque dolorum, earum enim expedita odit perferendis
+          quod reiciendis, repellat repudiandae voluptas. A, aliquam amet animi assumenda aut consectetur cumque dicta
+          dolores et eum facilis fuga fugiat impedit in, iure iusto neque perspiciatis porro possimus quaerat, quasi
+          qui
+          quis repellendus reprehenderit sint temporibus totam unde vel voluptate voluptates. Amet, atque deleniti
+          dolorum excepturi facere magnam, magni maxime mollitia provident saepe totam.</p>
+      </wedding-portrait>
+    </div>
+    <div id="gallery">
+      <!--TODO: Gallerie erstellen!!!-->
+    </div>
+    <wedding-footer></wedding-footer>
 
   </template>
 

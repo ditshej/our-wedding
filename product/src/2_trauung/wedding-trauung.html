@@ -3,6 +3,7 @@
 <!-- specific polymer elements -->
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
+<link rel="import" href="/src/elements/wedding-footer.html">
 
 <dom-module id="wedding-trauung">
   <template>
@@ -10,11 +11,26 @@
       :host {
         display: block;
       }
+
+      :host > div {
+        padding: 4vw;
+      }
+
+      :host > div:nth-child(2n) {
+        background: var(--secondary-color);
+        color: var(--secondary-text-color)
+      }
+      .horizontal {
+        display: flex;
+        justify-content: space-between;
+      }
+
     </style>
 
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Die Trauung"
-                        img="/src/2_trauung/trauung.jpg"></wedding-eyecatcher>
+                        img="https://placeimg.com/1280/900/any"></wedding-eyecatcher>
+
     <div id="zivil">
       <h2>Zivile Trauung</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur cum delectus eum ipsum magnam minima
@@ -36,22 +52,32 @@
 
     <div id="kirchlich">
       <h2>Kirchliche Trauung</h2>
-      <h3>bei gutem Wetter</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt dignissimos
-        enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem facilis
-        fugit id incidunt labore nihil numquam repudiandae sint, sunt vel vero. Ab alias aperiam at beatae culpa,
-        delectus deserunt distinctio earum eligendi expedita explicabo facere facilis illo impedit in ipsa ipsum iste
-        laboriosam laborum laudantium magnam nesciunt odio pariatur perspiciatis quas quia ratione recusandae
-        repellendus reprehenderit sequi sint unde velit voluptatem? Debitis delectus, dolorum illum iusto obcaecati
-        quisquam recusandae temporibus ut?</p>
-      <h3>bei gutem Wetter</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt dignissimos
-        enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem facilis
-        fugit id incidunt labore nihil numquam repudiandae sint, sunt vel vero. Ab alias aperiam at beatae culpa,
-        delectus deserunt distinctio earum eligendi expedita explicabo facere facilis illo impedit in ipsa ipsum iste
-        laboriosam laborum laudantium magnam nesciunt odio pariatur perspiciatis quas quia ratione recusandae
-        repellendus reprehenderit sequi sint unde velit voluptatem? Debitis delectus, dolorum illum iusto obcaecati
-        quisquam recusandae temporibus ut?</p>
+      <div class="horizontal">
+        <div class="light">
+          <h3>bei gutem Wetter</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt
+            dignissimos
+            enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem facilis
+            fugit id incidunt labore nihil numquam repudiandae sint, sunt vel vero. Ab alias aperiam at beatae culpa,
+            delectus deserunt distinctio earum eligendi expedita explicabo facere facilis illo impedit in ipsa ipsum
+            iste
+            laboriosam laborum laudantium magnam nesciunt odio pariatur perspiciatis quas quia ratione recusandae
+            repellendus reprehenderit sequi sint unde velit voluptatem? Debitis delectus, dolorum illum iusto obcaecati
+            quisquam recusandae temporibus ut?</p>
+        </div>
+        <div class="dark">
+          <h3>bei gutem Wetter</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt
+            dignissimos
+            enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem facilis
+            fugit id incidunt labore nihil numquam repudiandae sint, sunt vel vero. Ab alias aperiam at beatae culpa,
+            delectus deserunt distinctio earum eligendi expedita explicabo facere facilis illo impedit in ipsa ipsum
+            iste
+            laboriosam laborum laudantium magnam nesciunt odio pariatur perspiciatis quas quia ratione recusandae
+            repellendus reprehenderit sequi sint unde velit voluptatem? Debitis delectus, dolorum illum iusto obcaecati
+            quisquam recusandae temporibus ut?</p>
+        </div>
+      </div>
     </div>
 
     <div id="fest">
@@ -72,7 +98,7 @@
         cupiditate doloribus ipsum laboriosam praesentium recusandae, rem repellat veniam? Delectus ipsam laboriosam
         modi voluptatibus. Quisquam, vitae!</p>
     </div>
-
+    <wedding-footer></wedding-footer>
 
   </template>
 

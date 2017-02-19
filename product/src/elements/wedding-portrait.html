@@ -7,7 +7,7 @@
     <style include="shared-styles">
       :host {
         display: block;
-        padding: 6% 2%;
+        /*padding: 6% 2%;*/
       }
 
       /* image */
@@ -18,6 +18,11 @@
 
       img {
         width: 100%;
+      }
+
+      /* class for invert="true" stylings */
+      .invert {
+        color: var(--wedding-portrait-invert-color);
       }
 
       /* class to show the correct picture via script */
@@ -63,7 +68,7 @@
       }
     </style>
 
-    <div class="element-wrapper">
+    <div id="elementWrapper">
 
       <!-- image first fetching the element-attribute "img" (display: none) -->
       <div class="image-wrapper img-first">
@@ -124,19 +129,23 @@
 
           /* unset horizontal for small elements */
           if (this.size <= 50) {
-            this.querySelector('.element-wrapper').classList.add('vertical-fifty');
+            this.$.elementWrapper.classList.add('vertical-fifty');
 
             if (this.size <= 25) {
-              this.querySelector('.element-wrapper').classList.add('vertical-twentyfive');
+              this.$.elementWrapper.classList.add('vertical-twentyfive');
             }
           }
         }
 
         /* get the information from element-attribute "arrangement" to configure arrangement */
         if (this.arrangement == 'horizontal') {
-          this.querySelector('.element-wrapper').classList.add('horizontal');
+          this.$.elementWrapper.classList.add('horizontal');
         }
 
+        /* if the information from element-attribute "invert" is set to "true" set class "invert" to elementWrapper */
+        if (this.invert) {
+          this.$.elementWrapper.classList.add('invert');
+        }
       }
     });
   </script>
