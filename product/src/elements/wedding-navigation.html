@@ -1,5 +1,7 @@
 <!-- general polymer elements -->
 <link rel="import" href="/src/shared/shared-polymer-header.html">
+<link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+
 <!-- other imports -->
 <link rel="import" href="/src/shared/shared-jquery.html">
 
@@ -14,6 +16,8 @@
         width: 100%;
         --wedding-nav-item-padding: 3px;
       }
+
+      /*TODO: im moment überdeckt die Navigation den ganzen oberen Teil der Webseite so, dass man dort keine Links klicken kann!!!*/
 
       /** navigation */
       /* page-top-style */
@@ -65,10 +69,26 @@
         width: 100%;
       }
 
+      @media (max-width: 750px) {
+        #nav {
+          display: none;
+        }
+      }
+
     </style>
 
     <!-- local DOM -->
+<!--TODO: wahrscheinlich muss ich da noch diese Elements importieren-->
+    <paper-menu-button>
+      <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+      <paper-menu class="dropdown-content">
+        <paper-item>Share</paper-item>
+        <paper-item>Settings</paper-item>
+        <paper-item>Help</paper-item>
+      </paper-menu>
+    </paper-menu-button>
 
+    <!-- TODO: Ohne Logo / Matter Balken als Hintergrund / ganz normeler dropdown hover -->
     <ul id="nav">
 
       <li id="logo">
@@ -126,7 +146,7 @@
         var url = window.location.pathname,
           filename = url.substring(url.lastIndexOf('/') + 1),
           fileString = filename.substring(0, filename.lastIndexOf('.')),
-          fileStringWithoutDash = fileString.lastIndexOf('-') > 0 ? fileString.substring(0, fileString.lastIndexOf('-')): fileString,
+          fileStringWithoutDash = fileString.lastIndexOf('-') > 0 ? fileString.substring(0, fileString.lastIndexOf('-')) : fileString,
           $mainItem = $(this.querySelector('#nav-' + fileStringWithoutDash)),
           $logo = $(this.$.logo),
           $subItemList = $mainItem.children('ul'),
@@ -173,7 +193,7 @@
           }
         };
 
-          /* set the current sub-items circular */
+        /* set the current sub-items circular */
 //        var $subItems = $subItemList.children();
 //        $($subItems[0]).css('transform', 'translate(-50%, -250%)');
 //        $($subItems[1]).css('transform', 'translate(0, -200%)');
