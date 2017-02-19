@@ -32,13 +32,13 @@
       }
 
       /** media queries */
-      @media  {
+      @media (max-width: 800px) {
         /* set the left image to visible and the right to hidden */
-        .img-left {
+        .img-first {
           display: block;
         }
 
-        .img-right {
+        .img-last {
           display: none;
         }
 
@@ -101,6 +101,9 @@
         },
         arrangement: {
           type: String
+        },
+        invert: {
+          type: Boolean
         }
       },
 
@@ -133,6 +136,7 @@
         if (this.arrangement == 'horizontal') {
           this.querySelector('.element-wrapper').classList.add('horizontal');
         }
+
       }
     });
   </script>
