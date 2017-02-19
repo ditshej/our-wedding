@@ -13,6 +13,11 @@
       img {
         width: 100%;
         height: auto;
+        max-height: 100vh;
+        /* crop the image always to best size */
+        object-fit: cover;
+        /* object-fit-images for IE, Edge and old browsers */
+        font-family: 'object-fit: cover';
       }
 
       .image-wrapper {
@@ -25,7 +30,6 @@
         left: 50%;
         transform: translate(-50%, 0);
         width: 90%;
-        font-size: 3em;
       }
 
       blockquote {
@@ -47,7 +51,7 @@
       <h1>[[title]]</h1>
     </div>
     <div class="content-wrapper">
-      <content></content>
+      <blockquote><content></content></blockquote>
     </div>
 
   </template>
