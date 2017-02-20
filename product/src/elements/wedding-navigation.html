@@ -1,6 +1,12 @@
 <!-- general polymer elements -->
 <link rel="import" href="/src/shared/shared-polymer-header.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
 
 <!-- other imports -->
 <link rel="import" href="/src/shared/shared-jquery.html">
@@ -8,130 +14,117 @@
 <dom-module id="wedding-navigation">
   <!-- Defines the element's style and local DOM -->
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
         position: fixed;
         z-index: 1000;
         width: 100%;
-        --wedding-nav-item-padding: 3px;
+        /*--wedding-nav-item-padding: 3px;*/
+      }
+
+      nav {
+        height: 60px;
       }
 
       /*TODO: im moment überdeckt die Navigation den ganzen oberen Teil der Webseite so, dass man dort keine Links klicken kann!!!*/
 
       /** navigation */
       /* page-top-style */
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
+      /*ul {*/
+      /*list-style-type: none;*/
+      /*padding: 0;*/
+      /*}*/
 
-      a {
-        padding: inherit;
-      }
+      /*a {*/
+      /*padding: inherit;*/
+      /*}*/
 
-      :host > ul > li {
-        float: left;
-        width: 20%;
-        text-align: center;
-        padding: var(--wedding-nav-item-padding);
-      }
+      /*:host > ul > li {*/
+      /*float: left;*/
+      /*width: 20%;*/
+      /*text-align: center;*/
+      /*padding: var(--wedding-nav-item-padding);*/
+      /*}*/
 
-      :host > ul > li > ul {
-        display: none;
-      }
+      /*:host > ul > li > ul {*/
+      /*display: none;*/
+      /*}*/
 
-      :host > ul > li > ul > li {
-        padding: var(--wedding-nav-item-padding);
-      }
+      /*:host > ul > li > ul > li {*/
+      /*padding: var(--wedding-nav-item-padding);*/
+      /*}*/
 
-      /* page-scroll-style */
-      :host > ul.scroll {
-        float: right;
-        width: 20%;
-      }
+      /*!* page-scroll-style *!*/
+      /*:host > ul.scroll {*/
+      /*float: right;*/
+      /*width: 20%;*/
+      /*}*/
 
-      :host > ul > li.scroll {
-        float: none;
-        width: auto;
-        text-align: right;
-      }
+      /*:host > ul > li.scroll {*/
+      /*float: none;*/
+      /*width: auto;*/
+      /*text-align: right;*/
+      /*}*/
 
-      /* collapse-style */
+      /*!* collapse-style *!*/
 
-      /** logo */
-      .logo {
-        display: inline-block;
-        width: 40%;
-      }
+      /*!** logo *!*/
+      /*.logo {*/
+      /*display: inline-block;*/
+      /*width: 40%;*/
+      /*}*/
 
-      img {
-        width: 100%;
-      }
+      /*img {*/
+      /*width: 100%;*/
+      /*}*/
 
-      @media (max-width: 750px) {
-        #nav {
-          display: none;
-        }
-      }
+      /*@media (max-width: 750px) {*/
+      /*#nav {*/
+      /*display: none;*/
+      /*}*/
+      /*}*/
 
     </style>
 
     <!-- local DOM -->
-<!--TODO: wahrscheinlich muss ich da noch diese Elements importieren-->
-    <paper-menu-button>
-      <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-      <paper-menu class="dropdown-content">
-        <paper-item>Share</paper-item>
-        <paper-item>Settings</paper-item>
-        <paper-item>Help</paper-item>
-      </paper-menu>
-    </paper-menu-button>
-
-    <!-- TODO: Ohne Logo / Matter Balken als Hintergrund / ganz normeler dropdown hover -->
-    <ul id="nav">
-
-      <li id="logo">
-        <a class="logo" href="/index.html"><img src="/src/image/chibi-logo.png" alt="Logo"></a>
-      </li>
-
-      <li id="nav-brautpaar">
-        <a href="/brautpaar.html">Brautpaar</a>
-        <ul>
-          <li><a href="#geschichte">Geschichte</a></li>
-          <li><a href="#braut">Braut</a></li>
-          <li><a href="#braeutigam">Bräutigam</a></li>
-          <!--<li><a href="#gallery">Bilder-Galerie</a></li>-->
-        </ul>
-      </li>
-
-      <li id="nav-trauung">
-        <a href="/trauung.html">Trauung</a>
-        <ul>
-          <li><a href="#zivil">Zivile Trauung</a></li>
-          <li><a href="#kirchlich">Kirchliche Trauung</a></li>
-          <li><a href="#festlichkeiten">Festlichkeiten</a></li>
-        </ul>
-      </li>
-
-      <li id="nav-organisation">
-        <a href="/organisation.html">Organisation</a>
-        <ul>
-          <li><a href="#trauzeugen">Trauzeugen</a></li>
-          <li><a href="#ok">OK-Team</a></li>
-          <li><a href="#helfer">Helfer</a></li>
-        </ul>
-      </li>
-
-      <li id="nav-geschenke">
-        <a href="/geschenke.html">Geschenke</a>
-      </li>
-
-      <li id="nav-anmeldung">
-        <a href="/anmeldung.html">Anmeldung</a>
-      </li>
-
-    </ul>
+    <nav class="fullbleed layout vertical">
+      <paper-menu-button class="horizontal end-justified layout"
+                         no-overlap
+                         ignore-select
+                         close-on-activate
+                         horizontal-align="right">
+        <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+        <paper-menu class="dropdown-content">
+          <paper-submenu>
+            <paper-item><a href="/brautpaar.html">Brautpaar</a></paper-item>
+            <paper-menu>
+              <paper-item><a href="#geschichte">Geschichte</a></paper-item>
+              <paper-item><a href="#braut">Braut</a></paper-item>
+              <paper-item><a href="#braeutigam">Bräutigam</a></paper-item>
+              <paper-item><a href="#gallery">Bilder-Galerie</a></paper-item>
+            </paper-menu>
+          </paper-submenu>
+          <paper-submenu>
+            <paper-item><a href="/trauung.html">Trauung</a></paper-item>
+            <paper-menu>
+              <paper-item><a href="#zivil">Zivile Trauung</a></paper-item>
+              <paper-item><a href="#kirchlich">Kirchliche Trauung</a></paper-item>
+              <paper-item><a href="#festlichkeiten">Festlichkeiten</a></paper-item>
+            </paper-menu>
+          </paper-submenu>
+          <paper-submenu>
+            <paper-item><a href="/organisation.html">Organisation</a></paper-item>
+            <paper-menu>
+              <paper-item><a href="#trauzeugen">Trauzeugen</a></paper-item>
+              <paper-item><a href="#ok">OK-Team</a></paper-item>
+            </paper-menu>
+          </paper-submenu>
+          <paper-item><a href="/geschenke.html">Geschenke</a></paper-item>
+          <paper-item><a href="/anmeldung.html">Anmeldung</a></paper-item>
+        </paper-menu>
+      </paper-menu-button>
+    </nav>
 
 
   </template>

@@ -9,7 +9,11 @@
     "aos": "^2.1.1",
     "paper-button": "^1.0.14",
     "google-map": "^1.2.0",
-    "paper-menu-button": "^1.5.2"
+    "paper-menu-button": "^1.5.2",
+    "paper-icon-button": "^1.1.4",
+    "paper-menu": "^1.2.2",
+    "paper-item": "^1.2.1",
+    "iron-icons": "^1.2.0"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
