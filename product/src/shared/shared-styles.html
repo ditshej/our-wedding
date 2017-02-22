@@ -15,8 +15,12 @@
         /* Colors */
         --primary-text-color: #69aba9;
         --secondary-text-color: #ffffff;
-        --primary-color: #1d7aad;
+        --primary-color: #69aba9;
         --secondary-color: #009e73;
+
+        /* Footer */
+        --footer-height: 200px;
+        --footer-height-negative: -200px;
 
         /*** general stylings ***/
         font-family: var(--font);
@@ -45,6 +49,31 @@
       a {
         text-decoration: none;
         color: var(--primary-text-color);
+      }
+
+      /*** Side Structure ***/
+      /* page padding */
+      .page-wrapper > div {
+        padding: 2vw 4vw;
+      }
+
+      /* every second div gets a alternative color-style */
+      .page-wrapper > div:nth-child(2n):not(.sticky-footer-push) {
+        background: var(--secondary-color);
+        color: var(--secondary-text-color)
+      }
+      :host > div:nth-child(2n) a {
+        color: var(--secondary-text-color)
+      }
+
+      /*** Sticky Footer Styling ***/
+      .page-wrapper {
+        min-height: 100%;
+        margin-bottom: -200px;
+      }
+
+      .sticky-footer-push, wedding-footer {
+        height: 200px;
       }
 
     </style>

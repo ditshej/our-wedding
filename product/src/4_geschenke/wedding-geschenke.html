@@ -12,14 +12,15 @@
     <style include="shared-styles">
       :host {
         display: block;
+
+        /* height for Sticky Footer */
+        height: 100%;
+
+        /* Variables */
         --wedding-present-primary-bg-color: var(--primary-color);
         --wedding-present-primary-text-color: var(--secondary-text-color);
         --wedding-present-secondary-bg-color: var(--secondary-color);
         --wedding-present-secondary-text-color: var(--secondary-text-color);
-      }
-
-      :host > div {
-        padding: 2vw 4vw;
       }
 
       #present-container {
@@ -28,17 +29,14 @@
         justify-content: space-between;
       }
 
-      wedding-present {
-
-      }
-
       /* helpclass to hide */
       .hidden {
         display: none;
       }
-
     </style>
-
+    <!-- wrapper to create Sticky Footer -->
+    <div class="page-wrapper">
+      <!-- local DOM -->
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Geschenke"
                         img="https://placeimg.com/1280/900/any/sepia"></wedding-eyecatcher>
@@ -55,6 +53,11 @@
     </div>
     <div id="present-container"></div>
 
+      <!-- push to create Sticky Footer -->
+      <div class="sticky-footer-push"></div>
+    </div><!-- page-wrapper end -->
+    <!-- Footer -->
+    <wedding-footer></wedding-footer>
   </template>
 
   <script>

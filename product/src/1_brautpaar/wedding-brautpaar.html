@@ -1,6 +1,7 @@
 <!-- general polymer elements -->
 <link rel="import" href="/src/shared/shared-polymer-header.html">
 <!-- specific polymer elements -->
+<link rel="import" href="/bower_components/awesome-slider/awesome-slider.html">
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
 <link rel="import" href="/src/elements/wedding-portrait.html">
@@ -12,23 +13,33 @@
     <style include="shared-styles">
       :host {
         display: block;
+
+        /* height for Sticky Footer */
+        height: 100%;
+
         /* for wedding-eyecatcher */
         --wedding-eyecatcher-banner-color: var(--primary-color);
         --wedding-eyecatcher-banner-text-color: var(--secondary-text-color);
         --wedding-portrait-invert-color: var(--secondary-text-color);
       }
 
-      :host > div {
-        padding: 2vw 4vw;
+      /*** Slider styling ***/
+      awesome-slider {
+        padding-top: 4vh;
+        padding-bottom: 4vh;
       }
 
-      :host > div:nth-child(2n) {
-        background: var(--secondary-color);
-        color: var(--secondary-text-color)
+      /* space for slider-bullets */
+      awesome-slider:after {
+        content: '';
+        display: block;
+        height: 50px;
+        width: 100%;
       }
-
     </style>
-
+    <!-- wrapper to create Sticky Footer -->
+    <div class="page-wrapper">
+      <!-- local DOM -->
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Das Brautpaar"
                         img="/src/1_brautpaar/brautpaar.jpg"
@@ -106,10 +117,20 @@
       </wedding-portrait>
     </div>
     <div id="gallery">
-      <!--TODO: Gallerie erstellen!!!-->
+      <awesome-slider
+              autostart="true"
+              bullets="true">
+        <item source="/src/1_brautpaar/braeutigam.png"></item>
+        <item source="/src/1_brautpaar/braut.png"></item>
+        <item source="/src/1_brautpaar/brautpaar.jpg"></item>
+      </awesome-slider>
     </div>
-    <wedding-footer></wedding-footer>
 
+      <!-- push to create Sticky Footer -->
+      <div class="sticky-footer-push"></div>
+    </div><!-- page-wrapper end -->
+    <!-- Footer -->
+    <wedding-footer></wedding-footer>
   </template>
 
   <script>

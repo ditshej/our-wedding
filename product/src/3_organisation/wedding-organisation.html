@@ -11,19 +11,9 @@
     <style include="shared-styles">
       :host {
         display: block;
-      }
 
-      :host > div {
-        padding: 2vw 4vw;
-      }
-
-      :host > div:nth-child(2n) {
-        background: var(--secondary-color);
-        color: var(--secondary-text-color)
-      }
-
-      :host > div:nth-child(2n) a {
-        color: var(--secondary-text-color)
+        /* height for Sticky Footer */
+        height: 100%;
       }
 
       .page-section {
@@ -33,7 +23,9 @@
       }
 
     </style>
-
+    <!-- wrapper to create Sticky Footer -->
+    <div class="page-wrapper">
+      <!-- local DOM -->
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Die Organisation"
                         img="https://placeimg.com/1280/900/any"></wedding-eyecatcher>
@@ -243,8 +235,12 @@
         </wedding-portrait>
       </div>
     </div>
-  <wedding-footer></wedding-footer>
 
+      <!-- push to create Sticky Footer -->
+      <div class="sticky-footer-push"></div>
+    </div><!-- page-wrapper end -->
+    <!-- Footer -->
+    <wedding-footer></wedding-footer>
   </template>
 
   <script>

@@ -13,7 +13,8 @@
     "paper-icon-button": "^1.1.4",
     "paper-menu": "^1.2.2",
     "iron-icons": "^1.2.0",
-    "paper-item": "^1.2.1"
+    "paper-item": "^1.2.1",
+    "awesome-slider": "*"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"

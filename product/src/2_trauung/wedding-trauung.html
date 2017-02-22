@@ -11,19 +11,9 @@
     <style include="shared-styles">
       :host {
         display: block;
-      }
 
-      :host > div {
-        padding: 4vw;
-      }
-
-      :host > div:nth-child(2n) {
-        background: var(--secondary-color);
-        color: var(--secondary-text-color)
-      }
-
-      :host > div:nth-child(2n) a {
-        color: var(--secondary-text-color)
+        /* height for Sticky Footer */
+        height: 100%;
       }
 
       .horizontal {
@@ -38,7 +28,9 @@
       }
 
     </style>
-
+    <!-- wrapper to create Sticky Footer -->
+    <div class="page-wrapper">
+      <!-- local DOM -->
 
 
     <wedding-navigation></wedding-navigation>
@@ -148,8 +140,11 @@
         modi voluptatibus. Quisquam, vitae!</p>
     </div>
 
+      <!-- push to create Sticky Footer -->
+      <div class="sticky-footer-push"></div>
+    </div><!-- page-wrapper end -->
+    <!-- Footer -->
     <wedding-footer></wedding-footer>
-
   </template>
 
   <script>

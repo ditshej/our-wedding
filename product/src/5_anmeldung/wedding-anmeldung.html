@@ -10,17 +10,21 @@
     <style include="shared-styles">
       :host {
         display: block;
+
+        /* height for Sticky Footer */
+        height: 100%;
       }
 
-      :host > div {
-        padding: 2vw 4vw;
-      }
 
       .formcontainer {
         text-align: center;
       }
-    </style>
 
+
+    </style>
+    <!-- wrapper to create Sticky Footer -->
+    <div class="page-wrapper">
+      <!-- local DOM -->
     <wedding-navigation></wedding-navigation>
     <wedding-eyecatcher title="Anmeldung"
                         img="https://placeimg.com/1280/900/any"></wedding-eyecatcher>
@@ -73,8 +77,11 @@
     </div>
 
 
+      <!-- push to create Sticky Footer -->
+      <div class="sticky-footer-push"></div>
+    </div><!-- page-wrapper end -->
+    <!-- Footer -->
     <wedding-footer></wedding-footer>
-
   </template>
 
   <script>

@@ -1,5 +1,5 @@
 <!-- general polymer elements -->
-<link rel="import" href="/src/shared/shared-polymer-header.html">
+<link rel="import" href="/bower_components/polymer/polymer.html">
 <!-- specific polymer elements -->
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
@@ -10,31 +10,39 @@
     <style include="shared-styles">
       :host {
         display: block;
+
+        /* height for Sticky Footer */
+        height: 100%;
       }
 
       .container {
         max-width: 800px;
         margin: auto;
       }
+
+
     </style>
+    <!-- wrapper to create Sticky Footer -->
+    <div class="page-wrapper">
+      <!-- local DOM -->
+      <wedding-navigation></wedding-navigation>
+      <wedding-eyecatcher title="Anmeldung"
+                          img="https://placeimg.com/1280/400/any"></wedding-eyecatcher>
 
-    <wedding-navigation></wedding-navigation>
-    <wedding-eyecatcher title="Anmeldung"
-                        img="https://placeimg.com/1280/400/any"></wedding-eyecatcher>
+      <div class="container">
+        <h2>Vielen Dank für deine Anmeldung</h2>
+        <p>Wir haben dir ein Bestätigungsmail an die angegebene E-Mail Adresse gesendet und freuen und darauf dich
+          begrüssen
+          zu dürfen.</p>
 
-    <div class="container">
-      <h2>Vielen Dank für deine Anmeldung</h2>
-      <p>Wir haben dir ein Bestätigungsmail an die angegebene E-Mail Adresse gesendet und freuen und darauf dich
-        begrüssen
-        zu dürfen.</p>
+        <a href="/anmeldung.html">Möchtest du eine weitere Person anmelden? Kehre hier zum Anmeldeformular zurück.</a>
+      </div>
 
-      <a href="/anmeldung.html">Möchtest du eine weitere Person anmelden? Kehre hier zum Anmeldeformular zurück.</a>
-    </div>
-
-
-
+      <!-- push to create Sticky Footer -->
+      <div class="sticky-footer-push"></div>
+    </div><!-- page-wrapper end -->
+    <!-- Footer -->
     <wedding-footer></wedding-footer>
-
   </template>
 
   <script>
