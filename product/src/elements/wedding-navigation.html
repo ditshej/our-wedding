@@ -21,13 +21,29 @@
         z-index: 1000;
         width: 100%;
         /*--wedding-nav-item-padding: 3px;*/
+
       }
 
-      nav {
-        height: 60px;
+      /* hide all the sub-items by default */
+      .subItem {
+      display: none;
       }
 
-      /*TODO: im moment überdeckt die Navigation den ganzen oberen Teil der Webseite so, dass man dort keine Links klicken kann!!!*/
+      /* hover effect on menu-items to show sub-menu-items for non-mobile-devices */
+      .menuItem:hover > .subItem {
+        display: block;
+      }
+
+      /* helpclass to hide elements */
+      .hidden {
+        display: none;
+      }
+
+      /* helpclass to show elements */
+      .shown {
+        display: block;
+      }
+
 
       /** navigation */
       /* page-top-style */
@@ -86,45 +102,85 @@
       /*}*/
 
     </style>
-
     <!-- local DOM -->
-    <nav class="fullbleed layout vertical">
-      <paper-menu-button class="horizontal end-justified layout"
-                         no-overlap
-                         ignore-select
-                         close-on-activate
-                         horizontal-align="right">
-        <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
-        <paper-menu class="dropdown-content">
-          <paper-submenu>
-            <paper-item><a href="/brautpaar.html">Brautpaar</a></paper-item>
-            <paper-menu>
-              <paper-item><a href="#geschichte">Geschichte</a></paper-item>
-              <paper-item><a href="#braut">Braut</a></paper-item>
-              <paper-item><a href="#braeutigam">Bräutigam</a></paper-item>
-              <paper-item><a href="#gallery">Bilder-Galerie</a></paper-item>
+    <!-- element to add menu, if we have full-screen-mode  -->
+    <nav id="bigscreen" class="horizontal layout justified"></nav>
+
+    <!-- hamburger-menu for small screens (as mobile) -->
+    <paper-menu-button id="menubutton"
+                       class="horizontal layout end-justified"
+                       no-overlap
+                       ignore-select
+                       close-on-activate
+                       horizontal-align="right">
+      <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
+      <paper-menu class="dropdown-content" id="nav">
+        <paper-submenu>
+          <div class="menuItem">
+            <a href="/brautpaar.html" tabindex="-1" role="menuitem">
+              <paper-item>Brautpaar</paper-item>
+            </a>
+            <paper-menu id="nav-brautpaar" class="subItem">
+              <a href="/brautpaar.html#geschichte" tabindex="-1" role="menuitem">
+                <paper-item>Geschichte</paper-item>
+              </a>
+              <a href="/brautpaar.html#braut" tabindex="-1" role="menuitem">
+                <paper-item>Braut</paper-item>
+              </a>
+              <a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">
+                <paper-item>Bräutigam</paper-item>
+              </a>
+              <a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">
+                <paper-item>Bilder-Galerie</paper-item>
+              </a>
             </paper-menu>
-          </paper-submenu>
-          <paper-submenu>
-            <paper-item><a href="/trauung.html">Trauung</a></paper-item>
-            <paper-menu>
-              <paper-item><a href="#zivil">Zivile Trauung</a></paper-item>
-              <paper-item><a href="#kirchlich">Kirchliche Trauung</a></paper-item>
-              <paper-item><a href="#festlichkeiten">Festlichkeiten</a></paper-item>
+          </div>
+        </paper-submenu>
+        <paper-submenu>
+          <div class="menuItem">
+            <a href="/trauung.html" tabindex="-1" role="menuitem">
+              <paper-item>Trauung</paper-item>
+            </a>
+            <paper-menu id="nav-trauung" class="subItem">
+              <a href="/trauung.html#zivil" tabindex="-1" role="menuitem">
+                <paper-item>Zivile Trauung</paper-item>
+              </a>
+              <a href="/trauung.html#kirchlich" tabindex="-1" role="menuitem">
+                <paper-item>Kirchliche Trauung</paper-item>
+              </a>
+              <a href="/trauung.html#festlichkeiten" tabindex="-1" role="menuitem">
+                <paper-item>Festlichkeiten</paper-item>
+              </a>
             </paper-menu>
-          </paper-submenu>
-          <paper-submenu>
-            <paper-item><a href="/organisation.html">Organisation</a></paper-item>
-            <paper-menu>
-              <paper-item><a href="#trauzeugen">Trauzeugen</a></paper-item>
-              <paper-item><a href="#ok">OK-Team</a></paper-item>
+          </div>
+        </paper-submenu>
+        <paper-submenu>
+          <div class="menuItem">
+            <a href="/organisation.html" tabindex="-1" role="menuitem">
+              <paper-item>Organisation</paper-item>
+            </a>
+            <paper-menu id="nav-organisation" class="subItem">
+              <a href="/organisation.html#trauzeugen" tabindex="-1" role="menuitem">
+                <paper-item>Trauzeugen</paper-item>
+              </a>
+              <a href="/organisation.html#ok" tabindex="-1" role="menuitem">
+                <paper-item>OK-Team</paper-item>
+              </a>
             </paper-menu>
-          </paper-submenu>
-          <paper-item><a href="/geschenke.html">Geschenke</a></paper-item>
-          <paper-item><a href="/anmeldung.html">Anmeldung</a></paper-item>
-        </paper-menu>
-      </paper-menu-button>
-    </nav>
+          </div>
+        </paper-submenu>
+        <div class="menuItem">
+          <a href="/geschenke.html" tabindex="-1" role="menuitem">
+            <paper-item>Geschenke</paper-item>
+          </a>
+        </div>
+        <div class="menuItem">
+          <a href="/anmeldung.html" tabindex="-1" role="menuitem">
+            <paper-item>Anmeldung</paper-item>
+          </a>
+        </div>
+      </paper-menu>
+    </paper-menu-button>
 
 
   </template>
@@ -134,82 +190,65 @@
       is: 'wedding-navigation',
 
       ready: function () {
-        /** general */
-        /* Variables */
-        var url = window.location.pathname,
+        /** show only the sub-menu items of the current page
+         * even if the filename is extended with "-something", it will grap just the first word.
+         * That way, it's possible to build a "page-something.html" as background-page of "page.html*/
+        var url = window.location.pathname, /* get page-name */
           filename = url.substring(url.lastIndexOf('/') + 1),
           fileString = filename.substring(0, filename.lastIndexOf('.')),
           fileStringWithoutDash = fileString.lastIndexOf('-') > 0 ? fileString.substring(0, fileString.lastIndexOf('-')) : fileString,
-          $mainItem = $(this.querySelector('#nav-' + fileStringWithoutDash)),
-          $logo = $(this.$.logo),
-          $subItemList = $mainItem.children('ul'),
-          $nav = $(this.$.nav),
-          $navChildren = $nav.children(),
-          navHalf = $navChildren.length / 2;
-
-        /* hide the current main nav item depending on the filename.
-         * even if the filename is extended with "-something", it will grap just the first word.
-         * That way, it's possible to build a "page-something.html" as background-page of "page.html*/
-        $mainItem.hide();
-
-        /* add the current sub-items to the logo and show them */
-        $logo.append($subItemList);
-        $subItemList.css('display', 'block');
-
-        /** on page-top */
-        /* move the logo to the center */
-        setLogo(navHalf, $mainItem, $logo);
+                /* get all items with id starts witn "nav-" (from the original list of menu-items - not the cloned ones) */
+          $allSubItems = $(this.querySelectorAll('.subItem')),
+                /* get item with id "nav-'pagename'" (from the original list of menu-items - not the cloned one) */
+          $mainItem = $(this.querySelector('#nav-' + fileStringWithoutDash));
 
 
-        /** on page-scroll */
-        /* as soon as the user scrolls... */
-        document.onscroll = function () {
+        /** media Query on window width
+         * bigger than XXXpx: show full-sreen-menu
+         * smaller than XXXpx: show hamburger-menu */
+        /* define media Query */
+        var mediaQuery = window.matchMedia('(min-width: 800px)'),
+                /* get all navigation items */
+          $nav = $(this.querySelectorAll('.menuItem')),
+                /* get nav-element to append the menu if it is full-screen */
+          $bigScreen = $(this.$.bigscreen),
+                /* get hamburger */
+          $menuButton = $(this.$.menubutton);
 
-          /* as soon as the scrollbar is more than 10px scrolled down.. */
-          if (window.scrollY >= 10) {
-            /* give the scroll-classes to the correct elements */
-            for (var i = 0; i < $navChildren.length; i++) {
-              $nav.addClass('scroll');
-              $($navChildren[i]).addClass('scroll');
-            }
-            /* move the logo to first position */
-            setLogo(0, $mainItem, $logo);
+        /* append the Navigation-Items to the nav-element prepared for full-screen */
+        $nav.clone().appendTo($bigScreen);
 
-          } else { /* if the scrollbar goes back to less than 10px scrolled down.. */
-            /* remove the scroll-classes again */
-            for (var ii = 0; ii < $navChildren.length; ii++) {
-              $nav.removeClass('scroll');
-              $($navChildren[ii]).removeClass('scroll');
-            }
-            /* move the logo back to center */
-            setLogo(navHalf, $mainItem, $logo);
-          }
-        };
-
-        /* set the current sub-items circular */
-//        var $subItems = $subItemList.children();
-//        $($subItems[0]).css('transform', 'translate(-50%, -250%)');
-//        $($subItems[1]).css('transform', 'translate(0, -200%)');
-//        $($subItems[2]).css('transform', 'translate(50%, -450%)');
-//
-
-        /** FUNCTIONS */
-        /**
-         *
-         * @param position
-         * @param $mainItem
-         * @param $logo
-         */
-        function setLogo(position, $mainItem, $logo) {
-          if ($mainItem.index() <= position) {
-            $($logo.parent().children()[(position)]).after($logo);
-          } else {
-            $($logo.parent().children()[(position)]).before($logo);
-          }
-
+        /* configure eventListener on change of window width */
+        if (matchMedia) {
+          mediaQuery.addListener(WidthChange);
+          WidthChange(mediaQuery);
         }
-      }
 
+        /**
+         * function to get fired, if window width changes
+         * @param mediaQuery: media Query
+         */
+        function WidthChange(mediaQuery) {
+          if (mediaQuery.matches) { /* if Media Query matches: */
+            /* show the element to append menu on full-screen */
+            $bigScreen.show();
+            /* remove class "dropdown-content" from <paper-menu> inside <paper-menu-button> to disable connection to the button */
+            $nav.removeClass('dropdown-content');
+            /* hide the hamburger button */
+            $menuButton.hide();
+          } else { /* if not: */
+            /* hide the element, where the menu should be appended in full-screen */
+            $bigScreen.hide();
+            /* set class "dropdown-content" on <paper-menu> inside <paper-menu-button> to enable connection to the button */
+            $nav.addClass('dropdown-content');
+            /* show the hamburger button */
+            $menuButton.show();
+            /* show only the nav-subItems of current page */
+            $mainItem.addClass('shown');
+          }
+        }
+
+      }
 
     });
   </script>
