@@ -15,92 +15,69 @@
   <!-- Defines the element's style and local DOM -->
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
+      /*** general styling ***/
       :host {
         display: block;
         position: fixed;
         z-index: 1000;
         width: 100%;
-        /*--wedding-nav-item-padding: 3px;*/
 
+        --paper-menu-background-color: transparent;
+
+        --paper-item: {
+          font-family: var(--font);
+          font-size: 2.2rem;
+          padding-bottom: 4px;
+        };
       }
 
       /* hide all the sub-items by default */
       .subItem {
-      display: none;
+        display: none;
+      }
+
+      /*** fullscreen styling ***/
+      /* transparent background */
+      nav:after {
+        content: "";
+        background: white;
+        opacity: 0.9;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+      }
+
+      /* subItem styling */
+      .subItem {
+        padding-top: 0;
+      }
+
+      .subItem paper-item {
+        font-size: 1.8rem;
+        padding-left: 26px;
+        padding-bottom: 0;
       }
 
       /* hover effect on menu-items to show sub-menu-items for non-mobile-devices */
-      .menuItem:hover > .subItem {
-        display: block;
+      @media (min-width: 800px) {
+        .menuItem:hover > .subItem {
+          display: block;
+        }
       }
 
-      /* helpclass to hide elements */
+      /*** helper classes ***/
+      /* help-class to hide elements */
       .hidden {
         display: none;
       }
 
-      /* helpclass to show elements */
+      /* help-class to show elements */
       .shown {
         display: block;
       }
-
-
-      /** navigation */
-      /* page-top-style */
-      /*ul {*/
-      /*list-style-type: none;*/
-      /*padding: 0;*/
-      /*}*/
-
-      /*a {*/
-      /*padding: inherit;*/
-      /*}*/
-
-      /*:host > ul > li {*/
-      /*float: left;*/
-      /*width: 20%;*/
-      /*text-align: center;*/
-      /*padding: var(--wedding-nav-item-padding);*/
-      /*}*/
-
-      /*:host > ul > li > ul {*/
-      /*display: none;*/
-      /*}*/
-
-      /*:host > ul > li > ul > li {*/
-      /*padding: var(--wedding-nav-item-padding);*/
-      /*}*/
-
-      /*!* page-scroll-style *!*/
-      /*:host > ul.scroll {*/
-      /*float: right;*/
-      /*width: 20%;*/
-      /*}*/
-
-      /*:host > ul > li.scroll {*/
-      /*float: none;*/
-      /*width: auto;*/
-      /*text-align: right;*/
-      /*}*/
-
-      /*!* collapse-style *!*/
-
-      /*!** logo *!*/
-      /*.logo {*/
-      /*display: inline-block;*/
-      /*width: 40%;*/
-      /*}*/
-
-      /*img {*/
-      /*width: 100%;*/
-      /*}*/
-
-      /*@media (max-width: 750px) {*/
-      /*#nav {*/
-      /*display: none;*/
-      /*}*/
-      /*}*/
-
     </style>
     <!-- local DOM -->
     <!-- element to add menu, if we have full-screen-mode  -->
@@ -112,7 +89,8 @@
                        no-overlap
                        ignore-select
                        close-on-activate
-                       horizontal-align="right">
+                       horizontal-align="right"
+                       opened>
       <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
       <paper-menu class="dropdown-content" id="nav">
         <paper-submenu>
@@ -182,7 +160,6 @@
       </paper-menu>
     </paper-menu-button>
 
-
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
@@ -204,8 +181,8 @@
 
 
         /** media Query on window width
-         * bigger than XXXpx: show full-sreen-menu
-         * smaller than XXXpx: show hamburger-menu */
+         * bigger than 800px: show full-sreen-menu
+         * smaller than 800px: show hamburger-menu */
         /* define media Query */
         var mediaQuery = window.matchMedia('(min-width: 800px)'),
                 /* get all navigation items */

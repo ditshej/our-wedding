@@ -12,8 +12,8 @@
     "paper-menu-button": "^1.5.2",
     "paper-icon-button": "^1.1.4",
     "paper-menu": "^1.2.2",
-    "paper-item": "^1.2.1",
-    "iron-icons": "^1.2.0"
+    "iron-icons": "^1.2.0",
+    "paper-item": "^1.2.1"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
