@@ -7,18 +7,24 @@
     <style include="shared-styles">
       :host {
         display: block;
-        padding: 2vw 1vw;
+        padding: 3vh 0;
         margin: 0 -1vw;
       }
 
       /* image */
       .image-wrapper {
         min-width: 40%;
+        padding: 1vw;
         display: none; /* set pictures to hidden to show the correct via script */
       }
 
       img {
         width: 100%;
+      }
+
+      /* content */
+      .content-wrapper {
+        padding: 1vw;
       }
 
       /* class for invert="true" stylings */
@@ -51,6 +57,11 @@
         /* unset horizonal */
         div.horizontal {
           display: block;
+        }
+
+        /* overwrite js-width to 100% */
+        :host {
+          width: 100% !important;
         }
       }
 
