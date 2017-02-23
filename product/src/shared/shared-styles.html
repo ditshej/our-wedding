@@ -15,8 +15,12 @@
         /* Colors */
         --primary-text-color: #69aba9;
         --secondary-text-color: #ffffff;
+        --dark-text-color: #000000;
+        --light-text-color: #ffffff;
         --primary-color: #69aba9;
         --secondary-color: #009e73;
+        --light-color: #89dbd9;
+        --dark-color: #000000;
 
         /* Footer */
         --footer-height: 200px;
@@ -37,9 +41,12 @@
       }
 
       h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-header);
         text-transform: none;
         margin: 1rem 0 0.3rem;
+      }
+
+      h1, h2, h5, h6 {
+        font-family: var(--font-header);
       }
 
       p {
@@ -62,6 +69,7 @@
         background: var(--secondary-color);
         color: var(--secondary-text-color)
       }
+
       :host > div:nth-child(2n) a {
         color: var(--secondary-text-color)
       }
