@@ -1,24 +1,49 @@
 <!-- general polymer elements -->
 <link rel="import" href="/src/shared/shared-polymer-header.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="wedding-footer">
   <!-- Defines the element's style and local DOM -->
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
         height: var(--footer-height);
         background: var(--primary-color);
+        color: var(--secondary-text-color)
       }
-/* TODO: Sticky Footer */
 
+      a {
+        color: var(--secondary-text-color)
+      }
+
+      .footer {
+        background: var(--primary-color);
+      }
+
+      .footer>div {
+        padding: 20px;
+      }
     </style>
-
-
-
     <!-- local DOM -->
-
-
+    <div class="footer layout horizontal around-justified center wrap">
+      <div>
+        <h5>Kontakt Brautpaar</h5>
+        <p>Nathalie & Raphael Weiss</p>
+        <p><a href="tel:+41793879890">+41 79 387 98 90</a></p>
+        <p><a href="mailto:raphi@nahli.ch">raphi@nahli.ch</a></p>
+      </div>
+      <div>
+        <h5>Kontakt Organisation</h5>
+        <p>Roger Weiss</p>
+        <p><a href="tel:+41794729012">+41 79 472 90 12</a></p>
+        <p><a href="mailto:rodoweiss@thurbweb.ch">rodoweiss@thurbweb.ch</a></p>
+      </div>
+      <div>
+        <h5>Webpage Creation</h5>
+        <p>Created by the groom</p>
+      </div>
+    </div>
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
