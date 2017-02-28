@@ -4,12 +4,13 @@
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
 <link rel="import" href="/src/elements/wedding-present.html">
+<link rel="import" href="/src/elements/wedding-footer.html">
 <!-- other imports -->
 <link rel="import" href="/src/shared/shared-jquery.html">
 
 <dom-module id="wedding-geschenke">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
 
@@ -23,35 +24,38 @@
         --wedding-present-secondary-text-color: var(--secondary-text-color);
       }
 
-      #present-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-
-      /* helpclass to hide */
+      /*** help-classes ***/
+      /* help-class to hide items */
       .hidden {
         display: none;
       }
+
     </style>
     <!-- wrapper to create Sticky Footer -->
     <div class="page-wrapper">
       <!-- local DOM -->
-    <wedding-navigation></wedding-navigation>
-    <wedding-eyecatcher title="Geschenke"
-                        img="https://placeimg.com/1280/900/any/sepia"></wedding-eyecatcher>
+      <wedding-navigation></wedding-navigation>
+      <wedding-eyecatcher title="Geschenke"
+                          img="https://placeimg.com/1280/900/any/sepia"></wedding-eyecatcher>
+      <div class="hidden">
+        <!-- hidden div to set first section to alternative color
+           (this one would have the normal color, so te next will be alternative) -->
+      </div>
+      <div><h2>Erklärung</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis deserunt eos exercitationem expedita
+          impedit
+          laborum, molestiae nobis numquam quasi quibusdam, repellat unde voluptas? A at atque aut earum harum, ipsam
+          iste
+          magnam magni maiores pariatur perferendis placeat quisquam repellat repellendus tempore velit voluptatem.
+          Deleniti fugit obcaecati quibusdam veritatis! Ad asperiores aspernatur delectus distinctio earum eligendi,
+          esse
+          facilis harum inventore maxime modi mollitia neque officia omnis qui quis quo, quod quos sit ullam?
+          Accusantium
+          aut corporis dicta impedit optio repellat sed sequi suscipit, totam velit! A ad consequuntur cumque dolorum
+          totam ullam vitae voluptates? Commodi error et maxime numquam officia officiis.</p>
+      </div>
 
-
-    <div><h2>Erklärung</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis deserunt eos exercitationem expedita impedit
-        laborum, molestiae nobis numquam quasi quibusdam, repellat unde voluptas? A at atque aut earum harum, ipsam iste
-        magnam magni maiores pariatur perferendis placeat quisquam repellat repellendus tempore velit voluptatem.
-        Deleniti fugit obcaecati quibusdam veritatis! Ad asperiores aspernatur delectus distinctio earum eligendi, esse
-        facilis harum inventore maxime modi mollitia neque officia omnis qui quis quo, quod quos sit ullam? Accusantium
-        aut corporis dicta impedit optio repellat sed sequi suscipit, totam velit! A ad consequuntur cumque dolorum
-        totam ullam vitae voluptates? Commodi error et maxime numquam officia officiis.</p>
-    </div>
-    <div id="present-container"></div>
+      <div id="presentscontainer" class="horizontal layout wrap justified"></div>
 
       <!-- push to create Sticky Footer -->
       <div class="sticky-footer-push"></div>
@@ -65,6 +69,8 @@
       is: 'wedding-geschenke',
 
       ready: function () {
+        /* fetch the DOM-Element to put the <wedding-present>-Elemenets in */
+        var $presentContainer = $(this.$.presentscontainer);
 
         /** ajax request to get presents-data form "/getpresent" in json */
         $.ajax('/getpresent', {
@@ -72,7 +78,7 @@
           contentType: 'json',
           success: function (data) {
             /* Create <wedding-present>-Elements with given Data */
-            createPresents(data);
+            createPresents(data, $presentContainer);
           },
           error: function () {
             console.log('error');
@@ -83,15 +89,13 @@
         /**
          * Create <wedding-present>-Elements with given Data
          * @param presentsArray (array) Array with objects{ title, description, cost, img }
+         * @param $container (jQuery-Object) Object to add <wedding-presents>-Elements
          */
-        var createPresents = function createPresents(presentsArray) {
-          /* fetch the DOM-Element to put the <wedding-present>-Elemenets in */
-          var $presentContainer = $('#present-container');
-
+        var createPresents = function createPresents(presentsArray, $container) {
           /* for every Element in the given presentArray create a <wedding-present>-Element and add it to the Container */
           for (var i = 0; i < presentsArray.length; i++) {
             /* create class to hide element, if sold is set to true in presentArray */
-            var sold = presentsArray[i].sold ? ' hidden' : undefined,
+            var sold = presentsArray[i].sold,
                     /* define <wedding-present>-Element */
               $weddingPresentElement = $('<wedding-present></wedding-present>', {
                 id: presentsArray[i].id,
@@ -100,10 +104,10 @@
                 imgalt: presentsArray[i].img.slice(0, -4),
                 description: presentsArray[i].description,
                 cost: presentsArray[i].cost,
-                class: 'scope-style wedding-geschenke' + sold
+                sold: presentsArray[i].sold
               });
             /* append <wedding-present>-Element to the Container */
-            $presentContainer.append($weddingPresentElement);
+            $container.append($weddingPresentElement);
           }
         };
 

@@ -5,3 +5,4 @@ config/auth.js
 .sass-cache
 *.css.map
 .htaccess
+img-presents

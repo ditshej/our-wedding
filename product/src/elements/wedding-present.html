@@ -8,18 +8,34 @@
 <dom-module id="wedding-present">
   <!-- Defines the element's style and local DOM -->
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
+        /*TODO: nicht mit flexbox, sonder mit media query*/
         display: block;
         padding: 2vw;
-        margin: 1vw;
+        margin-bottom: 5vh;
         background: var(--wedding-present-primary-bg-color);
         color: var(--wedding-present-primary-text-color);
+
+
+        /* buttons */
+        --wedding-present-paper-button-font-size: .95rem;
+        --paper-button: {
+          background: var(--wedding-present-secondary-bg-color);
+          font-size: var(--wedding-present-paper-button-font-size);
+        }
       }
-      
+
+      /* alternative element */
       :host:nth-child(2n) {
         background: var(--wedding-present-secondary-bg-color);
         color: var(--wedding-present-secondary-text-color);
+
+        /* buttons */
+        --paper-button: {
+          background: var(--wedding-present-primary-bg-color);
+          font-size: var(--wedding-present-paper-button-font-size);
+        }
       }
 
       img {
@@ -30,10 +46,30 @@
         margin-top: 0;
       }
 
-      /* buttons */
-      paper-button {
-        background: green;
-        color: yellow;
+      /** media queries */
+      @media (max-width: 560px) {
+        :host {
+          width: 100%;
+        }
+      }
+
+      @media (min-width: 561px) and (max-width: 800px) {
+        :host {
+          width: 48%;
+        }
+        :host:nth-child(2n) {
+          margin-left: 4%;
+        }
+
+        /*TODO: hintergrundfarbe wechseln dass es wie ein schachbrett ist: 1,4,5,8,9...*/
+      }
+
+      @media (min-width: 801px) and (max-width: 1200px) {
+
+      }
+
+      @media (min-width: 1201px) and (max-width: 2500px) {
+
       }
 
       /* modal-notification */
@@ -87,14 +123,14 @@
     <!-- visible content -->
 
     <!--TODO: Buttons anders / Geschenke anders floaten-->
-    <!--TODO: wenn ein Geschenk geschenkt wurde, dann soll es nicht verschwinden, sondern eifoch als "geschenkt" bezeichnet werden und nicht mehr angewählt werden-->
     <h3>[[title]]</h3>
     <img src="/src/4_geschenke/img-presents/[[img]]" alt="[[imgalt]]">
     <p class="description">[[description]]</p>
-    <p>Kosten: <span>[[cost]]</span> CHF</p>
-    <paper-button id="presentBtn" raised>ganz schenken</paper-button>
-    <paper-button id="rateBtn" raised>Anteil schenken</paper-button>
-
+    <p id="cost">Kosten: <span>[[cost]]</span> CHF</p>
+    <div class="horizontal layout wrap justified">
+      <paper-button id="presentBtn" raised>ganz schenken</paper-button>
+      <paper-button id="rateBtn" raised>Anteil schenken</paper-button>
+    </div>
     <!-- invisible content -> modal-notification -->
     <div id="notification" class="hidden">
       <div class="notification-container">
@@ -122,12 +158,18 @@
       </div>
     </div>
     <div id="notificationOverlay" class="hidden"></div>
-<!--TODO: Footer-->
+    <!--TODO: Footer-->
   </template>
   <!-- Creates the element's prototype and registers it -->
   <script>
     Polymer({
       is: 'wedding-present',
+
+      properties: {
+        sold: {
+          type: Number
+        }
+      },
 
       ready: function () {
 
@@ -168,7 +210,19 @@
           $rate.removeClass('hidden');
           $full.removeClass('hidden');
         });
+      },
 
+      attached: function () {
+        /** Show "soldMessage" if item is sold and hide the buttons. */
+        var $cost = $(this.$.cost),
+          soldMessage = this.title + ' wurde bereits geschenkt',
+          $fullButton = $(this.$.presentBtn),
+          $rateButton = $(this.$.rateBtn);
+        if (this.sold) {
+          $cost.text(soldMessage);
+          $fullButton.hide();
+          $rateButton.hide();
+        }
       }
     })
     ;
