@@ -10,13 +10,11 @@
   <template>
     <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
-        /*TODO: nicht mit flexbox, sonder mit media query*/
         display: block;
         padding: 2vh 2vw;
         margin-bottom: 5vw;
         background: var(--wedding-present-primary-bg-color);
         color: var(--wedding-present-primary-text-color);
-
 
         /* buttons */
         --wedding-present-paper-button-font-size: .9rem;
@@ -39,6 +37,11 @@
           font-size: var(--wedding-present-paper-button-font-size);
           margin: var(--wedding-present-paper-button-margin);
         }
+      }
+
+      /*** present box ***/
+      #box {
+        height: 100%;
       }
 
       img {
@@ -65,11 +68,10 @@
           width: 48%;
           margin-left: 4%;
         }
+
         :host:nth-child(2n-1) {
           margin-left: 0;
         }
-
-        /*TODO: hintergrundfarbe wechseln dass es wie ein schachbrett ist: 1,4,5,8,9...*/
       }
 
       /* medium screens */
@@ -79,6 +81,7 @@
           width: 31%;
           margin-left: 3.5%;
         }
+
         :host:nth-child(3n-2) {
           margin-left: 0;
         }
@@ -91,6 +94,7 @@
           width: 22%;
           margin-left: 4%;
         }
+
         :host:nth-child(4n-3) {
           margin-left: 0;
         }
@@ -103,6 +107,7 @@
           width: 18%;
           margin-left: 2.5%;
         }
+
         :host:nth-child(5n-4) {
           margin-left: 0;
         }
@@ -159,19 +164,23 @@
     </style>
     <!-- local DOM -->
     <!-- visible content -->
-
-    <!--TODO: Buttons anders / Geschenke anders floaten-->
-    <h3>[[title]]</h3>
-    <img src="/src/4_geschenke/img-presents/[[img]]" alt="[[imgalt]]">
-    <p class="description">[[description]]</p>
-    <p id="cost">Kosten: <span>[[cost]]</span> CHF</p>
-    <div class="horizontal layout wrap around-justified">
-      <paper-button id="presentBtn" raised>ganz schenken</paper-button>
-      <paper-button id="rateBtn" raised>Anteil schenken</paper-button>
+    <div id="box" class="vertical layout">
+      <div>
+        <h3>[[title]]</h3>
+        <img src="/src/4_geschenke/img-presents/[[img]]" alt="[[imgalt]]">
+      </div>
+      <div class="flex">
+        <p class="description">[[description]]</p>
+        <p id="cost">Kosten: <span>[[cost]]</span> CHF</p>
+      </div>
+      <div class="horizontal layout wrap around-justified">
+        <paper-button id="presentBtn" raised>ganz schenken</paper-button>
+        <paper-button id="rateBtn" raised>Anteil schenken</paper-button>
+      </div>
     </div>
     <!-- invisible content -> modal-notification -->
     <div id="notification" class="hidden">
-      <div class="notification-container layout "> <!--TodO: FLEX VERT CENTER-->
+      <div class="notification-container layout vertical"> <!--TodO: FLEX VERT CENTER-->
         <p>Um uns
           <span class="full">[[cost]] CHF für</span>
           <span class="rate">einen Anteil für</span>
