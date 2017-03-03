@@ -7,7 +7,7 @@
 
 <dom-module id="wedding-anmeldung">
   <template>
-    <style include="shared-styles">
+    <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
 
@@ -15,66 +15,155 @@
         height: 100%;
       }
 
-
-      .formcontainer {
-        text-align: center;
+      /*** form  ***/
+      .form-element {
+        width: 300px;
+        padding: 3px 0;
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
       }
 
+      /* input */
+      input {
+        border: 1px solid var(--primary-color);
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        padding: 2px 5px;
+      }
+
+      /* checkbox */
+      input[type=checkbox] {
+        visibility: hidden;
+      }
+
+      .checkbox {
+        width: 20px;
+        height: 20px;
+        background: var(--primary-color);
+        /*margin: 10px 45px;*/
+
+        border-radius: 100%;
+        position: relative;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+      }
+
+      .checkbox label {
+        display: block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50px;
+
+        transition: all .5s ease;
+        cursor: pointer;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        z-index: 1;
+
+        background: #ffffff;
+        box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.5);
+      }
+
+      .checkbox input[type=checkbox]:checked + label {
+        background: var(--secondary-color);
+      }
+
+      /* submit */
+      input[type=submit] {
+        width: 100%;
+        padding-bottom: 8px;
+
+        font-size: 2rem;
+        font-family: var(--font);
+
+        background: var(--primary-color);
+        color: var(--light-text-color);
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+      }
+
+      /*** help-classes ***/
+      /* help-class to hide items */
+      .hidden {
+        display: none;
+      }
+
+      .text-center {
+        text-align: center;
+      }
 
     </style>
     <!-- wrapper to create Sticky Footer -->
     <div class="page-wrapper">
       <!-- local DOM -->
-    <wedding-navigation></wedding-navigation>
-    <wedding-eyecatcher title="Anmeldung"
-                        img="https://placeimg.com/1280/900/any"></wedding-eyecatcher>
+      <wedding-navigation></wedding-navigation>
+      <wedding-eyecatcher title="Anmeldung"
+                          img="/src/image/chibi-logo.png"></wedding-eyecatcher>
 
-    <!--TODO: ausrichten-->
-    <div class="formcontainer">
-      <form action="/anmeldung" method="post" id="signUpForm">
-        <div class="form-element">
-          <label for="firstname">Vorname</label>
-          <input id="firstname" name="firstname" type="text" required value="Raphael">
-        </div>
-        <div class="form-element">
-          <label for="lastname">Nachname</label>
-          <input id="lastname" name="lastname" type="text" required value="Weiss">
-        </div>
-        <div class="form-element">
-          <label for="email">Email Adresse</label>
-          <input id="email" name="email" type="email" required value="raphael.92@bluewin.ch">
-        </div>
-        <div class="form-element">
-          <label for="phone">Telefon</label>
-          <input id="phone" name="phone" type="tel" placeholder="+41791234567" required value="+41793879890">
-        </div>
-        <div class="form-element">
-          <label for="address">Strasse & Nr</label>
-          <input id="address" name="address" type="text" required value="Bildfeldstrasse 2">
-        </div>
-        <div class="form-element">
-          <label for="plz">PLZ</label>
-          <input id="plz" name="plz" type="number" required value="9552">
-        </div>
-        <div class="form-element">
-          <label for="city">Stadt</label>
-          <input id="city" name="city" type="text" required value="Bronschhofen">
-        </div>
-        <div class="form-element">
-          <input id="wedding" name="wedding" type="checkbox" checked>
-          <label for="wedding">Ich komme zur Trauungszeremonie.</label>
-        </div>
-        <div class="form-element">
-          <input id="party" name="party" type="checkbox">
-          <label for="party">Ich komme zum Fest am Abend.</label>
-        </div>
-        <div class="form-element">
-          <label for="comment">Bemerkungen</label>
-          <textarea name="comment" id="comment" cols="30" rows="10">blaaa blaaa</textarea>
-        </div>
-        <input type="submit" value="anmelden">
-      </form>
-    </div>
+      <div class="hidden">
+        <!-- hidden div to set first section to alternative color
+           (this one would have the normal color, so te next will be alternative) -->
+      </div>
+      <div class="text-center">
+        <h2>Erklärung</h2>
+        <p>Hier kannst du dich anmelden.</p>
+        <p>Bitte melde immer nur eine Persons aufs Mal an.</p>
+      </div>
+      <div class="formcontainer layout horizontal center-justified">
+        <form action="/anmeldung" method="post" id="signUpForm">
+          <div class="form-element">
+            <label for="firstname">Vorname</label>
+            <input id="firstname" name="firstname" type="text" required value="Raphael">
+          </div>
+          <div class="form-element">
+            <label for="lastname">Nachname</label>
+            <input id="lastname" name="lastname" type="text" required value="Weiss">
+          </div>
+          <div class="form-element">
+            <label for="email">Email Adresse</label>
+            <input id="email" name="email" type="email" required value="raphael.92@bluewin.ch">
+          </div>
+          <div class="form-element">
+            <label for="phone">Telefon</label>
+            <input id="phone" name="phone" type="tel" placeholder="+41791234567" required value="+41793879890">
+          </div>
+          <div class="form-element">
+            <label for="address">Strasse & Nr</label>
+            <input id="address" name="address" type="text" required value="Bildfeldstrasse 2">
+          </div>
+          <div class="form-element">
+            <label for="plz">PLZ</label>
+            <input id="plz" name="plz" type="number" required value="9552">
+          </div>
+          <div class="form-element">
+            <label for="city">Stadt</label>
+            <input id="city" name="city" type="text" required value="Bronschhofen">
+          </div>
+          <div class="form-element layout center">
+            <label for="wedding">Ich komme zur Trauungszeremonie.</label>
+            <div>
+              <div class="checkbox">
+                <input id="wedding" class="checkboxInpunt" name="wedding" type="checkbox" checked>
+                <label for="wedding"></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-element layout center">
+            <label for="party">Ich komme zum Fest am Abend.</label>
+            <div>
+              <div class="checkbox">
+                <input id="party" class="checkboxInpunt" name="party" type="checkbox">
+                <label for="party"></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-element layout vertical">
+            <label for="comment">Bemerkungen</label>
+            <textarea name="comment" id="comment" cols="30" rows="10">blaaa blaaa</textarea>
+          </div>
+          <input type="submit" value="anmelden">
+        </form>
+      </div>
 
 
       <!-- push to create Sticky Footer -->

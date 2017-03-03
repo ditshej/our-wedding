@@ -2,7 +2,5 @@
 product/bower_components
 config/node_modules
 config/auth.js
-.sass-cache
-*.css.map
 .htaccess
-img-presents
+image/
