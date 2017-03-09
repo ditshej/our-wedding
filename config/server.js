@@ -3,7 +3,7 @@
  *
  *
  ********************************************************************************/
-
+/*TODO: mysql db etc. auf uberspace vorbereiten*/
 /**
  * dependency VARIABLES
  */
@@ -15,7 +15,7 @@ var auth = require('./auth.js'),
   /* require the path nodejs module */
   path = require('path'),
   /* define port */
-  serverport = 8081,
+  serverport = 8081, /* auth.uberspace.port */
   /* require the mysql nodejs module */
   mysql = require('mysql'),
   nodemailer = require('nodemailer');
@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 /* tell express the root of our public web folder */
-app.use(express.static(path.join('..', 'product')));
+app.use(express.static(path.join('..', 'product'))); /* auth.uberspace.path */
 
 /* run the server */
 app.listen(serverport, function () {
