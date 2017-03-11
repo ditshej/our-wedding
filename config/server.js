@@ -3,7 +3,7 @@
  *
  *
  ********************************************************************************/
-/*TODO: mysql db etc. auf uberspace vorbereiten*/
+
 /**
  * dependency VARIABLES
  */
@@ -15,7 +15,7 @@ var auth = require('./auth.js'),
   /* require the path nodejs module */
   path = require('path'),
   /* define port */
-  serverport = 8081, /* auth.uberspace.port */
+  serverport = auth.uberspace.port ,
   /* require the mysql nodejs module */
   mysql = require('mysql'),
   nodemailer = require('nodemailer');
@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 /* tell express the root of our public web folder */
-app.use(express.static(path.join('..', 'product'))); /* auth.uberspace.path */
+app.use(express.static(/*path.join('..', 'product')*/  auth.uberspace.path  ));
 
 /* run the server */
 app.listen(serverport, function () {
@@ -139,11 +139,11 @@ app.post('/addpresent', function (req, res) {
   res.setHeader('Content-Type', 'application/json');
 
   /* send the results back to the user */
-  res.send(JSON.stringify({
-    title: req.body.title || null,
-    description: req.body.description || null,
-    costinit: req.body.costinit || null
-  }));
+  // res.send(JSON.stringify({
+  //   title: req.body.title || null,
+  //   description: req.body.description || null,
+  //   costinit: req.body.costinit || null
+  // }));
 
   /* debugging output for the terminal */
   console.log(req.body);
@@ -176,6 +176,8 @@ app.post('/addpresent', function (req, res) {
   /* end Database connection */
   con.end();
 
+  /* redirect to Input-Page */
+  res.redirect('/adm/add-presents.html');
 
 });
 

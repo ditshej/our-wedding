@@ -42,7 +42,7 @@
         color: var(--light-text-color);
       }
 
-      .light>p, .dark>p {
+      .light > p, .dark > p {
         margin-top: 2vh;
       }
 
@@ -54,14 +54,17 @@
 
       /* size behaviour */
       .light, .dark {
-
+        width: 50%;
         padding: 2vw;
         margin: 1vw;
       }
 
       @media (max-width: 800px) {
         #light-dark-wrapper {
-         flex-wrap: wrap;
+          flex-wrap: wrap;
+        }
+        .light, .dark {
+          width: 100%;
         }
       }
 
@@ -75,26 +78,26 @@
                           img="/src/image/2/eyecatcher.png"></wedding-eyecatcher>
       <div id="zivil">
         <h2>Zivile Trauung</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur cum delectus eum ipsum magnam minima
-          minus molestias necessitatibus nihil, numquam officiis optio quia quod repellat repellendus repudiandae
-          suscipit
-          unde vel voluptate voluptatem! Accusantium aliquid animi aspernatur at, atque beatae blanditiis consectetur
-          dolor eveniet excepturi facilis fuga fugiat mollitia nam omnis optio porro quae quos reiciendis reprehenderit
-          tempore vel veritatis. A aliquam amet at blanditiis consectetur consequatur cupiditate, dolorum ducimus
-          eligendi
-          et, expedita fuga illo ipsam iste iusto laboriosam laudantium minima neque odio porro quis rem repellat
-          repellendus sed sint ut velit. Accusamus accusantium adipisci animi consequuntur cupiditate fugit iste laborum
-          maxime, minima necessitatibus neque nihil non pariatur perspiciatis quod reiciendis repellat rerum sunt totam
-          veritatis? Architecto beatae consequatur corporis cum cumque dignissimos dolor enim est eveniet excepturi
-          explicabo facere hic illo impedit iusto laboriosam maiores maxime modi nesciunt nihil numquam officia, omnis
-          pariatur perferendis quaerat quis quisquam quod rem repellat saepe sit soluta totam unde ut vitae voluptatem
-          voluptatibus! Alias autem deserunt iure minima quaerat quo veniam. Atque dignissimos distinctio doloremque
-          excepturi facere iste laudantium minima mollitia nihil nobis obcaecati quam quidem, tenetur. Blanditiis
-          cupiditate doloribus ipsum laboriosam praesentium recusandae, rem repellat veniam? Delectus ipsam laboriosam
-          modi voluptatibus. Quisquam, vitae!</p>
+        <p>Das <b>Baronenhaus in Wil</b> darf als Hintergrund für den geschichtsträchtigen Anlass dienen. Am <b>18.
+          August um
+          15:30</b> wird das Standesamt die rechtliche Ehe zwischen Raphael Weiss und Nathalie Abategiovanni
+          bekräftigen.
+          Jeder der möchte ist herzlich eingeladen an diesem Moment teilzuhaben.</p>
+        <p>Anschliessend wird das Brautpaar mit einigen ausgelesenen Personen in einem kleinen Rahmen die erworbenen
+          Zivilstandsdokumente gebührend feiern.</p>
       </div>
       <div id="kirchlich">
         <h2>Kirchliche Trauung</h2>
+        <p>Die zwei Wochen nach der zivilen Trauung plant das Brautpaar sich nicht zu sehen. Sie möchten eine grosse
+          Vorfreude und Spannung erzeugen und werden beide mit Poltern und ausruhen beschäftigt sein.</p>
+        <p>Am <b>2. September um 15:00 Uhr</b> ist es endlich so weit. Fünf Jahre und einen Monat Freundschaft werden
+          mit der
+          Entstehung einer neuen Familie gekrönt. <b>Bitte meldet euch bis zum 16. April 2017 an</b>, damit wir
+          abschätzen
+          können, wie viele Personen auftauchen werden.</p>
+        <p>Je nachdem ob wir von Gott einen sonnigen oder regnerischen Tag geschenkt bekommen, wird die Trauung an einem
+          anderen Ort stattfinden. Um welchen der beiden folgenden Orte es sich dabei handelt, kannst du zwei Tage vor
+          der Trauung auf dieser Webseite nachsehen.</p>
         <div id="light-dark-wrapper" class="layout horizontal">
           <div class="light">
             <h3>bei gutem Wetter</h3>
@@ -115,17 +118,11 @@
                 <p>8561 Ottoberg</p>
               </div>
             </a>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt
-              dignissimos
-              enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem
-              facilis
-              fugit id incidunt labore nihil numquam repudiandae sint, sunt vel vero. Ab alias aperiam at beatae culpa,
-              delectus deserunt distinctio earum eligendi expedita explicabo facere facilis illo impedit in ipsa ipsum
-              iste
-              laboriosam laborum laudantium magnam nesciunt odio pariatur perspiciatis quas quia ratione recusandae
-              repellendus reprehenderit sequi sint unde velit voluptatem? Debitis delectus, dolorum illum iusto
-              obcaecati
-              quisquam recusandae temporibus ut?</p>
+            <p>Auf der Apfelbaum-Wiese des Hofguts der Familie Büchi dürfen wir bei gutem Wetter eine Openair-Hochzeit
+              erleben. Am Rand der Wiese werden Parkfelder gekennzeichnet sein. Es empfiehlt sich Fahrgemeinschaften zu
+              gründen.</p>
+            <p>Anschliessend an die Trauung sind alle Gäste zu süssen und salzigen Snacks auf dem Vorplatz des Hofguts
+              eingeladen.</p>
           </div>
           <div class="dark">
             <h3>bei schlechtem Wetter</h3>
@@ -145,39 +142,21 @@
                 <p>9556 Affeltrangen</p>
               </div>
             </a>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut autem deleniti deserunt
-              dignissimos
-              enim et, facere fugit hic incidunt iusto nemo obcaecati placeat quod, rem. Doloribus exercitationem
-              facilis
-              fugit id incidunt labore nihil numquam repudiandae sint, sunt vel vero. Ab alias aperiam at beatae culpa,
-              delectus deserunt distinctio earum eligendi expedita explicabo facere facilis illo impedit in ipsa ipsum
-              iste
-              laboriosam laborum laudantium magnam nesciunt odio pariatur perspiciatis quas quia ratione recusandae
-              repellendus reprehenderit sequi sint unde velit voluptatem? Debitis delectus, dolorum illum iusto
-              obcaecati
-              quisquam recusandae temporibus ut?</p>
+            <p>Sollte es aus Strömen regnen, dürfen wir die Trauung in der evangelischen Kirche von Affeltrangen
+              erleben. In einer kleinen schönen Kirche ist sogar unser Trau-Bibelvers in einem Bogen an die Decke
+              geschrieben. Die Kirche fasst ca. 150 Personen. Es lohnt sich also früh genug aufzukreuzen.</p>
+            <p>Anschliessend wird im Gemeindezentrum nebenan süsse und salzige Snacks angeboten. Dazu sind alle Gäste
+              herzlich eingeladen.</p>
           </div>
         </div>
       </div>
       <div id="fest">
         <h2>Das Fest</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur cum delectus eum ipsum magnam minima
-          minus molestias necessitatibus nihil, numquam officiis optio quia quod repellat repellendus repudiandae
-          suscipit
-          unde vel voluptate voluptatem! Accusantium aliquid animi aspernatur at, atque beatae blanditiis consectetur
-          dolor eveniet excepturi facilis fuga fugiat mollitia nam omnis optio porro quae quos reiciendis reprehenderit
-          tempore vel veritatis. A aliquam amet at blanditiis consectetur consequatur cupiditate, dolorum ducimus
-          eligendi
-          et, expedita fuga illo ipsam iste iusto laboriosam laudantium minima neque odio porro quis rem repellat
-          repellendus sed sint ut velit. Accusamus accusantium adipisci animi consequuntur cupiditate fugit iste laborum
-          maxime, minima necessitatibus neque nihil non pariatur perspiciatis quod reiciendis repellat rerum sunt totam
-          veritatis? Architecto beatae consequatur corporis cum cumque dignissimos dolor enim est eveniet excepturi
-          explicabo facere hic illo impedit iusto laboriosam maiores maxime modi nesciunt nihil numquam officia, omnis
-          pariatur perferendis quaerat quis quisquam quod rem repellat saepe sit soluta totam unde ut vitae voluptatem
-          voluptatibus! Alias autem deserunt iure minima quaerat quo veniam. Atque dignissimos distinctio doloremque
-          excepturi facere iste laudantium minima mollitia nihil nobis obcaecati quam quidem, tenetur. Blanditiis
-          cupiditate doloribus ipsum laboriosam praesentium recusandae, rem repellat veniam? Delectus ipsam laboriosam
-          modi voluptatibus. Quisquam, vitae!</p>
+        <p>Für alle Gäste, die auf ihren Einladungskarten einen Stempel mit der Aufschrift <b>«auch zum Fest eingeladen»</b>
+          finden und sich <b>bis am 16. April 2017 angemeldet</b> haben, geht das Feiern auch nach der Trauung und dem Snack
+          weiter. Bei schlechtem Wetter treffen wir uns <b>um 19:00 Uhr</b> auf dem <b>Büchi Hofgut</b> und bei gutem Wetter sind ja
+          schon dort. Mit Salaten, Pizza aus dem Holzofen und reichhaltigem Dessert werden wir verwöhnt werden. Wie der
+          Abend ablaufen wird weiss das Brautpaar nicht und es soll auch eine Überraschung bleiben.</p>
       </div>
 
       <!-- push to create Sticky Footer -->

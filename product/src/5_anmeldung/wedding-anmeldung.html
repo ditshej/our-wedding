@@ -107,43 +107,47 @@
       <div class="text-center">
         <h2>Erklärung</h2>
         <p>Hier kannst du dich anmelden.</p>
+        <p>Wenn du auf der Einladungskarte einen Stempel mit dem Schriftzug «auch zum Fest eingeladen» fidnest, dann
+          darfst du unten das Feld «Ich komme zum Fest am Abend» anwählen.</p>
+        <p>Wenn du keinen solchen Stempel auf deiner
+          Einladungskarte findest, melde dich bitte nur mit «Ich komme zur Trauungszeremonie» an.</p>
         <p>Bitte melde immer nur eine Persons aufs Mal an.</p>
       </div>
       <div class="formcontainer layout horizontal center-justified">
         <form action="/anmeldung" method="post" id="signUpForm">
           <div class="form-element">
             <label for="firstname">Vorname</label>
-            <input id="firstname" name="firstname" type="text" required value="Raphael">
+            <input id="firstname" name="firstname" type="text" required>
           </div>
           <div class="form-element">
             <label for="lastname">Nachname</label>
-            <input id="lastname" name="lastname" type="text" required value="Weiss">
+            <input id="lastname" name="lastname" type="text" required>
           </div>
           <div class="form-element">
             <label for="email">Email Adresse</label>
-            <input id="email" name="email" type="email" required value="raphael.92@bluewin.ch">
+            <input id="email" name="email" type="email" required>
           </div>
           <div class="form-element">
             <label for="phone">Telefon</label>
-            <input id="phone" name="phone" type="tel" placeholder="+41791234567" required value="+41793879890">
+            <input id="phone" name="phone" type="tel" placeholder="+41791234567" required>
           </div>
           <div class="form-element">
             <label for="address">Strasse & Nr</label>
-            <input id="address" name="address" type="text" required value="Bildfeldstrasse 2">
+            <input id="address" name="address" type="text" required>
           </div>
           <div class="form-element">
             <label for="plz">PLZ</label>
-            <input id="plz" name="plz" type="number" required value="9552">
+            <input id="plz" name="plz" type="number" required>
           </div>
           <div class="form-element">
             <label for="city">Stadt</label>
-            <input id="city" name="city" type="text" required value="Bronschhofen">
+            <input id="city" name="city" type="text" required>
           </div>
           <div class="form-element layout center">
             <label for="wedding">Ich komme zur Trauungszeremonie.</label>
             <div>
               <div class="checkbox">
-                <input id="wedding" class="checkboxInpunt" name="wedding" type="checkbox" checked>
+                <input id="wedding" class="checkboxInpunt" name="wedding" type="checkbox">
                 <label for="wedding"></label>
               </div>
             </div>
@@ -159,8 +163,9 @@
           </div>
           <div class="form-element layout vertical">
             <label for="comment">Bemerkungen</label>
-            <textarea name="comment" id="comment" cols="30" rows="10">blaaa blaaa</textarea>
+            <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
           </div>
+          <!--TODO: auf Handy ist der Button mit zu viel Radius-->
           <input type="submit" value="anmelden">
         </form>
       </div>

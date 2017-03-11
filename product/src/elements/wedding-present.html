@@ -26,6 +26,8 @@
         }
       }
 
+      /*TODO: Styling Mobile und IE11 ish beschisse*/
+
       /* alternative element */
       :host:nth-child(2n) {
         background: var(--wedding-present-secondary-bg-color);
@@ -41,7 +43,7 @@
 
       /*** present box ***/
       #box {
-        height: 100%;
+        /*height: 100%;*/
       }
 
       img {
@@ -171,7 +173,7 @@
       </div>
       <div class="flex">
         <p class="description">[[description]]</p>
-        <p id="cost">Kosten: <span>[[cost]]</span> CHF</p>
+        <p id="cost"><b>Kosten: <span>[[cost]]</span> CHF</b></p>
       </div>
       <div class="horizontal layout wrap around-justified">
         <paper-button id="presentBtn" raised>ganz schenken</paper-button>
