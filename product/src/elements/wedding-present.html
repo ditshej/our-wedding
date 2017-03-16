@@ -120,7 +120,7 @@
         max-width: 90vw;
         width: 600px;
         max-height: 100vh;
-        height: 430px;
+        height: 310px;
 
         position: fixed;
         left: 50%;
@@ -139,7 +139,7 @@
         /*width: 100%;*/
         /*height: 100%;*/
 
-        margin: 5vw;
+        margin: 2vh 5vw;
 
         overflow: auto;
       }
@@ -166,14 +166,14 @@
     </style>
     <!-- local DOM -->
     <!-- visible content -->
-    <div id="box" class="vertical layout">
+    <div id="box">
       <div>
         <h3>[[title]]</h3>
         <img src="/src/image/4/[[img]]" alt="[[imgalt]]">
       </div>
       <div class="flex">
         <p class="description">[[description]]</p>
-        <p id="cost"><b>Kosten: <span>[[cost]]</span> CHF</b></p>
+        <b><p id="cost">Kosten: <span>[[cost]]</span> CHF</p></b>
       </div>
       <div class="horizontal layout wrap around-justified">
         <paper-button id="presentBtn" raised>ganz schenken</paper-button>
