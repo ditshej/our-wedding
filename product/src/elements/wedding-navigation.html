@@ -91,27 +91,27 @@
                        horizontal-align="right">
       <paper-icon-button icon="menu" class="dropdown-trigger"></paper-icon-button>
       <paper-menu class="dropdown-content" id="nav">
-        <!--<paper-submenu>--><!--TODO: Brautpaar Menu aufschalten-->
-          <!--<div class="menuItem">-->
-            <!--<a href="/brautpaar.html" tabindex="-1" role="menuitem">-->
-              <!--<paper-item>Brautpaar</paper-item>-->
-            <!--</a>-->
-            <!--<paper-menu id="nav-brautpaar" class="subItem">-->
-              <!--<a href="/brautpaar.html#geschichte" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Geschichte</paper-item>-->
-              <!--</a>-->
-              <!--<a href="/brautpaar.html#braut" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Braut</paper-item>-->
-              <!--</a>-->
-              <!--<a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Bräutigam</paper-item>-->
-              <!--</a>-->
+        <paper-submenu>
+          <div class="menuItem">
+            <a href="/brautpaar.html" tabindex="-1" role="menuitem">
+              <paper-item>Brautpaar</paper-item>
+            </a>
+            <paper-menu id="nav-brautpaar" class="subItem">
+              <a href="/brautpaar.html#geschichte" tabindex="-1" role="menuitem">
+                <paper-item>Geschichte</paper-item>
+              </a>
+              <a href="/brautpaar.html#braut" tabindex="-1" role="menuitem">
+                <paper-item>Braut</paper-item>
+              </a>
+              <a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">
+                <paper-item>Bräutigam</paper-item>
+              </a>
               <!--<a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">-->
                 <!--<paper-item>Bilder-Galerie</paper-item>-->
               <!--</a>-->
-            <!--</paper-menu>-->
-          <!--</div>-->
-        <!--</paper-submenu>-->
+            </paper-menu>
+          </div>
+        </paper-submenu>
         <paper-submenu>
           <div class="menuItem">
             <a href="/trauung.html" tabindex="-1" role="menuitem">
@@ -165,19 +165,6 @@
       is: 'wedding-navigation',
 
       ready: function () {
-        /** show only the sub-menu items of the current page
-         * even if the filename is extended with "-something", it will grap just the first word.
-         * That way, it's possible to build a "page-something.html" as background-page of "page.html*/
-        var url = window.location.pathname, /* get page-name */
-          filename = url.substring(url.lastIndexOf('/') + 1),
-          fileString = filename.substring(0, filename.lastIndexOf('.')),
-          fileStringWithoutDash = fileString.lastIndexOf('-') > 0 ? fileString.substring(0, fileString.lastIndexOf('-')) : fileString,
-                /* get all items with id starts witn "nav-" (from the original list of menu-items - not the cloned ones) */
-          $allSubItems = $(this.querySelectorAll('.subItem')),
-                /* get item with id "nav-'pagename'" (from the original list of menu-items - not the cloned one) */
-          $mainItem = $(this.querySelector('#nav-' + fileStringWithoutDash));
-
-
         /** media Query on window width
          * bigger than 800px: show full-sreen-menu
          * smaller than 800px: show hamburger-menu */
@@ -218,8 +205,6 @@
             $nav.addClass('dropdown-content');
             /* show the hamburger button */
             $menuButton.show();
-            /* show only the nav-subItems of current page */
-            $mainItem.addClass('shown');
           }
         }
 

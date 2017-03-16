@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 /* tell express the root of our public web folder */
-app.use(express.static(/*path.join('..', 'product')*/  auth.uberspace.path  ));
+app.use(express.static(path.join('..', 'product')  /*auth.uberspace.path*/  ));
 
 /* run the server */
 app.listen(serverport, function () {
@@ -115,8 +115,8 @@ app.post('/anmeldung', function (req, res) {
         address: 'raphael.92@bluewin.ch'
       },
       subject: 'Anmeldung Hochzeit Nathalie & Raphael Weiss', // Subject line
-      text: 'Vielen Dank für deine Anmeldung an unsere Hochzeit. Wir freuen uns auf dich. Für weitere Infos und Geschenkideen kannst gerne auf unsere Webseite raphi.nahli.ch herumstöbern. Liebe Grüsse Nathalie & Raphael', // plain text body
-      html: '<h2>Vielen Dank für deine Anmeldung an unsere Hochzeit</h2> <br>Wir freuen uns auf dich. <br>Für weitere Infos und Geschenkideen kannst gerne auf unsere <a href="http://raphi.nahli.ch">Webseite raphi.nahli.ch</a> herumstöbern. <br><br>Liebe Grüsse <br>Nathalie & Raphael'  // html body
+      text: 'Vielen Dank für deine Anmeldung an unsere Hochzeit. Wir freuen uns auf dich. Für weitere Infos und bald auch Geschenkideen kannst gerne auf unsere Webseite raphi.nahli.ch herumstöbern. Liebe Grüsse Nathalie & Raphael', // plain text body
+      html: '<h2>Vielen Dank für deine Anmeldung an unsere Hochzeit</h2> <br>Wir freuen uns auf dich. <br>Für weitere Infos und bald auch Geschenkideen kannst gerne auf unsere <a href="http://raphi.nahli.ch">Webseite raphi.nahli.ch</a> herumstöbern. <br><br>Liebe Grüsse <br>Nathalie & Raphael'  // html body
     };
 
   /* send mail with defined transport object */
