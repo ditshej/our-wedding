@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 /* tell express the root of our public web folder */
-app.use(express.static(path.join('..', 'product')  /*auth.uberspace.path*/  ));
+app.use(express.static(path.join('..', 'product'/*, 'build', 'unbundled'*/)  /*auth.uberspace.path*/  ));
 
 /* run the server */
 app.listen(serverport, function () {

@@ -17,10 +17,10 @@
       }
 
       /* set background and color manually */
-      wedding-eyecatcher {
-        background: var(--secondary-color);
-        color: var(--secondary-text-color);
-      }
+      /*wedding-eyecatcher {*/
+      /*background: var(--secondary-color);*/
+      /*color: var(--secondary-text-color);*/
+      /*}*/
 
       /*** "kirchlich" Styling ***/
       /* light/dark styling */
@@ -63,9 +63,16 @@
         #light-dark-wrapper {
           flex-wrap: wrap;
         }
+
         .light, .dark {
           width: 100%;
         }
+      }
+
+      /*** help-classes ***/
+      /* help-class to hide items */
+      .hidden {
+        display: none;
       }
 
     </style>
@@ -75,6 +82,10 @@
       <wedding-navigation></wedding-navigation>
       <wedding-eyecatcher title="Die Trauung"
                           img="/src/image/2/eyecatcher.jpg"></wedding-eyecatcher>
+      <div class="hidden">
+        <!-- hidden div to set first section to alternative color
+           (this one would have the normal color, so te next will be alternative) -->
+      </div>
       <div id="zivil">
         <h2>Zivile Trauung</h2>
         <p>Das <b>Baronenhaus in Wil</b> darf als Hintergrund für den geschichtsträchtigen Anlass dienen. Am <b>18.
@@ -90,13 +101,13 @@
         <p>Die zwei Wochen nach der zivilen Trauung plant das Brautpaar sich nicht zu sehen. Sie möchten eine grosse
           Vorfreude und Spannung erzeugen und werden beide mit Poltern und ausruhen beschäftigt sein.</p>
         <p>Am <b>2. September um 15:00 Uhr</b> ist es endlich so weit. Fünf Jahre und einen Monat Freundschaft werden
-          mit der
-          Entstehung einer neuen Familie gekrönt. <b>Bitte meldet euch bis zum 16. April 2017 an</b>, damit wir
-          abschätzen
-          können, wie viele Personen auftauchen werden.</p>
+          mit der Entstehung einer neuen Familie gekrönt. <b>Bitte meldet euch bis zum 16. April 2017 an</b>, damit wir
+          abschätzen können, wie viele Personen auftauchen werden.</p>
         <p>Je nachdem ob wir von Gott einen sonnigen oder regnerischen Tag geschenkt bekommen, wird die Trauung an einem
           anderen Ort stattfinden. Um welchen der beiden folgenden Orte es sich dabei handelt, kannst du zwei Tage vor
           der Trauung auf dieser Webseite nachsehen.</p>
+        <p>Fragst du dich, was du anziehen sollst, dann liegst du mit festlichen und elegangen Kleidern bestimmt nicht
+          falsch. Und wenn du dich gerne <i>sehr</i> passend kleidest, dann greifst du am besten zu Pastell-Farben.</p>
         <div id="light-dark-wrapper" class="layout horizontal">
           <div class="light">
             <h3>bei gutem Wetter</h3>
@@ -151,9 +162,12 @@
       </div>
       <div id="fest">
         <h2>Das Fest</h2>
-        <p>Für alle Gäste, die auf ihren Einladungskarten einen Stempel mit der Aufschrift <b>«auch zum Fest eingeladen»</b>
-          finden und sich <b>bis am 16. April 2017 angemeldet</b> haben, geht das Feiern auch nach der Trauung und dem Snack
-          weiter. Bei schlechtem Wetter treffen wir uns <b>um 19:00 Uhr</b> auf dem <b>Büchi Hofgut</b> und bei gutem Wetter sind ja
+        <p>Für alle Gäste, die auf ihren Einladungskarten einen Stempel mit der Aufschrift <b>«auch zum Fest
+          eingeladen»</b>
+          finden und sich <b>bis am 16. April 2017 angemeldet</b> haben, geht das Feiern auch nach der Trauung und dem
+          Snack
+          weiter. Bei schlechtem Wetter treffen wir uns <b>um 19:00 Uhr</b> auf dem <b>Büchi Hofgut</b> und bei gutem
+          Wetter sind ja
           schon dort. Mit Salaten, Pizza aus dem Holzofen und reichhaltigem Dessert werden wir verwöhnt werden. Wie der
           Abend ablaufen wird weiss das Brautpaar nicht und es soll auch eine Überraschung bleiben.</p>
       </div>
