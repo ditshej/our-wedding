@@ -1,0 +1,15 @@
+{
+  "name": "product",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vulcanize.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vulcanize": "^1.15.4",
+    "write": "^0.3.3"
+  }
+}

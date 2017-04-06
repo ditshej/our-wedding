@@ -1,8 +1,7 @@
 .idea
-product/bower_components
-config/node_modules
+bower_components
+node_modules
 config/auth.js
 .htaccess
 .htpasswd
 image/
-build/
