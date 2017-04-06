@@ -13,6 +13,7 @@ var writeFile = require('write');
 var files = [
   'index.html',
   'brautpaar.html',
+  'trauung.html',
   'organisation.html',
   'geschenke.html',
   'geschenke-danke.html',
