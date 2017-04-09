@@ -14,7 +14,8 @@
     "paper-menu": "^1.2.2",
     "iron-icons": "^1.2.0",
     "paper-item": "^1.2.1",
-    "cat-slider": "^0.7.2"
+    "cat-slider": "^0.7.2",
+    "paper-carousel": "Redbility/paper-carousel#^1.1.6"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"

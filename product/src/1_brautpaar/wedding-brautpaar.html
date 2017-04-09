@@ -4,6 +4,7 @@
 <link rel="import" href="/bower_components/cat-slider/cat-slider.html">
 <link rel="import" href="/bower_components/cat-image/cat-image.html">
 <link rel="import" href="/bower_components/cat-text/cat-text.html">
+<link rel="import" href="/bower_components/paper-carousel/paper-carousel.html">
 <link rel="import" href="/src/elements/wedding-navigation.html">
 <link rel="import" href="/src/elements/wedding-eyecatcher.html">
 <link rel="import" href="/src/elements/wedding-portrait.html">
@@ -31,28 +32,29 @@
       /*** Slider styling ***/
       /* set height */
       #gallery {
-        height: 100vh;
+        /*height: 100vh;*/
       }
 
       /* adjust slider at view-size */
       cat-slider {
-        width: 100% !important;
-        height: 90% !important;
+        /*width: 100% !important;*/
+        /*height: 90% !important;*/
       }
 
       /* for small screens: get padding to overlap all bullets */
-      @media (max-width: 556px) {
-        #gallery {
-          padding-bottom: 40px;
-        }
-      }
+      /*@media (max-width: 556px) {*/
+        /*#gallery {*/
+          /*padding-bottom: 40px;*/
+        /*}*/
+      /*}*/
 
-      @media (max-width: 382px) {
-        #gallery {
-          padding-bottom: 80px;
-        }
-      }
+      /*@media (max-width: 382px) {*/
+        /*#gallery {*/
+          /*padding-bottom: 80px;*/
+        /*}*/
+      /*}*/
 
+      /* unfortunatelly cat-slider is not working properly on smartphones, so it'll be hidden */
       /*@media (max-width: 740px) {*/
         /*#gallery {*/
           /*display: none;*/
@@ -207,8 +209,8 @@
             zuhause und kommt an.</p>
         </wedding-portrait>
       </div>
-      <!--<div id="gallery">-->
-      <!--<h2>Bilder-Galerie</h2>-->
+      <div id="gallery">
+      <h2>Bilder-Galerie</h2>
         <!--<cat-slider disable-slider-shadow="true">-->
           <!--<cat-image src="/src/image/1/gallery/IMG_7317.jpg"><cat-text></cat-text></cat-image>-->
           <!--<cat-image src="/src/image/1/gallery/IMG_7356.jpg"><cat-text></cat-text></cat-image>-->
@@ -242,7 +244,42 @@
           <!--<cat-image src="/src/image/1/gallery/IMG_8129.jpg"><cat-text></cat-text></cat-image>-->
           <!--<cat-image src="/src/image/1/gallery/IMG_8171.jpg"><cat-text></cat-text></cat-image>-->
         <!--</cat-slider>-->
-      <!--</div>-->
+
+        <paper-carousel items="1" dotText="false" dots="false">
+          <img src="/src/image/1/gallery/IMG_7317.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7356.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7402.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7412.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7413.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7444.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7450.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7475.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7477.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7500.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7512.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7541.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7562.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7572.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7593.jpg" draggable="false">
+          <!--<img src="/src/image/1/gallery/IMG_7612.jpg" draggable="false">-->
+          <!--<img src="/src/image/1/gallery/IMG_7625.jpg" draggable="false">-->
+          <!--<img src="/src/image/1/gallery/IMG_7638.jpg" draggable="false">-->
+          <!--<img src="/src/image/1/gallery/IMG_7645.jpg" draggable="false">-->
+          <!--<img src="/src/image/1/gallery/IMG_7684.jpg" draggable="false">-->
+          <img src="/src/image/1/gallery/IMG_7707.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7821.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7831.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7898.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7925.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_8021.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_8042.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_8044.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_8092.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_8129.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_8171.jpg" draggable="false">
+        </paper-carousel>
+        
+      </div>
 
       <!-- push to create Sticky Footer -->
       <div class="sticky-footer-push"></div>

@@ -8990,6 +8990,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 90%;
         font-size: 6vw;
         margin: 0;
+        color: var(--wedding-anchorimg-h1-color);
       }
 
     </style>
@@ -9039,6 +9040,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles iron-flex iron-flex-alignment">
       :host {
         display: block;
+        --wedding-anchorimg-h1-color: var(--primary-color); /*TODO: funktioniert irgendwie noch nicht*/
       }
 
       .three-box {
@@ -9061,22 +9063,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
     <!-- local DOM -->
-    <!--<div class="layout vertical">-->
       <wedding-anchorimg title="Nathalie + Raphael" anchor="/brautpaar.html" img="/src/image/1/eyecatcher-bw.jpg" width="100" height="60"></wedding-anchorimg>
       <div class="lower-half layout horizontal">
         <wedding-anchorimg title="Trauung" anchor="/trauung.html" img="/src/image/2/eyecatcher-bw.jpg" width="40" height="40"></wedding-anchorimg>
         <div class="three-box layout horizontal wrap">
           <wedding-anchorimg title="Anmeldung" anchor="/anmeldung.html" img="/src/image/5/eyecatcher-bw.jpg" width="50" height="20"></wedding-anchorimg>
           <wedding-anchorimg title="Geschenke" anchor="/geschenke.html" img="/src/image/4/eyecatcher-bw.jpg" width="50" height="20"></wedding-anchorimg>
-          <!--<wedding-anchorimg title="Organisation"--><!--TODO: Organisation aufschalten -->
-                             <!--anchor="/organisation.html"-->
-                             <!--img="/src/image/3/-bw.jpg"-->
-                             <!--width="100"-->
-                             <!--height="20"></wedding-anchorimg>-->
-          <wedding-anchorimg title="coming soon..." img="/src/image/3/eyecatcher-bw.jpg" width="100" height="20"></wedding-anchorimg>
+          <wedding-anchorimg title="Organisation" anchor="/organisation.html" img="/src/image/3/eyecatcher-bw.jpg" width="100" height="20"></wedding-anchorimg>
         </div>
       </div>
-    <!--</div>-->
 
   </template>
 

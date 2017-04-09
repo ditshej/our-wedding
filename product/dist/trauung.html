@@ -18310,9 +18310,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">
                 <paper-item>Bräutigam</paper-item>
               </a>
-              <!--<a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Bilder-Galerie</paper-item>-->
-              <!--</a>-->
+              <a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">
+                <paper-item>Bilder-Galerie</paper-item>
+              </a>
             </paper-menu>
           </div>
         </paper-submenu>
@@ -18334,21 +18334,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-menu>
           </div>
         </paper-submenu>
-        <!--<paper-submenu>--><!--TODO: Organisation Menu aufschalten-->
-          <!--<div class="menuItem">-->
-            <!--<a href="/organisation.html" tabindex="-1" role="menuitem">-->
-              <!--<paper-item>Organisation</paper-item>-->
-            <!--</a>-->
-            <!--<paper-menu id="nav-organisation" class="subItem">-->
-              <!--<a href="/organisation.html#trauzeugen" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Trauzeugen</paper-item>-->
-              <!--</a>-->
-              <!--<a href="/organisation.html#ok" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>OK-Team</paper-item>-->
-              <!--</a>-->
-            <!--</paper-menu>-->
-          <!--</div>-->
-        <!--</paper-submenu>-->
+        <paper-submenu>
+          <div class="menuItem">
+            <a href="/organisation.html" tabindex="-1" role="menuitem">
+              <paper-item>Organisation</paper-item>
+            </a>
+            <paper-menu id="nav-organisation" class="subItem">
+              <a href="/organisation.html#trauzeugen" tabindex="-1" role="menuitem">
+                <paper-item>Trauzeugen</paper-item>
+              </a>
+              <a href="/organisation.html#ok" tabindex="-1" role="menuitem">
+                <paper-item>OK-Team</paper-item>
+              </a>
+            </paper-menu>
+          </div>
+        </paper-submenu>
         <div class="menuItem">
           <a href="/geschenke.html" tabindex="-1" role="menuitem">
             <paper-item>Geschenke</paper-item>
@@ -18441,10 +18441,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       h1 {
         position: absolute;
-        top: 50%;
+        top: var(--wedding-eyecatcher-h1-top, 50%);
         left: 50%;
         transform: translate(-50%, -50%);
         width: 90%;
+        color: var(--wedding-eyecatcher-h1-color);
       }
 
       blockquote {
@@ -20378,7 +20379,7 @@ child of `google-map`.
     <div class="page-wrapper">
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
-      <wedding-eyecatcher title="Die Trauung" img="/src/image/2/eyecatcher.jpg"></wedding-eyecatcher>
+      <wedding-eyecatcher title="Trauung" img="/src/image/2/eyecatcher.jpg"></wedding-eyecatcher>
       <div class="hidden">
         <!-- hidden div to set first section to alternative color
            (this one would have the normal color, so te next will be alternative) -->

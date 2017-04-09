@@ -18310,9 +18310,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">
                 <paper-item>Bräutigam</paper-item>
               </a>
-              <!--<a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Bilder-Galerie</paper-item>-->
-              <!--</a>-->
+              <a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">
+                <paper-item>Bilder-Galerie</paper-item>
+              </a>
             </paper-menu>
           </div>
         </paper-submenu>
@@ -18334,21 +18334,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-menu>
           </div>
         </paper-submenu>
-        <!--<paper-submenu>--><!--TODO: Organisation Menu aufschalten-->
-          <!--<div class="menuItem">-->
-            <!--<a href="/organisation.html" tabindex="-1" role="menuitem">-->
-              <!--<paper-item>Organisation</paper-item>-->
-            <!--</a>-->
-            <!--<paper-menu id="nav-organisation" class="subItem">-->
-              <!--<a href="/organisation.html#trauzeugen" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>Trauzeugen</paper-item>-->
-              <!--</a>-->
-              <!--<a href="/organisation.html#ok" tabindex="-1" role="menuitem">-->
-                <!--<paper-item>OK-Team</paper-item>-->
-              <!--</a>-->
-            <!--</paper-menu>-->
-          <!--</div>-->
-        <!--</paper-submenu>-->
+        <paper-submenu>
+          <div class="menuItem">
+            <a href="/organisation.html" tabindex="-1" role="menuitem">
+              <paper-item>Organisation</paper-item>
+            </a>
+            <paper-menu id="nav-organisation" class="subItem">
+              <a href="/organisation.html#trauzeugen" tabindex="-1" role="menuitem">
+                <paper-item>Trauzeugen</paper-item>
+              </a>
+              <a href="/organisation.html#ok" tabindex="-1" role="menuitem">
+                <paper-item>OK-Team</paper-item>
+              </a>
+            </paper-menu>
+          </div>
+        </paper-submenu>
         <div class="menuItem">
           <a href="/geschenke.html" tabindex="-1" role="menuitem">
             <paper-item>Geschenke</paper-item>
@@ -18441,10 +18441,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       h1 {
         position: absolute;
-        top: 50%;
+        top: var(--wedding-eyecatcher-h1-top, 50%);
         left: 50%;
         transform: translate(-50%, -50%);
         width: 90%;
+        color: var(--wedding-eyecatcher-h1-color);
       }
 
       blockquote {
@@ -18708,6 +18709,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
 
+        /* for wedding-eyecatcher */
+        --wedding-eyecatcher-h1-top:77%;
         /* for wedding-portrait */
         --wedding-portrait-invert-color: var(--secondary-text-color);
 
@@ -18721,11 +18724,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="page-wrapper">
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
-      <wedding-eyecatcher title="Die Organisation" img="/src/image/3/eyecatcher.jpg"></wedding-eyecatcher>
+      <wedding-eyecatcher title="Organisation" img="/src/image/3/eyecatcher.jpg"></wedding-eyecatcher>
       <div id="trauzeugen">
         <h2>Die Trauzeugen</h2>
         <div class="layout horizontal justified wrap">
-          <!-- TODO: Bild von Siso einfügen -->
           <wedding-portrait title="Siso" img="/src/image/3/siso.jpg" textalign="left" imgalign="first" size="50" arrangement="vertical">
             <p>«Spazzel», so nennen sich Siso und die Braut seit einer gefühlten Ewigkeit. Der Spitzname soll zeigen das
               sie eine ganz spezielle Beziehung zueinander haben. Die beiden sind miteinander verwandt deswegen kennen
@@ -18753,7 +18755,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="ok">
         <h2>Organisations Komitée</h2>
         <div class="horizontal layout wrap justified">
-          <wedding-portrait title="Siso &amp; Claude" img="/src/image/3/siso-claude.jpg" textalign="left" imgalign="last" size="50" arrangement="horizontal" invert="true">
+          <wedding-portrait title="Siso &amp; Claude" img="/src/image/3/siso-claude.jpg" textalign="left" imgalign="first" size="50" arrangement="horizontal" invert="true">
             <p>Nathalies Cousine und Trauzeugin hat einen netten jungen Mann an ihrer Seite der so offen und herzlich
               ist das es manchmal fast ein wenig weh tut. Die beiden haben mit ihren Hobbys oft ein volles Programm. Sie
               singt und er spielt Tennis. Sie sind gerne nur für ein gemütliches Essen zu haben (besonders wenn es
@@ -18768,7 +18770,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               dignissimos distinctio dolor</p>
           </wedding-portrait>
 
-          <wedding-portrait title="Roger &amp; Dolores" img="/src/image/3/roger-dolores.jpg" textalign="left" imgalign="last" size="50" arrangement="vertical" invert="true">
+          <wedding-portrait title="Roger &amp; Dolores" img="/src/image/3/roger-dolores.jpg" textalign="left" imgalign="first" size="50" arrangement="vertical" invert="true">
             <p>Raphaels Eltern sind wahre Engel. Die Mutter sieht aus wie einer und lebt vor allem die fürsorgliche
               Seite der Himmelswesen aus. Der Vater repräsentiert für Raphael Weisheit und Schutz. Beide sind stets zur
               Stelle, wenn Not am Mann oder Frau ist und auch sonst pflegen sie eine wunderbare Beziehung zum
@@ -18819,7 +18821,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               an den kleinen Dingen im Leben - wie einer 4 Euro günstigen Pizza im Restaurant, alleine ohne Eltern -
               erfreuten.</p>
           </wedding-portrait>
-          <wedding-portrait title="Marco &amp; Ariana" img="/src/image/3/marco-ariana.jpg" textalign="right" imgalign="last" size="50" arrangement="horizontal" invert="true">
+          <wedding-portrait title="Marco &amp; Ariana" img="/src/image/3/marco-ariana.jpg" textalign="right" imgalign="first" size="50" arrangement="horizontal" invert="true">
             <p>Zwei durchgeknallte Personen aus dem Freundeskreis von Raphael. Beide lieben Zweisamkeit und Gemeinschaft
               mit Menschen, die Gott als einen grossen Teil ihres Lebens betrachten. Ariana ist Jugendarbeiterin in der
               Freien Evangelischen Gemeinde Wil und Marco verdient seine Brötchen mit der Gestaltung des Mediums,
