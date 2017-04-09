@@ -12,6 +12,8 @@
       :host {
         display: block;
 
+        /* for wedding-eyecatcher */
+        --wedding-eyecatcher-h1-top:77%;
         /* for wedding-portrait */
         --wedding-portrait-invert-color: var(--secondary-text-color);
 
@@ -25,12 +27,11 @@
     <div class="page-wrapper">
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
-      <wedding-eyecatcher title="Die Organisation"
+      <wedding-eyecatcher title="Organisation"
                           img="/src/image/3/eyecatcher.jpg"></wedding-eyecatcher>
       <div id="trauzeugen">
         <h2>Die Trauzeugen</h2>
         <div class="layout horizontal justified wrap">
-          <!-- TODO: Bild von Siso einfügen -->
           <wedding-portrait title="Siso"
                             img="/src/image/3/siso.jpg"
                             textalign="left"
@@ -71,7 +72,7 @@
           <wedding-portrait title="Siso & Claude"
                             img="/src/image/3/siso-claude.jpg"
                             textalign="left"
-                            imgalign="last"
+                            imgalign="first"
                             size="50"
                             arrangement="horizontal"
                             invert="true">
@@ -98,7 +99,7 @@
           <wedding-portrait title="Roger & Dolores"
                             img="/src/image/3/roger-dolores.jpg"
                             textalign="left"
-                            imgalign="last"
+                            imgalign="first"
                             size="50"
                             arrangement="vertical"
                             invert="true">
@@ -167,7 +168,7 @@
           <wedding-portrait title="Marco & Ariana"
                             img="/src/image/3/marco-ariana.jpg"
                             textalign="right"
-                            imgalign="last"
+                            imgalign="first"
                             size="50"
                             arrangement="horizontal"
                             invert="true">
