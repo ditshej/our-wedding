@@ -9124,7 +9124,8 @@ CatBehaviors.CatDecoratorBehavior = {
 					blur: 10,
 					spread: 0,
 					color: '#000',
-					inset: false
+					inset: false,
+					double: false
 				}
 			},
 			_restrictions: {
@@ -9134,19 +9135,32 @@ CatBehaviors.CatDecoratorBehavior = {
 					blur: 'number',
 					spread: 'number',
 					color: 'color',
-					inset: 'boolean'
+					inset: 'boolean',
+					double: 'boolean'
 				}
 			}
 		},
 
 		_customInit: function() {
-			
-			this._config.node.style.boxShadow = this._config.horizontalWidth + 'px ' +
+			var shadowString = this._config.horizontalWidth + 'px ' +
 				this._config.verticalWidth + 'px ' +
 				this._config.blur + 'px ' +
 				this._config.spread + 'px ' +
 				this._config.color + 
 				(this._config.inset ? ' inset' : '');
+
+			if (this._config.double) {
+				shadowString += ', ' +
+					(- this._config.horizontalWidth) + 'px ' +
+					(- this._config.verticalWidth) + 'px ' +
+					this._config.blur + 'px ' +
+					this._config.spread + 'px ' +
+					this._config.color + 
+					(this._config.inset ? ' inset' : '');
+
+			}
+
+			this._config.node.style.boxShadow = shadowString;
 
 		}
 		
@@ -10726,8 +10740,6 @@ function onVisibleOnce(el, callback, scope, offset) {
 </style><dom-module id="cat-image" assetpath="/bower_components/cat-image/">
 <style>
     :host {
-        width: 300px;
-        height: 200px;
         display: block;
         position: relative;        
         overflow: hidden;
@@ -10746,7 +10758,7 @@ function onVisibleOnce(el, callback, scope, offset) {
 </style>
 
 <template>
-    <div class="cat-spinbox-preloader"></div>
+    <div id="preloader" class="cat-spinbox-preloader"></div>
     <div id="img"></div>
     <div id="txt"></div>
     <div id="brdr"></div>
@@ -10782,7 +10794,7 @@ Polymer({
          */
         textTransitionType:     { type: String, value: 'scale' },
         /**
-         * Available options: center, left, right, top, bottom. 'center' is unavailable for textTransitionType: slide
+         * Available options: random, center, left, right, top, bottom. 'center' is unavailable for textTransitionType: slide
          */
         textTransitionDirection: { type: String, value: 'center' },
         /**
@@ -10793,6 +10805,14 @@ Polymer({
          * Easing duration, in seconds
          */
         textTransitionDuration: { type: Number, value: 1 },
+        /**
+         * Transition delay, in seconds
+         */
+        textTransitionDelay:    { type: Number, value: 0 },
+        /**
+         * Delay (in seconds) between multiple text appearances
+         */
+        delayInBetween:    { type: Number, value: 0.3 },
         /**
          * Distance in percentage for slide effect.
          * Available only for Transition type: slide
@@ -10880,6 +10900,10 @@ Polymer({
          */
         shadowInset:            { type: Boolean, value: false},
         /**
+         * Double the shadow both vertically and horizontally
+         */
+        useDoubleShadow:       { type: Boolean, value: false},
+        /**
          * Text padding in pixels
          */
         textPadding:            { type: Number, value: 20 },
@@ -10893,10 +10917,6 @@ Polymer({
          * Available options: random, center, top, bottom
          */
         verticalTextPosition:   { type: String, value: 'random' },
-        /**
-         * Delay (in seconds) between multiple text appearances
-         */
-        textTransitionDelay:    { type: Number, value: 0.3 },
         /**
          * Space between cat-text elements
          */
@@ -10920,14 +10940,48 @@ Polymer({
     _isImageLoaded: false,
 
     CatTextProperties: [
-        'textTransitionType',
-        'textTransitionDirection',
-        'textTransitionFunction',
-        'textTransitionDuration',
+        'transitionType:textTransitionType',
+        'transitionDirection:textTransitionDirection',
+        'transitionFunction:textTransitionFunction',
+        'transitionDuration:textTransitionDuration',
+        'transitionDelay:textTransitionDelay',
         'slideOffset'
     ],
 
+    // apply the bundled properties
+    // unless there are individual properties defined for a specific cat-text element
+    _getOriginal:function(str) {
+        if (str.indexOf(':') !== -1) {
+            return str.slice(0, str.indexOf(':'));
+        } else {
+            return str;
+        }
+    },
+    _getSpecific: function(str) {
+        if (str.indexOf(':') !== -1) {
+            return str.slice(str.indexOf(':') + 1, str.length);
+        } else {
+            return str;
+        }
+    },
+    _applyBundledProperties: function(el, PropertiesArray) {
+        var i, len, original, specific, dashedOriginal;
+        for (i = 0, len = PropertiesArray.length; i < len; i++) {
+            original = this._getOriginal(PropertiesArray[i]);
+            specific = this._getSpecific(PropertiesArray[i]);
+            dashedOriginal = dashedLowercase(original);
+            if (! el.hasAttribute(dashedOriginal) && this[specific] !== false) {
+                el.setAttribute(dashedOriginal, this[specific]);
+            }
+        }
+    },
+
     _setImageAsBackground: function() {
+        
+        if (parseInt(getComputedStyle(this).height) === 0) {
+            this.style.height = '300px';
+        }
+
         this.$.img.style.background = "url('" + this.src +"') no-repeat center center";
         this.$.img.style.backgroundSize = 'cover';                
         
@@ -10948,6 +11002,7 @@ Polymer({
             self._isImageLoaded = true;
             callback.call(scope);
         }
+
     },
 
     _errorHandling: function() {        
@@ -10956,21 +11011,9 @@ Polymer({
         }
     },
 
-    // apply the bundled properties
-    // unless there are individual properties defined for a specific cat-text element
-    _applyBundledProperties: function(el) {
-        for (var i = 0, len = this.CatTextProperties.length; i < len; i++) {
-            var dashedOriginal = dashedLowercase(this.CatTextProperties[i]);
-            if (! el.hasAttribute(dashedOriginal) && this[this.CatTextProperties[i]] !== false) {
-                el.setAttribute(dashedOriginal, this[this.CatTextProperties[i]]);
-            }
-        }
-        el.setAttribute('manual-mode', '');
-    },
-
     _applyTextTransitionDelay: function(el) {
         if (! el.hasAttribute('transition-delay')) {
-            el.setAttribute('transition-delay', this.textTransitionDelay * this.transitionDelayCount);
+            el.setAttribute('transition-delay', this.textTransitionDelay + this.delayInBetween * this.transitionDelayCount);
             this.transitionDelayCount++;
         }
     },
@@ -10983,9 +11026,16 @@ Polymer({
         for (var i = 0; i < this._lightDom.length; i++) {
             var paragraph = document.createElement('p');
             this._applyTextTransitionDelay(this._lightDom[i]);
-            this._applyBundledProperties(this._lightDom[i]);
+            this._applyBundledProperties(this._lightDom[i], this.CatTextProperties);
+            this._lightDom[i].setAttribute('manual-mode', '');
             paragraph.appendChild(this._lightDom[i]);
             Polymer.dom(this.$.txt).appendChild(paragraph);
+        }
+    },
+
+    _unifyTextDirection: function() {
+        if (this.textTransitionDirection === 'random') {
+            this.textTransitionDirection = ['center', 'left', 'right', 'top', 'bottom'][Math.floor(Math.random() * 5)];
         }
     },
 
@@ -11045,7 +11095,8 @@ Polymer({
                 blur: this.shadowBlur,
                 spread: this.shadowSpread,
                 color: this.shadowColor,
-                inset: this.shadowInset
+                inset: this.shadowInset,
+                double: this.useDoubleShadow
             });
         }
 
@@ -11097,6 +11148,7 @@ Polymer({
     attached: function() {
         this._errorHandling();
         this._setImageAsBackground();
+        this._unifyTextDirection();
         this._appendTextChildren();
         this._attachListeners();
         this._initialStyleSetup();
@@ -11433,28 +11485,28 @@ Polymer({
         /**
          * Available options: fade, slide, scale (or combined, space delimited), none
          */
-        textTransitionType: {
+        transitionType: {
             type: String,
             value: 'scale'
         },
         /**
-         * Available options: center, left, right, top, bottom, random. 'center' is unavailable for textTransitionType: slide
+         * Available options: center, left, right, top, bottom, random. 'center' is unavailable for transitionType: slide
          */
-        textTransitionDirection: {
+        transitionDirection: {
             type: String,
             value: 'center'
         },
         /**
          * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
          */
-        textTransitionFunction: {
+        transitionFunction: {
             type: String,
             value: 'ease'
         },
         /**
          * Easing duration, in seconds
          */
-        textTransitionDuration: {
+        transitionDuration: {
             type: Number,
             value: 1
         },
@@ -11496,7 +11548,7 @@ Polymer({
     },    
 
     _transitionTypeHandling: function() {
-        var types = this.textTransitionType.split(' ');
+        var types = this.transitionType.split(' ');
         if (types.indexOf('none') > -1) {
             this._useTransition = false;
         } else {
@@ -11531,7 +11583,7 @@ Polymer({
                 name: 'cat-fade-animation',
                 node: this,
                 fade: 'in',
-                duration: this.textTransitionDuration,
+                duration: this.transitionDuration,
                 delay: this.transitionDelay,
                 reverseDuration: 0.5
             });
@@ -11541,9 +11593,9 @@ Polymer({
                 name: 'cat-scale-animation',
                 node: this,
                 scale: 'up',
-                direction: this.textTransitionDirection,
-                function: this.textTransitionFunction,
-                duration: this.textTransitionDuration,
+                direction: this.transitionDirection,
+                function: this.transitionFunction,
+                duration: this.transitionDuration,
                 delay: this.transitionDelay,
                 reverse: false
             });
@@ -11554,10 +11606,10 @@ Polymer({
                 name: 'cat-slide-animation',
                 node: this,
                 slide: 'in',
-                direction: this.textTransitionDirection,
+                direction: this.transitionDirection,
                 offset: this.slideOffset,
-                function: this.textTransitionFunction,
-                duration: this.textTransitionDuration,
+                function: this.transitionFunction,
+                duration: this.transitionDuration,
                 delay: this.transitionDelay,
                 reverse: false
             });
@@ -14974,7 +15026,8 @@ Custom property | Description | Default
     // NOTE: Use useCapture=true to avoid accidentally prevention of the closing
     // of an overlay via event.stopPropagation(). The only way to prevent
     // closing of an overlay should be through its APIs.
-    Polymer.Gestures.add(document, 'tap', null);
+    // NOTE: enable tap on <html> to workaround Polymer/polymer#4459
+    Polymer.Gestures.add(document.documentElement, 'tap', null);
     document.addEventListener('tap', this._onCaptureClick.bind(this), true);
     document.addEventListener('focus', this._onCaptureFocus.bind(this), true);
     document.addEventListener('keydown', this._onCaptureKeyDown.bind(this), true);
@@ -20284,14 +20337,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       attrForItemTitle: {
         type: String
-      }
+      },
+
+      disabled: {
+        type: Boolean,
+        value: false,
+        observer: '_disabledChanged',
+      },
     },
 
     _SEARCH_RESET_TIMEOUT_MS: 1000,
 
+    _previousTabIndex: 0,
+
     hostAttributes: {
       'role': 'menu',
-      'tabindex': '0'
     },
 
     observers: [
@@ -20480,7 +20540,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     _focusedItemChanged: function(focusedItem, old) {
       old && old.setAttribute('tabindex', '-1');
-      if (focusedItem) {
+      if (focusedItem && !focusedItem.hasAttribute('disabled') && !this.disabled) {
         focusedItem.setAttribute('tabindex', '0');
         focusedItem.focus();
       }
@@ -20604,6 +20664,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     _activateHandler: function(event) {
       Polymer.IronSelectableBehavior._activateHandler.call(this, event);
       event.stopPropagation();
+    },
+
+    /**
+     * Updates this element's tab index when it's enabled/disabled.
+     * @param {boolean} disabled
+     */
+    _disabledChanged: function(disabled) {
+      if (disabled) {
+        this._previousTabIndex = this.hasAttribute('tabindex') ? this.tabIndex : 0;
+        this.removeAttribute('tabindex');  // No tabindex means not tab-able or select-able.
+      } else if (!this.hasAttribute('tabindex')) {
+        this.setAttribute('tabindex', this._previousTabIndex);
+      }
     }
   };
 
@@ -20824,8 +20897,7 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700">
+--><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
 <style is="custom-style">
 
   :root {
@@ -21153,9 +21225,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">
                 <paper-item>Raphael</paper-item>
               </a>
-              <a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">
-                <paper-item>Bilder-Galerie</paper-item>
-              </a>
+              <!--<a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">-->
+                <!--<paper-item>Bilder-Galerie</paper-item>-->
+              <!--</a>-->
             </paper-menu>
           </div>
         </paper-submenu>
@@ -21550,6 +21622,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
+        text-align: center;
 
         /* height for Sticky Footer */
         height: 100%;
@@ -21562,8 +21635,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /* for wedding-portrait */
         --wedding-portrait-invert-color: var(--secondary-text-color);
       }
-
+      
+      
       /*** Slider styling ***/
+      paper-carousel {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+
       /* set height */
       #gallery {
         /*height: 100vh;*/
@@ -21767,39 +21846,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!--</cat-slider>-->
 
         <paper-carousel items="1" dottext="false" dots="false">
-          <img src="/src/image/1/gallery/IMG_7317.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7356.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7402.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7412.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7413.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7444.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7450.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7475.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7477.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7500.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7512.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7541.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7562.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7572.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7593.jpg" draggable="false">
-          <!--<img src="/src/image/1/gallery/IMG_7612.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7625.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7638.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7645.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7684.jpg" draggable="false">-->
-          <img src="/src/image/1/gallery/IMG_7707.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7821.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7831.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7898.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7925.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8021.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8042.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8044.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8092.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8129.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8171.jpg" draggable="false">
+          <img src="/src/image/1/gallery/IMG_7317.jpg">
+          <img src="/src/image/1/gallery/IMG_7356.jpg">
+          <img src="/src/image/1/gallery/IMG_7402.jpg">
+          <img src="/src/image/1/gallery/IMG_7412.jpg">
+          <img src="/src/image/1/gallery/IMG_7413.jpg">
+          <img src="/src/image/1/gallery/IMG_7444.jpg">
+          <img src="/src/image/1/gallery/IMG_7450.jpg">
+          <img src="/src/image/1/gallery/IMG_7475.jpg">
+          <img src="/src/image/1/gallery/IMG_7477.jpg">
+          <img src="/src/image/1/gallery/IMG_7500.jpg">
+          <img src="/src/image/1/gallery/IMG_7512.jpg">
+          <img src="/src/image/1/gallery/IMG_7541.jpg">
+          <img src="/src/image/1/gallery/IMG_7562.jpg">
+          <img src="/src/image/1/gallery/IMG_7572.jpg">
+          <img src="/src/image/1/gallery/IMG_7593.jpg">
+          <img src="/src/image/1/gallery/IMG_7707.jpg">
+          <img src="/src/image/1/gallery/IMG_7821.jpg">
+          <img src="/src/image/1/gallery/IMG_7831.jpg">
+          <img src="/src/image/1/gallery/IMG_7898.jpg">
+          <img src="/src/image/1/gallery/IMG_7925.jpg">
+          <img src="/src/image/1/gallery/IMG_8021.jpg">
+          <img src="/src/image/1/gallery/IMG_8042.jpg">
+          <img src="/src/image/1/gallery/IMG_8044.jpg">
+          <img src="/src/image/1/gallery/IMG_8092.jpg">
+          <img src="/src/image/1/gallery/IMG_8129.jpg">
+          <img src="/src/image/1/gallery/IMG_8171.jpg">
         </paper-carousel>
-        
+
+        <!--<img src="/src/image/1/gallery/IMG_7612.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7625.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7638.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7645.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7684.jpg" draggable="false">-->
+
+
       </div>
 
       <!-- push to create Sticky Footer -->

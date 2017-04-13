@@ -16,6 +16,7 @@
     <style include="shared-styles">
       :host {
         display: block;
+        text-align: center;
 
         /* height for Sticky Footer */
         height: 100%;
@@ -28,8 +29,14 @@
         /* for wedding-portrait */
         --wedding-portrait-invert-color: var(--secondary-text-color);
       }
-
+      
+      
       /*** Slider styling ***/
+      paper-carousel {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+
       /* set height */
       #gallery {
         /*height: 100vh;*/
@@ -245,40 +252,45 @@
           <!--<cat-image src="/src/image/1/gallery/IMG_8171.jpg"><cat-text></cat-text></cat-image>-->
         <!--</cat-slider>-->
 
-        <paper-carousel items="1" dotText="false" dots="false">
-          <img src="/src/image/1/gallery/IMG_7317.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7356.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7402.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7412.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7413.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7444.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7450.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7475.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7477.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7500.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7512.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7541.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7562.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7572.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7593.jpg" draggable="false">
-          <!--<img src="/src/image/1/gallery/IMG_7612.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7625.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7638.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7645.jpg" draggable="false">-->
-          <!--<img src="/src/image/1/gallery/IMG_7684.jpg" draggable="false">-->
-          <img src="/src/image/1/gallery/IMG_7707.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7821.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7831.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7898.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_7925.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8021.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8042.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8044.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8092.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8129.jpg" draggable="false">
-          <img src="/src/image/1/gallery/IMG_8171.jpg" draggable="false">
+        <paper-carousel items="1"
+                        dotText="false"
+                        dots="false"
+                        >
+          <img src="/src/image/1/gallery/IMG_7317.jpg">
+          <img src="/src/image/1/gallery/IMG_7356.jpg">
+          <img src="/src/image/1/gallery/IMG_7402.jpg">
+          <img src="/src/image/1/gallery/IMG_7412.jpg">
+          <img src="/src/image/1/gallery/IMG_7413.jpg">
+          <img src="/src/image/1/gallery/IMG_7444.jpg">
+          <img src="/src/image/1/gallery/IMG_7450.jpg">
+          <img src="/src/image/1/gallery/IMG_7475.jpg">
+          <img src="/src/image/1/gallery/IMG_7477.jpg">
+          <img src="/src/image/1/gallery/IMG_7500.jpg">
+          <img src="/src/image/1/gallery/IMG_7512.jpg">
+          <img src="/src/image/1/gallery/IMG_7541.jpg">
+          <img src="/src/image/1/gallery/IMG_7562.jpg">
+          <img src="/src/image/1/gallery/IMG_7572.jpg">
+          <img src="/src/image/1/gallery/IMG_7593.jpg">
+          <img src="/src/image/1/gallery/IMG_7707.jpg">
+          <img src="/src/image/1/gallery/IMG_7821.jpg">
+          <img src="/src/image/1/gallery/IMG_7831.jpg">
+          <img src="/src/image/1/gallery/IMG_7898.jpg">
+          <img src="/src/image/1/gallery/IMG_7925.jpg">
+          <img src="/src/image/1/gallery/IMG_8021.jpg">
+          <img src="/src/image/1/gallery/IMG_8042.jpg">
+          <img src="/src/image/1/gallery/IMG_8044.jpg">
+          <img src="/src/image/1/gallery/IMG_8092.jpg">
+          <img src="/src/image/1/gallery/IMG_8129.jpg">
+          <img src="/src/image/1/gallery/IMG_8171.jpg">
         </paper-carousel>
-        
+
+        <!--<img src="/src/image/1/gallery/IMG_7612.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7625.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7638.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7645.jpg" draggable="false">-->
+        <!--<img src="/src/image/1/gallery/IMG_7684.jpg" draggable="false">-->
+
+
       </div>
 
       <!-- push to create Sticky Footer -->

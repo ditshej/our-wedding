@@ -10641,7 +10641,8 @@ Custom property | Description | Default
     // NOTE: Use useCapture=true to avoid accidentally prevention of the closing
     // of an overlay via event.stopPropagation(). The only way to prevent
     // closing of an overlay should be through its APIs.
-    Polymer.Gestures.add(document, 'tap', null);
+    // NOTE: enable tap on <html> to workaround Polymer/polymer#4459
+    Polymer.Gestures.add(document.documentElement, 'tap', null);
     document.addEventListener('tap', this._onCaptureClick.bind(this), true);
     document.addEventListener('focus', this._onCaptureFocus.bind(this), true);
     document.addEventListener('keydown', this._onCaptureKeyDown.bind(this), true);
@@ -17444,14 +17445,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       attrForItemTitle: {
         type: String
-      }
+      },
+
+      disabled: {
+        type: Boolean,
+        value: false,
+        observer: '_disabledChanged',
+      },
     },
 
     _SEARCH_RESET_TIMEOUT_MS: 1000,
 
+    _previousTabIndex: 0,
+
     hostAttributes: {
       'role': 'menu',
-      'tabindex': '0'
     },
 
     observers: [
@@ -17640,7 +17648,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     _focusedItemChanged: function(focusedItem, old) {
       old && old.setAttribute('tabindex', '-1');
-      if (focusedItem) {
+      if (focusedItem && !focusedItem.hasAttribute('disabled') && !this.disabled) {
         focusedItem.setAttribute('tabindex', '0');
         focusedItem.focus();
       }
@@ -17764,6 +17772,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     _activateHandler: function(event) {
       Polymer.IronSelectableBehavior._activateHandler.call(this, event);
       event.stopPropagation();
+    },
+
+    /**
+     * Updates this element's tab index when it's enabled/disabled.
+     * @param {boolean} disabled
+     */
+    _disabledChanged: function(disabled) {
+      if (disabled) {
+        this._previousTabIndex = this.hasAttribute('tabindex') ? this.tabIndex : 0;
+        this.removeAttribute('tabindex');  // No tabindex means not tab-able or select-able.
+      } else if (!this.hasAttribute('tabindex')) {
+        this.setAttribute('tabindex', this._previousTabIndex);
+      }
     }
   };
 
@@ -17984,8 +18005,7 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700">
+--><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
 <style is="custom-style">
 
   :root {
@@ -18313,9 +18333,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a href="/brautpaar.html#braeutigam" tabindex="-1" role="menuitem">
                 <paper-item>Raphael</paper-item>
               </a>
-              <a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">
-                <paper-item>Bilder-Galerie</paper-item>
-              </a>
+              <!--<a href="/brautpaar.html#gallery" tabindex="-1" role="menuitem">-->
+                <!--<paper-item>Bilder-Galerie</paper-item>-->
+              <!--</a>-->
             </paper-menu>
           </div>
         </paper-submenu>

@@ -197,9 +197,9 @@
             <label for="email">Email Adresse</label>
             <input type="email" name="email" id="email" required>
           </div>
-          <input type="number" name="id" value="[[id]]" class="hidden">
-          <input type="text" name="title" value="[[title]]" class="hidden">
-          <input type="number" name="cost" value="[[cost]]" class="hidden">
+          <input type="number" name="id" id="idgiven" class="hidden">
+          <input type="text" name="title" id="titlegiven" class="hidden">
+          <input type="number" name="cost" id="costgiven" class="hidden">
           <input type="submit" value="beschenken">
         </form>
       </div>
@@ -214,6 +214,15 @@
 
       properties: {
         sold: {
+          type: Number
+        },
+        id: {
+          type: Number
+        },
+        title: {
+          type: String
+        },
+        cost: {
           type: Number
         }
       },
@@ -260,6 +269,18 @@
       },
 
       attached: function () {
+        /** set hidden values*/
+        var $idGiven = $(this.$.idgiven),
+         $titleGiven = $(this.$.titlegiven),
+          $costGiven = $(this.$.costgiven),
+          idValue = this.id,
+          titleValue = this.title,
+          costValue = this.cost;
+
+        $idGiven.val(idValue);
+        $titleGiven.val(titleValue);
+        $costGiven.val(costValue);
+
         /** Show "soldMessage" if item is sold and hide the buttons. */
         var $cost = $(this.$.cost),
           soldMessage = this.title + ' wurde bereits geschenkt',
