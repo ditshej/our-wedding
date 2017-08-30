@@ -838,7 +838,7 @@ default:
 return value != null ? value : undefined;
 }
 }
-});Polymer.version = "1.8.1";Polymer.Base._addFeature({
+});Polymer.version = "1.9.3";Polymer.Base._addFeature({
 _registerFeatures: function () {
 this._prepIs();
 this._prepBehaviors();
@@ -866,10 +866,83 @@ this._marshalBehaviors();
 
 
 
-<script>Polymer.Base._addFeature({
+<script>(function () {
+function resolveCss(cssText, ownerDocument) {
+return cssText.replace(CSS_URL_RX, function (m, pre, url, post) {
+return pre + '\'' + resolve(url.replace(/["']/g, ''), ownerDocument) + '\'' + post;
+});
+}
+function resolveAttrs(element, ownerDocument) {
+for (var name in URL_ATTRS) {
+var a$ = URL_ATTRS[name];
+for (var i = 0, l = a$.length, a, at, v; i < l && (a = a$[i]); i++) {
+if (name === '*' || element.localName === name) {
+at = element.attributes[a];
+v = at && at.value;
+if (v && v.search(BINDING_RX) < 0) {
+at.value = a === 'style' ? resolveCss(v, ownerDocument) : resolve(v, ownerDocument);
+}
+}
+}
+}
+}
+function resolve(url, ownerDocument) {
+if (url && ABS_URL.test(url)) {
+return url;
+}
+var resolver = getUrlResolver(ownerDocument);
+resolver.href = url;
+return resolver.href || url;
+}
+var tempDoc;
+var tempDocBase;
+function resolveUrl(url, baseUri) {
+if (!tempDoc) {
+tempDoc = document.implementation.createHTMLDocument('temp');
+tempDocBase = tempDoc.createElement('base');
+tempDoc.head.appendChild(tempDocBase);
+}
+tempDocBase.href = baseUri;
+return resolve(url, tempDoc);
+}
+function getUrlResolver(ownerDocument) {
+return ownerDocument.body.__urlResolver || (ownerDocument.body.__urlResolver = ownerDocument.createElement('a'));
+}
+function pathFromUrl(url) {
+return url.substring(0, url.lastIndexOf('/') + 1);
+}
+var CSS_URL_RX = /(url\()([^)]*)(\))/g;
+var URL_ATTRS = {
+'*': [
+'href',
+'src',
+'style',
+'url'
+],
+form: ['action']
+};
+var ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
+var BINDING_RX = /\{\{|\[\[/;
+Polymer.ResolveUrl = {
+resolveCss: resolveCss,
+resolveAttrs: resolveAttrs,
+resolveUrl: resolveUrl,
+pathFromUrl: pathFromUrl
+};
+Polymer.rootPath = Polymer.Settings.rootPath || pathFromUrl(document.baseURI || window.location.href);
+}());Polymer.Base._addFeature({
 _prepTemplate: function () {
+var module;
 if (this._template === undefined) {
-this._template = Polymer.DomModule.import(this.is, 'template');
+module = Polymer.DomModule.import(this.is);
+this._template = module && module.querySelector('template');
+}
+if (module) {
+var assetPath = module.getAttribute('assetpath') || '';
+var importURL = Polymer.ResolveUrl.resolveUrl(assetPath, module.ownerDocument.baseURI);
+this._importPath = Polymer.ResolveUrl.pathFromUrl(importURL);
+} else {
+this._importPath = '';
 }
 if (this._template && this._template.hasAttribute('is')) {
 this._warn(this._logf('_prepTemplate', 'top-level Polymer template ' + 'must not be a type-extension, found', this._template, 'Move inside simple <template>.'));
@@ -889,6 +962,7 @@ return dom;
 }
 });(function () {
 var baseAttachedCallback = Polymer.Base.attachedCallback;
+var baseDetachedCallback = Polymer.Base.detachedCallback;
 Polymer.Base._addFeature({
 _hostStack: [],
 ready: function () {
@@ -968,6 +1042,13 @@ this._beforeAttached();
 baseAttachedCallback.call(this);
 } else {
 this._attachedPending = true;
+}
+},
+detachedCallback: function () {
+if (this._readied) {
+baseDetachedCallback.call(this);
+} else {
+this._attachedPending = false;
 }
 }
 });
@@ -3259,65 +3340,6 @@ return root;
 }
 }
 };
-}());(function () {
-function resolveCss(cssText, ownerDocument) {
-return cssText.replace(CSS_URL_RX, function (m, pre, url, post) {
-return pre + '\'' + resolve(url.replace(/["']/g, ''), ownerDocument) + '\'' + post;
-});
-}
-function resolveAttrs(element, ownerDocument) {
-for (var name in URL_ATTRS) {
-var a$ = URL_ATTRS[name];
-for (var i = 0, l = a$.length, a, at, v; i < l && (a = a$[i]); i++) {
-if (name === '*' || element.localName === name) {
-at = element.attributes[a];
-v = at && at.value;
-if (v && v.search(BINDING_RX) < 0) {
-at.value = a === 'style' ? resolveCss(v, ownerDocument) : resolve(v, ownerDocument);
-}
-}
-}
-}
-}
-function resolve(url, ownerDocument) {
-if (url && ABS_URL.test(url)) {
-return url;
-}
-var resolver = getUrlResolver(ownerDocument);
-resolver.href = url;
-return resolver.href || url;
-}
-var tempDoc;
-var tempDocBase;
-function resolveUrl(url, baseUri) {
-if (!tempDoc) {
-tempDoc = document.implementation.createHTMLDocument('temp');
-tempDocBase = tempDoc.createElement('base');
-tempDoc.head.appendChild(tempDocBase);
-}
-tempDocBase.href = baseUri;
-return resolve(url, tempDoc);
-}
-function getUrlResolver(ownerDocument) {
-return ownerDocument.body.__urlResolver || (ownerDocument.body.__urlResolver = ownerDocument.createElement('a'));
-}
-var CSS_URL_RX = /(url\()([^)]*)(\))/g;
-var URL_ATTRS = {
-'*': [
-'href',
-'src',
-'style',
-'url'
-],
-form: ['action']
-};
-var ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
-var BINDING_RX = /\{\{|\[\[/;
-Polymer.ResolveUrl = {
-resolveCss: resolveCss,
-resolveAttrs: resolveAttrs,
-resolveUrl: resolveUrl
-};
 }());Polymer.Path = {
 root: function (path) {
 var dotIndex = path.indexOf('.');
@@ -5103,6 +5125,8 @@ node._configValue(name, value);
 }
 },
 _afterClientsReady: function () {
+this.importPath = this._importPath;
+this.rootPath = Polymer.rootPath;
 this._executeStaticEffects();
 this._applyConfig(this._config, this._aboveConfig);
 this._flushHandlers();
@@ -5441,13 +5465,7 @@ _getPathParts: Polymer.Base._getPathParts
 });
 }());Polymer.Base._addFeature({
 resolveUrl: function (url) {
-var module = Polymer.DomModule.import(this.is);
-var root = '';
-if (module) {
-var assetPath = module.getAttribute('assetpath') || '';
-root = Polymer.ResolveUrl.resolveUrl(assetPath, module.ownerDocument.baseURI);
-}
-return Polymer.ResolveUrl.resolveUrl(url, root);
+return Polymer.ResolveUrl.resolveUrl(url, this._importPath);
 }
 });Polymer.CssParse = function () {
 return {
@@ -6030,6 +6048,11 @@ this._transformRule(rule, this._transformDocumentSelector);
 },
 normalizeRootSelector: function (rule) {
 rule.selector = rule.selector.replace(ROOT, 'html');
+var parts = rule.selector.split(COMPLEX_SELECTOR_SEP);
+parts = parts.filter(function (part) {
+return !part.match(HOST_OR_HOST_GT_STAR);
+});
+rule.selector = parts.join(COMPLEX_SELECTOR_SEP);
 },
 _transformDocumentSelector: function (selector) {
 return selector.match(SCOPE_JUMP) ? this._transformComplexSelector(selector, SCOPE_DOC_SELECTOR) : this._transformSimpleSelector(selector.trim(), SCOPE_DOC_SELECTOR);
@@ -6059,6 +6082,7 @@ var CLASS = 'class';
 var CONTENT_START = new RegExp('^(' + CONTENT + ')');
 var SELECTOR_NO_MATCH = 'should_not_match';
 var SLOTTED_PAREN = /(?:::slotted)(?:\(((?:\([^)(]*\)|[^)(]*)+?)\))/g;
+var HOST_OR_HOST_GT_STAR = /:host(?:\s*>\s*\*)?/;
 return api;
 }();Polymer.StyleExtends = function () {
 var styleUtil = Polymer.StyleUtil;
@@ -7772,9 +7796,17 @@ this._detachInstance(i);
 attached: function () {
 if (this.__isDetached) {
 this.__isDetached = false;
-var parent = Polymer.dom(Polymer.dom(this).parentNode);
+var refNode;
+var parentNode = Polymer.dom(this).parentNode;
+if (parentNode.localName == this.is) {
+refNode = parentNode;
+parentNode = Polymer.dom(parentNode).parentNode;
+} else {
+refNode = this;
+}
+var parent = Polymer.dom(parentNode);
 for (var i = 0; i < this._instances.length; i++) {
-this._attachInstance(i, parent);
+this._attachInstance(i, parent, refNode);
 }
 }
 },
@@ -8058,10 +8090,10 @@ Polymer.dom(inst.root).appendChild(el);
 return inst;
 }
 },
-_attachInstance: function (idx, parent) {
+_attachInstance: function (idx, parent, refNode) {
 var inst = this._instances[idx];
 if (!inst.isPlaceholder) {
-parent.insertBefore(inst.root, this);
+parent.insertBefore(inst.root, refNode);
 }
 },
 _detachAndRemoveInstance: function (idx) {
@@ -8094,6 +8126,12 @@ inst = this._stampInstance(idx, key);
 var beforeRow = this._instances[idx + 1];
 var beforeNode = beforeRow && !beforeRow.isPlaceholder ? beforeRow._children[0] : this;
 var parentNode = Polymer.dom(this).parentNode;
+if (parentNode.localName == this.is) {
+if (beforeNode == this) {
+beforeNode = parentNode;
+}
+parentNode = Polymer.dom(parentNode).parentNode;
+}
 Polymer.dom(parentNode).insertBefore(inst.root, beforeNode);
 this._instances[idx] = inst;
 return inst;
@@ -8289,7 +8327,11 @@ _queueRender: function () {
 this._debounceTemplate(this._render);
 },
 detached: function () {
-if (!this.parentNode || this.parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE && (!Polymer.Settings.hasShadow || !(this.parentNode instanceof ShadowRoot))) {
+var parentNode = this.parentNode;
+if (parentNode && parentNode.localName == this.is) {
+parentNode = Polymer.dom(parentNode).parentNode;
+}
+if (!parentNode || parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE && (!Polymer.Settings.hasShadow || !(parentNode instanceof ShadowRoot))) {
 this._teardownInstance();
 }
 },
@@ -8322,20 +8364,26 @@ this._lastIf = this.if;
 }
 },
 _ensureInstance: function () {
+var refNode;
 var parentNode = Polymer.dom(this).parentNode;
+if (parentNode && parentNode.localName == this.is) {
+refNode = parentNode;
+parentNode = Polymer.dom(parentNode).parentNode;
+} else {
+refNode = this;
+}
 if (parentNode) {
-var parent = Polymer.dom(parentNode);
 if (!this._instance) {
 this._instance = this.stamp();
 var root = this._instance.root;
-parent.insertBefore(root, this);
+Polymer.dom(parentNode).insertBefore(root, refNode);
 } else {
 var c$ = this._instance._children;
 if (c$ && c$.length) {
-var lastChild = Polymer.dom(this).previousSibling;
+var lastChild = Polymer.dom(refNode).previousSibling;
 if (lastChild !== c$[c$.length - 1]) {
 for (var i = 0, n; i < c$.length && (n = c$[i]); i++) {
-parent.insertBefore(n, this);
+Polymer.dom(parentNode).insertBefore(n, refNode);
 }
 }
 }
@@ -8400,8 +8448,15 @@ _registerFeatures: function () {
 this._prepConstructor();
 },
 _insertChildren: function () {
-var parentDom = Polymer.dom(Polymer.dom(this).parentNode);
-parentDom.insertBefore(this.root, this);
+var refNode;
+var parentNode = Polymer.dom(this).parentNode;
+if (parentNode.localName == this.is) {
+refNode = parentNode;
+parentNode = Polymer.dom(parentNode).parentNode;
+} else {
+refNode = this;
+}
+Polymer.dom(parentNode).insertBefore(this.root, refNode);
 },
 _removeChildren: function () {
 if (this._children) {
@@ -12102,14 +12157,27 @@ The layout class stylesheet provides a simple set of class-based flexbox rules, 
 let you specify layout properties directly in markup. You must include this file
 in every element that needs to use them.
 
-  Sample use:
+    Sample use:
 
-      <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-      <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    ```
+    <custom-element-demo>
+      <template>
+        <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+        <next-code-block></next-code-block>
+      </template>
+    </custom-element-demo>
+    ```
 
-      <div class="layout horizontal layout-start">
-        <div>cross axis start alignment</div>
-      </div>
+    ```html
+    <link rel="import" href="iron-flex-layout-classes.html">
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+      .test { width: 100px; }
+    </style>
+    <div class="layout horizontal center-center">
+      <div class="test">horizontal layout center alignment</div>
+    </div>
+    ```
 
 2. [Custom CSS mixins](https://github.com/PolymerElements/iron-flex-layout/blob/master/iron-flex-layout.html).
 The mixin stylesheet includes custom CSS mixins that can be applied inside a CSS rule using the `@apply` function.
@@ -12185,7 +12253,7 @@ A complete [guide](https://elements.polymer-project.org/guides/flex-layout) to `
       -webkit-flex-wrap: wrap;
       flex-wrap: wrap;
     };
-    
+
     --layout-no-wrap: {
       -ms-flex-wrap: nowrap;
       -webkit-flex-wrap: nowrap;
@@ -12832,6 +12900,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         svg.setAttribute('viewBox', viewBox);
         svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svg.setAttribute('focusable', 'false');
         // TODO(dfreedm): `pointer-events: none` works around https://crbug.com/370136
         // TODO(sjmiles): inline style may not be ideal, but avoids requiring a shadow-root
         svg.style.cssText = cssText;
@@ -13040,7 +13109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       /**
-       * True if this element is currently notifying its descedant elements of
+       * True if this element is currently notifying its descendant elements of
        * resize.
        */
       _notifyingDescendant: {
@@ -13139,7 +13208,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return;
       }
 
-      // NOTE(cdata): In ShadowDOM, event retargetting makes echoing of the
+      // NOTE(cdata): In ShadowDOM, event retargeting makes echoing of the
       // otherwise non-bubbling event "just work." We do it manually here for
       // the case where Polymer is not using shadow roots for whatever reason:
       if (!Polymer.Settings.useShadow) {
@@ -13521,12 +13590,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </style><dom-module id="paper-carousel" assetpath="/bower_components/paper-carousel/">
   <template>
-    <style>:host{display:block;position:relative;overflow:hidden;--dot-background-color:#ffffff;--dot-active-extra-item:hidden}:host::content .paper-carousel_wrapper{text-align:center;position:relative;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-flow:row wrap;-ms-flex-flow:row wrap;flex-flow:row wrap;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around;-webkit-align-items:flex-start;-ms-flex-align:start;align-items:flex-start;-webkit-align-content:flex-start;-ms-flex-line-pack:start;align-content:flex-start;width:100%;z-index:1;transition:-webkit-transform .5s ease-in-out;transition:transform .5s ease-in-out;transition:transform .5s ease-in-out,-webkit-transform .5s ease-in-out;-ms-touch-action:pan-y;touch-action:pan-y}:host::content .paper-carousel_controls{position:absolute;width:auto;top:50%;right:10px;left:10px;-webkit-transform:translateY(-50%);transform:translateY(-50%);text-align:center;z-index:1;pointer-events:none}:host::content [class*=paper-carousel_controls_arrow]{color:var(--dot-background-color);pointer-events:auto}:host::content [class*=paper-carousel_controls_arrow].paper-carousel_controls_arrow--disabled{pointer-events:none;cursor:default}:host::content [class*=paper-carousel_controls_arrow] iron-icon{opacity:var(--light-secondary-opacity);-webkit-filter:drop-shadow(0 0 1px rgba(0, 0, 0, .4));filter:drop-shadow(0 0 1px rgba(0, 0, 0, .4));-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transform:scale(1);transform:scale(1);transition:opacity .2s ease-out,-webkit-filter .2s ease-out,-webkit-transform .2s ease-out;transition:opacity .2s ease-out,filter .2s ease-out,transform .2s ease-out;transition:opacity .2s ease-out,filter .2s ease-out,transform .2s ease-out,-webkit-filter .2s ease-out,-webkit-transform .2s ease-out}:host::content [class*=paper-carousel_controls_arrow] iron-icon:hover{opacity:var(--light-primary-opacity);-webkit-transform:scale(1.15);transform:scale(1.15);-webkit-filter:drop-shadow(0 2px 2px rgba(0, 0, 0, .4));filter:drop-shadow(0 2px 2px rgba(0, 0, 0, .4))}:host::content .paper-carousel_controls_arrow-next{float:right}:host::content .paper-carousel_controls_arrow-prev{float:left}:host::content .paper-carousel_dots_wrapper{position:relative;display:inline-block;margin:0;padding:0;z-index:2}:host::content .paper-carousel_dots{position:absolute;width:100%;text-align:center;z-index:1;bottom:10px;pointer-events:none}:host::content .paper-carousel_dot-line{visibility:var(--dot-active-extra-item);position:absolute;top:0;padding:6px;z-index:2;pointer-events:none;transition:-webkit-transform .2s ease-in-out;transition:transform .2s ease-in-out;transition:transform .2s ease-in-out,-webkit-transform .2s ease-in-out}:host::content .paper-carousel_dot-line::before{content:'';display:block;width:10px;height:10px;background-color:var(--color-red);border-radius:10px}:host::content .paper-carousel_dot{display:inline-block;pointer-events:auto;opacity:var(--light-secondary-opacity);-webkit-filter:drop-shadow(0 0 2px rgba(0, 0, 0, .4));filter:drop-shadow(0 0 2px rgba(0, 0, 0, .4));-webkit-transform-origin:center;transform-origin:center;-webkit-transform:scale(1);transform:scale(1);transition:opacity .6s cubic-bezier(.25,.8,.25,1),-webkit-transform .6s cubic-bezier(.25,.8,.25,1),-webkit-filter .6s cubic-bezier(.25,.8,.25,1);transition:transform .6s cubic-bezier(.25,.8,.25,1),opacity .6s cubic-bezier(.25,.8,.25,1),filter .6s cubic-bezier(.25,.8,.25,1);transition:transform .6s cubic-bezier(.25,.8,.25,1),opacity .6s cubic-bezier(.25,.8,.25,1),filter .6s cubic-bezier(.25,.8,.25,1),-webkit-transform .6s cubic-bezier(.25,.8,.25,1),-webkit-filter .6s cubic-bezier(.25,.8,.25,1);-webkit-backface-visibility:hidden;backface-visibility:hidden}:host::content .paper-carousel_dot.active{opacity:var(--light-primary-opacity);-webkit-filter:drop-shadow(0 1px 3px rgba(0, 0, 0, .4));filter:drop-shadow(0 1px 3px rgba(0, 0, 0, .4));-webkit-transform:scale(1.15);transform:scale(1.15)}:host::content .paper-carousel_dot a{position:relative;display:block;padding:6px;color:var(--dot-background-color);font-size:.8125em;line-height:2em;font-weight:400;text-decoration:none}:host::content .paper-carousel_dot a::before{content:'';display:block;width:8px;height:8px;background-color:var(--dot-background-color);border-radius:8px}:host::content [class*=paper-carousel-demo]{position:relative;height:400px}:host::content [class*=paper-carousel-demo]::before{position:absolute;content:attr(data-text);color:var(--dot-background-color);font-size:3rem;font-weight:700;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}:host::content .paper-carousel-demo-indigo{background-color:var(--paper-indigo-500)}:host::content .paper-carousel-demo-pink{background-color:var(--paper-pink-500)}:host::content .paper-carousel-demo-teal{background-color:var(--paper-teal-500)}:host::content .paper-carousel-demo-amber{background-color:var(--paper-amber-500)}:host::content .paper-carousel-demo-green{background-color:var(--paper-green-500)}:host::content .paper-carousel-demo-blue{background-color:var(--paper-blue-500)}</style>
+    <style>:host{display:block;position:relative;overflow:hidden;--dot-background-color:#ffffff;--dot-active-extra-item:hidden}:host::content .paper-carousel_wrapper{text-align:center;position:relative;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-flow:row nowrap;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around;-webkit-align-items:flex-start;-ms-flex-align:start;align-items:flex-start;-webkit-align-content:flex-start;-ms-flex-line-pack:start;align-content:flex-start;width:100%;z-index:1;transition:-webkit-transform var(--transition-speed,500ms) ease-in-out;transition:transform var(--transition-speed,500ms) ease-in-out;transition:transform var(--transition-speed,500ms) ease-in-out,-webkit-transform var(--transition-speed,500ms) ease-in-out;-ms-touch-action:pan-y;touch-action:pan-y;will-change:transform}:host::content .paper-carousel_controls{position:absolute;width:auto;top:50%;right:10px;left:10px;-webkit-transform:translateY(-50%);transform:translateY(-50%);text-align:center;z-index:1;pointer-events:none}:host::content [class*=paper-carousel_controls_arrow]{color:var(--dot-background-color);pointer-events:auto}:host::content [class*=paper-carousel_controls_arrow].paper-carousel_controls_arrow--disabled{pointer-events:none;cursor:default}:host::content [class*=paper-carousel_controls_arrow] iron-icon{opacity:var(--light-secondary-opacity);-webkit-filter:drop-shadow(0 0 1px rgba(0, 0, 0, .4));filter:drop-shadow(0 0 1px rgba(0, 0, 0, .4));-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transform:scale(1);transform:scale(1);transition:opacity .2s ease-out,-webkit-filter .2s ease-out,-webkit-transform .2s ease-out;transition:opacity .2s ease-out,filter .2s ease-out,transform .2s ease-out;transition:opacity .2s ease-out,filter .2s ease-out,transform .2s ease-out,-webkit-filter .2s ease-out,-webkit-transform .2s ease-out}:host::content [class*=paper-carousel_controls_arrow] iron-icon:hover{opacity:var(--light-primary-opacity);-webkit-transform:scale(1.15);transform:scale(1.15);-webkit-filter:drop-shadow(0 2px 2px rgba(0, 0, 0, .4));filter:drop-shadow(0 2px 2px rgba(0, 0, 0, .4))}:host::content .paper-carousel_controls_arrow-next{float:right}:host::content .paper-carousel_controls_arrow-prev{float:left}:host::content .paper-carousel_dots_wrapper{position:relative;display:inline-block;margin:0;padding:0;z-index:2}:host::content .paper-carousel_dots{position:absolute;width:100%;text-align:center;z-index:1;bottom:10px;pointer-events:none}:host::content .paper-carousel_dot-line{visibility:var(--dot-active-extra-item);position:absolute;top:0;padding:6px;z-index:2;pointer-events:none;transition:-webkit-transform .2s ease-in-out;transition:transform .2s ease-in-out;transition:transform .2s ease-in-out,-webkit-transform .2s ease-in-out}:host::content .paper-carousel_dot-line::before{content:'';display:block;width:10px;height:10px;background-color:var(--color-red);border-radius:10px}:host::content .paper-carousel_dot{display:inline-block;pointer-events:auto;opacity:var(--light-secondary-opacity);-webkit-filter:drop-shadow(0 0 2px rgba(0, 0, 0, .4));filter:drop-shadow(0 0 2px rgba(0, 0, 0, .4));-webkit-transform-origin:center;transform-origin:center;-webkit-transform:scale(1);transform:scale(1);transition:opacity .6s cubic-bezier(.25,.8,.25,1),-webkit-transform .6s cubic-bezier(.25,.8,.25,1),-webkit-filter .6s cubic-bezier(.25,.8,.25,1);transition:transform .6s cubic-bezier(.25,.8,.25,1),opacity .6s cubic-bezier(.25,.8,.25,1),filter .6s cubic-bezier(.25,.8,.25,1);transition:transform .6s cubic-bezier(.25,.8,.25,1),opacity .6s cubic-bezier(.25,.8,.25,1),filter .6s cubic-bezier(.25,.8,.25,1),-webkit-transform .6s cubic-bezier(.25,.8,.25,1),-webkit-filter .6s cubic-bezier(.25,.8,.25,1);-webkit-backface-visibility:hidden;backface-visibility:hidden}:host::content .paper-carousel_dot.active{opacity:var(--light-primary-opacity);-webkit-filter:drop-shadow(0 1px 3px rgba(0, 0, 0, .4));filter:drop-shadow(0 1px 3px rgba(0, 0, 0, .4));-webkit-transform:scale(1.15);transform:scale(1.15)}:host::content .paper-carousel_dot a{position:relative;display:block;padding:6px;color:var(--dot-background-color);font-size:.8125em;line-height:2em;font-weight:400;text-decoration:none}:host::content .paper-carousel_dot a::before{content:'';display:block;width:8px;height:8px;background-color:var(--dot-background-color);border-radius:8px}:host::content [class*=paper-carousel-demo]{position:relative;height:400px}:host::content [class*=paper-carousel-demo]::before{position:absolute;content:attr(data-text);color:var(--dot-background-color);font-size:3rem;font-weight:700;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}:host::content .paper-carousel-demo-indigo{background-color:var(--paper-indigo-500)}:host::content .paper-carousel-demo-pink{background-color:var(--paper-pink-500)}:host::content .paper-carousel-demo-teal{background-color:var(--paper-teal-500)}:host::content .paper-carousel-demo-amber{background-color:var(--paper-amber-500)}:host::content .paper-carousel-demo-green{background-color:var(--paper-green-500)}:host::content .paper-carousel-demo-blue{background-color:var(--paper-blue-500)}</style>
     <div class="paper-carousel_wrapper">
       <content></content>
     </div>
   </template>
-  <script>(function(){Polymer({is:"paper-carousel",behaviors:[Polymer.IronResizableBehavior],listeners:{"iron-resize":"_onResize"},items:function(){var t,e,r,i,o,s;if(i=this,o=i.getBoundingClientRect(),null!==i.getAttribute("responsive"))for(r=i.getAttribute("responsive").replace(/\s/g,"").split(","),e=0;e<r.length;){if(t=r[e].split(":"),s=r[e+1]?r[e+1].split(":"):{0:0},o.width<=t[0]&&o.width>s[0])return t[1];e++}return null!==i.getAttribute("items")?i.getAttribute("items"):1},_dotText:function(){var t,e;return t=this,e=t.getAttribute("dotText"),null===e||"false"!==e},getTotalItems:function(){var t,e,r,i,o,s,n;for(i=this,o=i.querySelector(".paper-carousel_wrapper"),n=0,s=o.children,e=0,r=s.length;e<r;e++)t=s[e],"template"!==t.localName&&n++;return n},getPages:function(){var t,e,r,i;for(e=this,t=1,r=[],i=[];t<=this.getTotalItems();)r.push(t-1),t%this.items()===0&&(i.push(r),r=[]),t===this.getTotalItems()&&i.push(r),t++;return i},getTotalPages:function(){var t;return t=this,Math.ceil(this.getTotalItems()/this.items())},getContainerPosition:function(){var t,e,r,i,o;return t=this,e=t.querySelector(".paper-carousel_wrapper"),r=e.style.transform,o=0,""!==r&&(i=r.match(/translateX\((.*)/)[0],o=i.match(/\((.*)\)/)[0],o=o.substr(1,o.length-2),o=parseFloat(o)),o},getCurrentItem:function(){var t,e;for(e=Math.round(100/this.getTotalItems()*1e3)/1e3,t=0;t<=this.getTotalItems();){if(Math.round(e*t*1e3)/1e3===-this.getContainerPosition())return t;t++}},goToItem:function(t){var e,r,i,o;return r=this,i=r.querySelector(".paper-carousel_wrapper"),e=Math.round(100/this.getTotalItems()*1e3)/1e3,o=Math.round(t*-e*1e3)/1e3,t<this.getTotalItems()&&t>=0&&this.items()<this.getTotalItems()&&(i.style.transform="translateX("+o+"%)"),this._setActiveDot(this.getCurrentPage()),this._setDisabledControls()},goToNextItem:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()>-(this.getTotalItems()-this.items()-1)*t-5)return this.goToItem(this.getCurrentItem()+1)},goToPrevItem:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()<0)return this.goToItem(this.getCurrentItem()-1)},getCurrentPage:function(){var t,e,r,i,o;for(t=Math.round(100/this.getTotalItems()*1e3)/1e3,o=t*this.items(),i=0;i<this.getPages().length;){if(r=this.getPages()[i],e=parseFloat(this.getCurrentItem())+parseFloat(this.items()),e>=this.getTotalItems())return this.goToPage(this.getTotalPages()-1),this.getTotalPages()-1;if(r.indexOf(this.getCurrentItem())!==-1)return i;i++}},goToPage:function(t){var e,r,i,o,s,n;return r=this,i=r.querySelector(".paper-carousel_wrapper"),e=Math.round(100/this.getTotalItems()*1e3)/1e3,n=(this.items()-this.getPages()[t].length)*e,s=-e*this.items(),o=Math.round(1e3*(t*s+n))/1e3,t<this.getTotalPages()&&t>=0&&this.items()<this.getTotalItems()&&(i.style.transform="translateX("+o+"%)"),this._setActiveDot(t),this._setDisabledControls()},goToNextPage:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()>-(this.getTotalItems()-this.items()-1)*t-5)return this.goToPage(this.getCurrentPage()+1)},goToPrevPage:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()<-5)return this.goToPage(this.getCurrentPage()-1)},_setContainerSize:function(){var t,e,r,i,o,s,n,a,l;for(s=this,a=s.querySelector(".paper-carousel_wrapper"),n=s.getBoundingClientRect(),r=n.width*this.getTotalItems()/this.items(),e=Math.round(100/this.getTotalItems()*1e4)/1e4,l=a.children,i=0,o=l.length;i<o;i++)t=l[i],"template"!==t.localName&&(t.style.width=e+"%");return a.style.minWidth=r+"px"},_setActiveDot:function(t){var e,r,i,o;for(o=this,r=o.querySelectorAll(".paper-carousel_dot"),e=o.querySelector(".paper-carousel_dot-line"),i=0;i<r.length;)i===parseInt(t)?r[t].classList.add("active"):r[i].classList.remove("active"),i++;if(e&&this.items()<this.getTotalItems())return e.style.transform="translateX("+t+"00%)"},_printControls:function(t){var e,r,i,o,s,n,a,l;if(o=this,i=1,"false"!==o.getAttribute("controls")&&(t===!0||o.tpages!==this.items()))return o.querySelector(".paper-carousel_controls")&&o.querySelector(".paper-carousel_controls").remove(),e=document.createElement("div"),e.classList.add("paper-carousel_controls"),r=document.createElement("div"),r.classList.add("paper-carousel_controls_wrapper"),s=document.createElement("a"),n=document.createElement("iron-icon"),null!==o.getAttribute("nextIcon")?n.setAttribute("icon",o.getAttribute("nextIcon")):n.setAttribute("icon","image:navigate-next"),a=document.createElement("a"),l=document.createElement("iron-icon"),null!==o.getAttribute("prevIcon")?l.setAttribute("icon",o.getAttribute("prevIcon")):l.setAttribute("icon","image:navigate-before"),s.setAttribute("href",""),s.classList.add("paper-carousel_controls_arrow-next"),a.setAttribute("href",""),a.classList.add("paper-carousel_controls_arrow-prev"),s.addEventListener("click",function(t){return t.preventDefault()}),a.addEventListener("click",function(t){return t.preventDefault()}),o.listen(s,"tap","goToNextItem"),o.listen(a,"tap","goToPrevItem"),Polymer.dom(s).appendChild(n),Polymer.dom(a).appendChild(l),Polymer.dom(e).appendChild(r),Polymer.dom(r).appendChild(a),Polymer.dom(r).appendChild(s),this.getTotalPages()>1&&Polymer.dom(o.root).appendChild(e),this._setDisabledControls()},_setDisabledControls:function(t){var e,r,i,o;if(o=this,i=Math.round(100/this.getTotalItems()*1e3)/1e3,e=o.querySelector(".paper-carousel_controls_arrow-prev"),r=o.querySelector(".paper-carousel_controls_arrow-next"),null!==r&&null!==e)return this.getContainerPosition()>-5?e.classList.add("paper-carousel_controls_arrow--disabled"):e.classList.remove("paper-carousel_controls_arrow--disabled"),this.getContainerPosition()<-(this.getTotalItems()-this.items()-1)*i?r.classList.add("paper-carousel_controls_arrow--disabled"):r.classList.remove("paper-carousel_controls_arrow--disabled")},_printDots:function(t){var e,r,i,o,s,n,a;if(a=this,n=1,"false"!==a.getAttribute("dots")){if(o=document.createElement("div"),o.classList.add("paper-carousel_dots"),s=document.createElement("ul"),s.classList.add("paper-carousel_dots_wrapper"),Polymer.dom(o).appendChild(s),t!==!0){if(a.tpages===this.items())return;a.tpages=this.items()}for(a.querySelector(".paper-carousel_dots")&&a.querySelector(".paper-carousel_dots").remove();n<=this.getTotalPages();)r=document.createElement("li"),r.classList.add("paper-carousel_dot"),i=document.createElement("a"),i.setAttribute("href",""),i.setAttribute("data-rel",n-1),a.clickDotsEvent=function(t){var e;return e=t.target.getAttribute("data-rel"),this.goToPage(e)},i.addEventListener("click",function(t){return t.preventDefault()}),a.listen(i,"tap","clickDotsEvent"),this._dotText()===!0&&(i.textContent=n),e=document.createElement("li"),e.classList.add("paper-carousel_dot-line"),Polymer.dom(r).appendChild(i),Polymer.dom(s).appendChild(r),n===this.getTotalPages()&&Polymer.dom(s).appendChild(e),n++;return this.getTotalPages()>1&&Polymer.dom(a.root).appendChild(o),this._setActiveDot(this.getCurrentPage())}},_getDragState:function(t){var e,r,i,o,s,n,a,l,u,h,c,g,d,m,p,f,v;switch(l=this,u=l.querySelector(".paper-carousel_wrapper"),h=u.getBoundingClientRect(),c=Math.round(100*t.detail.dx/h.width*1e3)/1e3,s=Math.round(100/this.getTotalItems()*1e3)/1e3,a=Math.round(s*(this.getTotalItems()-this.items())*1e3)/1e3,i=0,v=t.detail.dx,t.detail.state){case"start":return l.startTime=(new Date).getTime(),l.dragPosition=this.getContainerPosition(),window.touching=!0,u.style.transitionDuration="0s",window.addEventListener("scroll",function(){return clearInterval(window.scrollingInterval),window.scrolling=!0,window.touchScroll=!0,window.scrollingInterval=setTimeout(function(){if(window.scrolling=!1,window.touching===!1)return window.touchScroll=!1},50)});case"track":return d=Math.round(1e3*(l.dragPosition+c))/1e3,d=Math.min(d,0),d=Math.max(d,-a),window.scrolling===!1&&window.touchScroll===!1&&(v>30||v<-30)&&(this.items()<this.getTotalItems()&&window.movingCarousel===!0&&(u.style.transform="translateX("+d+"%)"),window.movingCarousel=!0),window.addEventListener("touchmove",function(t){if(window.movingCarousel===!0)return t.preventDefault()});case"end":if(i=(new Date).getTime(),f=i-l.startTime,n=Math.max(Math.min(f,500),100),o=0,this.getContainerPosition()>-5&&(n=500),this.getContainerPosition()<-(this.getTotalItems()-this.items())*s+5&&(n=500),v<30&&v>-30&&(n=500),u.style.transitionDuration=n+"ms",l.resetTransition=function(){return u.style.transitionDuration=""},l.listen(u,"transitionend","resetTransition"),window.scrolling===!1&&window.touchScroll===!1&&(v>30||v<-30))for(;o<this.getTotalItems();)m=-Math.round(s*o*1e3)/1e3,e=-Math.round(s*(o+1)*1e3)/1e3,g=Math.round(1e3*(m-e))/1e3,r=e+g/2,p=m-g/2,c<0&&f<150&&this.getContainerPosition()<m&&this.getContainerPosition()>=e&&this.goToItem(o+1),c>0&&f<150&&this.getContainerPosition()<m&&this.getContainerPosition()>=e&&this.goToItem(o),this.getContainerPosition()<m&&this.getContainerPosition()>=r&&this.goToItem(o),this.getContainerPosition()<p&&this.getContainerPosition()>=e&&this.goToItem(o+1),o++;return window.movingCarousel=!1,window.touchScroll=!1,window.touching=!1}},_onDrag:function(){var t,e;return t=this,e=t.querySelector(".paper-carousel_wrapper"),t.listen(this.$$(".paper-carousel_wrapper"),"track","_getDragState"),e.style.touchAction=""},refresh:function(){return this._setContainerSize(),this._printControls(!0),this._printDots(!0),this._onResize()},ready:function(){},attached:function(){return this._onDrag(),this._onResize()},_onResize:function(){return this._setContainerSize(),this._printControls(),this._printDots()}})}).call(this);</script>
+  <script>(function(){Polymer({is:"paper-carousel",behaviors:[Polymer.IronResizableBehavior],listeners:{"iron-resize":"_onResize"},items:function(){var t,e,o,i,r,s;if(i=this,r=i.getBoundingClientRect(),null!==i.getAttribute("responsive"))for(o=i.getAttribute("responsive").replace(/\s/g,"").split(","),e=0;e<o.length;){if(t=o[e].split(":"),s=o[e+1]?o[e+1].split(":"):{0:0},r.width<=t[0]&&r.width>s[0])return t[1];e++}return null!==i.getAttribute("items")?i.getAttribute("items"):1},_dotText:function(){var t,e;return t=this,e=t.getAttribute("dotText"),null===e||"false"!==e},_isLoop:function(){var t,e;return t=this,e=t.getAttribute("loop"),null!==e&&"true"===e},_transitionSpeed:function(){var t,e;if(t=this,e=t.getAttribute("transitionspeed"),null!==e&&void 0!==e)return t.customStyle["--transition-speed"]=e+"ms",t.updateStyles()},_isAutoplay:function(){var t,e;return t=this,e=t.getAttribute("autoplay"),null!==e&&"true"===e},getTotalItems:function(){var t,e,o,i,r,s,n,a,l,h;if(s=this,n=s.querySelector(".paper-carousel_wrapper"),h=0,s._isLoop())for(a=n.children,e=0,i=a.length;e<i;e++)t=a[e],"template"===t.localName||t.classList.contains("cloned")||h++;else for(l=n.children,o=0,r=l.length;o<r;o++)t=l[o],"template"!==t.localName&&h++;return h},_getRealTotalItems:function(){var t,e,o,i,r,s,n;for(i=this,r=i.querySelector(".paper-carousel_wrapper"),n=0,s=r.children,e=0,o=s.length;e<o;e++)t=s[e],"template"!==t.localName&&n++;return n},getPages:function(){var t,e,o,i;for(e=this,t=1,o=[],i=[];t<=this.getTotalItems();)o.push(t-1),t%this.items()===0&&(i.push(o),o=[]),t===this.getTotalItems()&&i.push(o),t++;return i},getTotalPages:function(){var t;return t=this,Math.ceil(this.getTotalItems()/this.items())},getContainerPosition:function(){var t,e,o,i,r;return t=this,e=t.querySelector(".paper-carousel_wrapper"),o=e.style.transform,r=0,""!==o&&(i=o.match(/translateX\((.*)/)[0],r=i.match(/\((.*)\)/)[0],r=r.substr(1,r.length-2),r=parseFloat(r)),r},getCurrentItem:function(){var t,e,o,i;if(i=this,e=Math.round(100/this.getTotalItems()*1e3)/1e3,o=Math.round(100/this._getRealTotalItems()*1e3)/1e3,t=0,this._isLoop)for(;t<=this._getRealTotalItems();){if(Math.round(o*t*1e3)/1e3===-this.getContainerPosition())return i.currentItem=t-this.itemsToPrepend.length,t-this.itemsToPrepend.length;t++}else for(;t<=this.getTotalItems();){if(Math.round(e*t*1e3)/1e3===-this.getContainerPosition())return i.currentItem=t,t;t++}},goToItem:function(t){var e,o,i,r;return o=this,i=o.querySelector(".paper-carousel_wrapper"),this._isLoop()?(e=Math.round(100/this._getRealTotalItems()*1e3)/1e3,r=Math.round((t+this.itemsToPrepend.length)*-e*1e3)/1e3):(e=Math.round(100/this.getTotalItems()*1e3)/1e3,r=Math.round(t*-e*1e3)/1e3),this._isLoop()?i.style.transform="translateX("+r+"%)":t<this.getTotalItems()&&t>=0&&this.items()<this.getTotalItems()&&(i.style.transform="translateX("+r+"%)"),this._setActiveDot(this.getCurrentPage()),this._setDisabledControls(),this._fireOnMoveEvent()},goToNextItem:function(){var t,e,o,i;if(o=this,i=o.querySelector(".paper-carousel_wrapper"),t=Math.round(100/this.getTotalItems()*1e3)/1e3,e=Math.round(100/this._getRealTotalItems()*1e3)/1e3,this._isLoop()){if(this.goToItem(this.getCurrentItem()+1),this.getCurrentItem()===this.getTotalItems())return i.style.transition="none",this.goToItem(-1),i.style.transition="",this.goToItem(0)}else if(this.getContainerPosition()>-(this.getTotalItems()-this.items()-1)*t-5)return this.goToItem(this.getCurrentItem()+1)},goToPrevItem:function(){var t,e,o,i;if(o=this,i=o.querySelector(".paper-carousel_wrapper"),t=Math.round(100/this.getTotalItems()*1e3)/1e3,e=Math.round(100/this._getRealTotalItems()*1e3)/1e3,this._isLoop){if(this.goToItem(this.getCurrentItem()-1),this.getCurrentItem()===-1)return i.style.transition="none",this.goToItem(this.getTotalItems()),i.style.transition="",this.goToItem(this.getTotalItems()-1)}else if(this.getContainerPosition()<0)return this.goToItem(this.getCurrentItem()-1)},getCurrentPage:function(){var t,e,o,i,r;for(t=Math.round(100/this.getTotalItems()*1e3)/1e3,r=t*this.items(),i=0;i<this.getPages().length;){if(o=this.getPages()[i],e=parseFloat(this.getCurrentItem())+parseFloat(this.items()),e>=this.getTotalItems())return this._isLoop()||this.goToPage(this.getTotalPages()-1),this.getTotalPages()-1;if(o.indexOf(this.getCurrentItem())!==-1)return i;i++}},goToPage:function(t){var e,o,i,r,s,n,a,l,h;return i=this,r=i.querySelector(".paper-carousel_wrapper"),e=Math.round(100/this.getTotalItems()*1e3)/1e3,o=Math.round(100/this._getRealTotalItems()*1e3)/1e3,l=(this.items()-this.getPages()[t].length)*e,h=(this.items()-this.getPages()[t].length)*o,n=-e*this.items(),a=-o*this.items(),s=this._isLoop()?Math.round(1e3*(t*a+h))/1e3+a:Math.round(1e3*(t*n+l))/1e3,this._isLoop()?r.style.transform="translateX("+s+"%)":t<this.getTotalPages()&&t>=0&&this.items()<this.getTotalItems()&&(r.style.transform="translateX("+s+"%)"),this._setActiveDot(t),this._setDisabledControls(),this._fireOnMoveEvent()},goToNextPage:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()>-(this.getTotalItems()-this.items()-1)*t-5)return this.goToPage(this.getCurrentPage()+1)},goToPrevPage:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()<-5)return this.goToPage(this.getCurrentPage()-1)},_createOnMoveEvent:function(){var t;return t=this,t.onMove=void 0,document.createEvent?(t.onMove=document.createEvent("HTMLEvents"),t.onMove.initEvent("onmove",!0,!0)):(t.onMove=document.createEventObject(),t.onMove.eventType="onmove"),t.onMove.eventName="onmove"},_fireOnMoveEvent:function(){var t;return t=this,document.createEvent?t.dispatchEvent(t.onMove):t.fireEvent("on"+t.onMove.eventType,t.onMove)},_setContainerSize:function(){var t,e,o,i,r,s,n,a,l;for(s=this,a=s.querySelector(".paper-carousel_wrapper"),n=s.getBoundingClientRect(),o=this._isLoop()?n.width*s._getRealTotalItems()/this.items():n.width*s.getTotalItems()/this.items(),e=this._isLoop?Math.round(100/this._getRealTotalItems()*1e4)/1e4:Math.round(100/this.getTotalItems()*1e4)/1e4,l=a.children,i=0,r=l.length;i<r;i++)t=l[i],"template"!==t.localName&&(t.style.width=e+"%");return a.style.minWidth=o+"px"},_setActiveDot:function(t){var e,o,i,r;for(r=this,o=r.querySelectorAll(".paper-carousel_dot"),e=r.querySelector(".paper-carousel_dot-line"),i=0;i<o.length;)i===parseInt(t)?o[t].classList.add("active"):o[i].classList.remove("active"),i++;if(e&&this.items()<this.getTotalItems())return e.style.transform="translateX("+t+"00%)"},_printControls:function(t){var e,o,i,r,s,n,a,l;if(r=this,i=1,"false"!==r.getAttribute("controls")&&(t===!0||r.tpages!==this.items()))return r.querySelector(".paper-carousel_controls")&&r.querySelector(".paper-carousel_controls").remove(),e=document.createElement("div"),e.classList.add("paper-carousel_controls"),o=document.createElement("div"),o.classList.add("paper-carousel_controls_wrapper"),s=document.createElement("a"),n=document.createElement("iron-icon"),null!==r.getAttribute("nextIcon")?n.setAttribute("icon",r.getAttribute("nextIcon")):n.setAttribute("icon","image:navigate-next"),a=document.createElement("a"),l=document.createElement("iron-icon"),null!==r.getAttribute("prevIcon")?l.setAttribute("icon",r.getAttribute("prevIcon")):l.setAttribute("icon","image:navigate-before"),s.setAttribute("href",""),s.classList.add("paper-carousel_controls_arrow-next"),a.setAttribute("href",""),a.classList.add("paper-carousel_controls_arrow-prev"),s.addEventListener("click",function(t){return t.preventDefault(),r._disableAutoPlay()}),a.addEventListener("click",function(t){return t.preventDefault(),r._disableAutoPlay()}),r.listen(s,"tap","goToNextItem"),r.listen(a,"tap","goToPrevItem"),Polymer.dom(s).appendChild(n),Polymer.dom(a).appendChild(l),Polymer.dom(e).appendChild(o),Polymer.dom(o).appendChild(a),Polymer.dom(o).appendChild(s),this.getTotalPages()>1&&Polymer.dom(r.root).appendChild(e),this._setDisabledControls()},_setDisabledControls:function(t){var e,o,i,r,s;if(s=this,i=Math.round(100/this.getTotalItems()*1e3)/1e3,r=Math.round(100/this._getRealTotalItems()*1e3)/1e3,e=s.querySelector(".paper-carousel_controls_arrow-prev"),o=s.querySelector(".paper-carousel_controls_arrow-next"),!this._isLoop()&&null!==o&&null!==e)return this.getContainerPosition()>-.5?e.classList.add("paper-carousel_controls_arrow--disabled"):e.classList.remove("paper-carousel_controls_arrow--disabled"),this.getContainerPosition()<-(this.getTotalItems()-this.items()-1)*i?o.classList.add("paper-carousel_controls_arrow--disabled"):o.classList.remove("paper-carousel_controls_arrow--disabled")},_printDots:function(t){var e,o,i,r,s,n,a;if(a=this,n=1,"false"!==a.getAttribute("dots")){if(r=document.createElement("div"),r.classList.add("paper-carousel_dots"),s=document.createElement("ul"),s.classList.add("paper-carousel_dots_wrapper"),Polymer.dom(r).appendChild(s),t!==!0){if(a.tpages===this.items())return;a.tpages=this.items()}for(a.querySelector(".paper-carousel_dots")&&a.querySelector(".paper-carousel_dots").remove();n<=this.getTotalPages();)o=document.createElement("li"),o.classList.add("paper-carousel_dot"),i=document.createElement("a"),i.setAttribute("href",""),i.setAttribute("data-rel",n-1),a.clickDotsEvent=function(t){var e;return e=t.target.getAttribute("data-rel"),this.goToPage(e)},i.addEventListener("click",function(t){return t.preventDefault(),a._disableAutoPlay()}),a.listen(i,"tap","clickDotsEvent"),this._dotText()===!0&&(i.textContent=n),e=document.createElement("li"),e.classList.add("paper-carousel_dot-line"),Polymer.dom(o).appendChild(i),Polymer.dom(s).appendChild(o),n===this.getTotalPages()&&Polymer.dom(s).appendChild(e),n++;return this.getTotalPages()>1&&Polymer.dom(a.root).appendChild(r),this._setActiveDot(this.getCurrentPage())}},_getDragState:function(t){var e,o,i,r,s,n,a,l,h,u,c,g,d,m,p,f,v,_,T;switch(u=this,c=u.querySelector(".paper-carousel_wrapper"),g=c.getBoundingClientRect(),d=Math.round(100*t.detail.dx/g.width*1e3)/1e3,s=Math.round(100/this.getTotalItems()*1e3)/1e3,n=Math.round(100/this._getRealTotalItems()*1e3)/1e3,l=Math.round(s*(this.getTotalItems()-this.items())*1e3)/1e3,h=Math.round(n*(this._getRealTotalItems()-this.items())*1e3)/1e3,i=0,T=t.detail.dx,t.detail.state){case"start":return u.startTime=(new Date).getTime(),u.dragPosition=this.getContainerPosition(),window.touching=!0,c.style.transitionDuration="0s",window.addEventListener("scroll",function(){return clearInterval(window.scrollingInterval),window.scrolling=!0,window.touchScroll=!0,window.scrollingInterval=setTimeout(function(){if(window.scrolling=!1,window.touching===!1)return window.touchScroll=!1},50)});case"track":return p=Math.round(1e3*(u.dragPosition+d))/1e3,p=Math.min(p,0),p=this._isLoop()?Math.max(p,-h):Math.max(p,-l),window.scrolling!==!1&&void 0!==window.scrolling||window.touchScroll!==!1&&void 0!==window.touchScroll||(T>2||T<-2)&&(this.items()<this.getTotalItems()&&window.movingCarousel===!0&&(c.style.transform="translateX("+p+"%) translateY(0) translateZ(0)"),window.movingCarousel=!0),window.addEventListener("touchmove",function(t){if(window.movingCarousel===!0)return t.preventDefault()});case"end":if(i=(new Date).getTime(),_=i-u.startTime,a=Math.max(Math.min(_,500),100),r=this._isLoop()?-1:0,this.getContainerPosition()>-5&&(a=500),this._isLoop()?this.getContainerPosition()<-(this._getRealTotalItems()-this.items())*s+5&&(a=500):this.getContainerPosition()<-(this.getTotalItems()-this.items())*s+5&&(a=500),T<30&&T>-30&&(a=500),c.style.transitionDuration=a+"ms",u.resetTransition=function(){return u._isLoop()&&(u.getCurrentItem()===u.getTotalItems()&&(c.style.transition="none",u.goToItem(0),c.style.transition=""),this.getCurrentItem()===-1&&(c.style.transition="none",this.goToItem(this.getTotalItems()-1),c.style.transition="")),c.style.transitionDuration=""},u.listen(c,"transitionend","resetTransition"),!(window.scrolling!==!1&&void 0!==window.scrolling||window.touchScroll!==!1&&void 0!==window.touchScroll)&&(T>2||T<-2))if(this._isLoop())for(;r<this._getRealTotalItems();)f=-Math.round(n*(r+this.itemsToPrepend.length)*1e3)/1e3,e=-Math.round(n*(r+this.itemsToPrepend.length+1)*1e3)/1e3,m=Math.round(1e3*(f-e))/1e3,o=e+m/2,v=f-m/2,d<0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r+1),d>0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r),this.getContainerPosition()<f&&this.getContainerPosition()>=o&&this.goToItem(r),this.getContainerPosition()<v&&this.getContainerPosition()>=e&&this.goToItem(r+1),r++;else for(;r<this.getTotalItems();)f=-Math.round(s*r*1e3)/1e3,e=-Math.round(s*(r+1)*1e3)/1e3,m=Math.round(1e3*(f-e))/1e3,o=e+m/2,v=f-m/2,d<0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r+1),d>0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r),this.getContainerPosition()<f&&this.getContainerPosition()>=o&&this.goToItem(r),this.getContainerPosition()<v&&this.getContainerPosition()>=e&&this.goToItem(r+1),r++;return window.movingCarousel=!1,window.touchScroll=!1,window.touching=!1}},_loop:function(){var t,e,o,i,r;if(o=this,o._isLoop())return i=o.querySelector(".paper-carousel_wrapper"),r=0,o.itemsToAppend=[],o.itemsToPrepend=[],e=o.querySelectorAll(".paper-carousel_wrapper .cloned"),t=function(){var t;return t=[],[].forEach.call(i.children,function(e,i){var r;if(i<o.items()&&(r=e.cloneNode(!0),r.classList.add("cloned"),o.itemsToAppend.push(r)),i>=o.getTotalItems()-o.items()&&i<=o.getTotalItems())return t.push(e)}),[].forEach.call(t,function(t,e){var i;if(e<o.items())return i=t.cloneNode(!0),i.classList.add("cloned"),o.itemsToPrepend.push(i)})},e.length>0?[].forEach.call(e,function(o,i){if(o.remove(),i===e.length-1)return t()}):t(),[].forEach.call(o.itemsToAppend,function(t,e){return i.appendChild(t)}),[].forEach.call(o.itemsToPrepend.reverse(),function(t,e){return i.insertBefore(t.cloneNode(!0),i.children[0])})},_autoPlay:function(){var t,e;if(e=this,t=null!==e.getAttribute("autoplaytime")&&void 0!==e.getAttribute("autoplaytime")?e.getAttribute("autoplaytime"):6e3,e._isAutoplay())return e.autoPlayInterval=setInterval(function(){return e._isLoop()?e.goToNextItem():e.getCurrentItem()+1<e.getTotalItems()?e.goToNextItem():e.goToItem(0)},t)},_disableAutoPlay:function(){var t;if(t=this,t._isAutoplay())return clearInterval(t.autoPlayInterval),t._isAutoplay=function(){return!1}},_onDrag:function(){var t,e;return t=this,e=t.querySelector(".paper-carousel_wrapper"),t.listen(this.$$(".paper-carousel_wrapper"),"track","_getDragState"),e.style.touchAction=""},_setInitialPosition:function(){var t,e;return t=this,e=t.querySelector(".paper-carousel_wrapper"),e.style.transition="none",t.goToItem(0),e.style.transition="",t.initialize=!0},refresh:function(){return this._setContainerSize(),this._printControls(!0),this._printDots(!0),this._onResize()},ready:function(){return this.itemsToAppend=[],this.itemsToPrepend=[],this._createOnMoveEvent()},attached:function(){var t;return t=this,this.async(function(){return setTimeout(function(){return t._onLoad()},0)})},_onLoad:function(){return this._onDrag(),this._onResize(),this._setInitialPosition(),this._transitionSpeed(),this._autoPlay()},_onResize:function(){if(this._loop(),this._setContainerSize(),this._printControls(),this._printDots(),this.initialize===!0)return this.goToItem(this.currentItem)}})}).call(this);</script>
 </dom-module><!-- other imports -->
 <!--
 @license
@@ -14271,7 +14340,6 @@ within `fitInto` boundaries, while preserving the element's CSS margin values.
 @demo demo/index.html
 @polymerBehavior
 */
-
   Polymer.IronFitBehavior = {
 
     properties: {
@@ -16606,6 +16674,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     var lastScrollableNodes = [];
 
+    var scrollEvents = [
+      // Modern `wheel` event for mouse wheel scrolling:
+      'wheel',
+      // Older, non-standard `mousewheel` event for some FF:
+      'mousewheel',
+      // IE:
+      'DOMMouseScroll',
+      // Touch enabled devices
+      'touchstart',
+      'touchmove'
+    ];
+
     /**
      * The IronDropdownScrollManager is intended to provide a central source
      * of authority and control over which elements in a document are currently
@@ -16774,24 +16854,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _lockScrollInteractions: function() {
         this._boundScrollHandler = this._boundScrollHandler ||
           this._scrollInteractionHandler.bind(this);
-        // Modern `wheel` event for mouse wheel scrolling:
-        document.addEventListener('wheel', this._boundScrollHandler, true);
-        // Older, non-standard `mousewheel` event for some FF:
-        document.addEventListener('mousewheel', this._boundScrollHandler, true);
-        // IE:
-        document.addEventListener('DOMMouseScroll', this._boundScrollHandler, true);
-        // Save the lastScrollableNodes on touchstart, to be used on touchmove.
-        document.addEventListener('touchstart', this._boundScrollHandler, true);
-        // Mobile devices can scroll on touch move:
-        document.addEventListener('touchmove', this._boundScrollHandler, true);
+        for (var i = 0, l = scrollEvents.length; i < l; i++) {
+          // NOTE: browsers that don't support objects as third arg will
+          // interpret it as boolean, hence useCapture = true in this case. 
+          document.addEventListener(scrollEvents[i], this._boundScrollHandler, {
+            capture: true,
+            passive: false
+          });
+        }
       },
 
       _unlockScrollInteractions: function() {
-        document.removeEventListener('wheel', this._boundScrollHandler, true);
-        document.removeEventListener('mousewheel', this._boundScrollHandler, true);
-        document.removeEventListener('DOMMouseScroll', this._boundScrollHandler, true);
-        document.removeEventListener('touchstart', this._boundScrollHandler, true);
-        document.removeEventListener('touchmove', this._boundScrollHandler, true);
+        for (var i = 0, l = scrollEvents.length; i < l; i++) {
+          // NOTE: browsers that don't support objects as third arg will
+          // interpret it as boolean, hence useCapture = true in this case.
+          document.removeEventListener(scrollEvents[i], this._boundScrollHandler, {
+            capture: true,
+            passive: false
+          });
+        }
       },
 
       /**
@@ -18121,7 +18202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     observers: [
-      '_detectKeyboardFocus(focused)',
+      '_focusChanged(focused)',
       '_activeChanged(active, ariaActiveAttribute)'
     ],
 
@@ -18139,6 +18220,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._userActivate(!this.active);
       } else {
         this.active = false;
+      }
+    },
+
+    _focusChanged: function(focused) {
+      this._detectKeyboardFocus(focused);
+
+      if (!focused) {
+        this._setPressed(false);
       }
     },
 
@@ -20897,7 +20986,7 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
+--><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
 <style is="custom-style">
 
   :root {
@@ -21635,8 +21724,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /* for wedding-portrait */
         --wedding-portrait-invert-color: var(--secondary-text-color);
       }
-      
-      
+
       /*** Slider styling ***/
       paper-carousel {
         max-width: 860px;
@@ -21656,22 +21744,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /* for small screens: get padding to overlap all bullets */
       /*@media (max-width: 556px) {*/
-        /*#gallery {*/
-          /*padding-bottom: 40px;*/
-        /*}*/
+      /*#gallery {*/
+      /*padding-bottom: 40px;*/
+      /*}*/
       /*}*/
 
       /*@media (max-width: 382px) {*/
-        /*#gallery {*/
-          /*padding-bottom: 80px;*/
-        /*}*/
+      /*#gallery {*/
+      /*padding-bottom: 80px;*/
+      /*}*/
       /*}*/
 
       /* unfortunatelly cat-slider is not working properly on smartphones, so it'll be hidden */
       /*@media (max-width: 740px) {*/
-        /*#gallery {*/
-          /*display: none;*/
-        /*}*/
+      /*#gallery {*/
+      /*display: none;*/
+      /*}*/
       /*}*/
 
     </style>
@@ -21680,169 +21768,253 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
       <wedding-eyecatcher title="Brautpaar" img="/src/image/1/eyecatcher.jpg" contentpadding="true">
-        Jesus sagt in Johannes 8,12: «Ich bin das Licht der Welt; wer mir nachfolgt, wird nicht in der Finsternis
-        wandeln,
-        sondern wird das Licht des Lebens haben.»
+        <h3>Die Trauung findet aufgrund vorgängigem schlechtem Wetter <a href="/trauung.html#kirchlich">in der evangelischen Kirche Affeltrangen</a> statt.</h3>
       </wedding-eyecatcher>
       <div id="geschichte">
         <h2>Die Geschichte von Nathalie &amp; Raphael</h2>
-        <p>«Doch, vor einigen Jahren haben wir uns schon einmal gesehen. Wir sind zusammen mit einer Gruppe nach Zürich
-          ins ICF gefahren. Ich fand dich echt knuffig mit deinen schwarzen Haaren und dem Emo-Style.», sagte Nathalie
-          als Raphael jemandem erzählte, er habe sie ca. ein halbes Jahr bevor sie zusammengekommen sind, das erste Mal
+        <p>«Doch, vor einigen Jahren haben wir uns schon einmal gesehen. Wir sind zusammen mit einer Gruppe nach
+          Zürich
+          ins ICF gefahren. Ich fand dich echt knuffig mit deinen schwarzen Haaren und dem Emo-Style.», sagte
+          Nathalie
+          als Raphael jemandem erzählte, er habe sie ca. ein halbes Jahr bevor sie zusammengekommen sind, das
+          erste Mal
           gesehen. Raphael konnte sich aber überhaupt nicht mehr daran erinnern.</p>
-        <p>Aus diesem Grund beginnt für ihn die wirkliche Geschichte erst am 31. Mai 2012 um 12:12 Uhr. Mitten bei der
-          Arbeit erhält Raphael eine Nachricht auf Facebook. Die Cousine einer guten Kollegin von ihm bedankt sich für
-          einen USB-Stick mit Musik, welcher über eben diese Kollegin in deren Hände gekommen ist. Natürlich hat Raphael
-          diese Cousine, die niemand anders als Nathalie war, bereits einige Monate davor kennen gelernt. Nach einem
-          Gottesdienst in der Freien Christengemeinde Wil (heute: lifechurch Wil), wurde sie ihm von eben dieser
-          Kollegin (Cindy Sommer, kurz: Siso) vorgestellt. Siso hatte ihm schon im vornherein vom Besuch Nathalies
-          erzählt und irgendwie hatte Raphael eine andere Cousine im Kopf. Doch bei diesem ersten Treffen, regte sich
-          etwas wie eine aus dem Winterschlaf erwache Raupe in ihm (bildlich gesprochen natürlich). Ihm gefiel diese
+        <p>Aus diesem Grund beginnt für ihn die wirkliche Geschichte erst am 31. Mai 2012 um 12:12 Uhr. Mitten
+          bei der
+          Arbeit erhält Raphael eine Nachricht auf Facebook. Die Cousine einer guten Kollegin von ihm bedankt
+          sich für
+          einen USB-Stick mit Musik, welcher über eben diese Kollegin in deren Hände gekommen ist. Natürlich
+          hat Raphael
+          diese Cousine, die niemand anders als Nathalie war, bereits einige Monate davor kennen gelernt. Nach
+          einem
+          Gottesdienst in der Freien Christengemeinde Wil (heute: lifechurch Wil), wurde sie ihm von eben
+          dieser
+          Kollegin (Cindy Sommer, kurz: Siso) vorgestellt. Siso hatte ihm schon im vornherein vom Besuch
+          Nathalies
+          erzählt und irgendwie hatte Raphael eine andere Cousine im Kopf. Doch bei diesem ersten Treffen,
+          regte sich
+          etwas wie eine aus dem Winterschlaf erwache Raupe in ihm (bildlich gesprochen natürlich). Ihm gefiel
+          diese
           Frau, was er aber niemals offen zugegeben hätte.</p>
-        <p>Über die nächsten Monate sahen sich die Beiden nur ab und zu in den Gottesdiensten, wechselten aber kaum
+        <p>Über die nächsten Monate sahen sich die Beiden nur ab und zu in den Gottesdiensten, wechselten aber
+          kaum
           Worte
-          miteinander. Erst als Nathalie sich, wie beschrieben, über Facebook bei Raphael bedankte, begann sich die
-          Raupe in beiden Bäuchen zu verpuppen. Von diesem Tag an wurde täglich SMS geschrieben. Anscheinend fanden sie
+          miteinander. Erst als Nathalie sich, wie beschrieben, über Facebook bei Raphael bedankte, begann
+          sich die
+          Raupe in beiden Bäuchen zu verpuppen. Von diesem Tag an wurde täglich SMS geschrieben. Anscheinend
+          fanden sie
           sich gegenseitig interessant und wollten sich kennen lernen.
         </p>
         <h3>Dating-Zeit</h3>
-        <p>Nach zwei Kino-Besuchen mit weiteren Freunden und einem Openair-Wochenende am CreaMeeting in Basel, schlüpfte
-          der Schmetterling. In einem peinlichen Moment gestand Raphael ihr, er empfinde etwas für sie. Nathalie war
-          zuerst etwas perplex, gestand dann aber, dass sie gleich fühlte. Es entstand ein längeres Gespräch, woraus
-          hervorging, dass beide trotz ihrer Gefühle den anderen zuerst einmal besser kennen lernen wollte, bevor man
+        <p>Nach zwei Kino-Besuchen mit weiteren Freunden und einem Openair-Wochenende am CreaMeeting in Basel,
+          schlüpfte
+          der Schmetterling. In einem peinlichen Moment gestand Raphael ihr, er empfinde etwas für sie.
+          Nathalie war
+          zuerst etwas perplex, gestand dann aber, dass sie gleich fühlte. Es entstand ein längeres Gespräch,
+          woraus
+          hervorging, dass beide trotz ihrer Gefühle den anderen zuerst einmal besser kennen lernen wollte,
+          bevor man
           sich wirklich als Paar bezeichnete.</p>
-        <p>So begann die Dating-Zeit der Beiden. Dank einem missverstanden Rat eines Kollegen von Raphael, entschieden
-          sie sich dazu, während dieser Kennenlernphase Köperkontakt ganz zu meiden. Zur Begrüssung und Abschied, gaben
-          sie sich ein «High-Five» und machten ein penibles Spiel daraus, sich sonst nie zu berühren. Doch verbrachten
+        <p>So begann die Dating-Zeit der Beiden. Dank einem missverstanden Rat eines Kollegen von Raphael,
+          entschieden
+          sie sich dazu, während dieser Kennenlernphase Köperkontakt ganz zu meiden. Zur Begrüssung und
+          Abschied, gaben
+          sie sich ein «High-Five» und machten ein penibles Spiel daraus, sich sonst nie zu berühren. Doch
+          verbrachten
           sie so viel Zeit, wie nur möglich war, miteinander und telefonierten täglich.</p>
-        <p>Die Sommerferien kamen und es ergab sich eine Zeit von drei Wochen, in denen sich die Beiden nicht sahen. Um
-          ihre Freundschaft zu testen und sich selbst eine Change der Reflexion zu geben, beschlossen sie, sich während
-          dieser Zeit weder zu schreiben noch anzurufen. Drei Wochen «Funkstille» sollte beiden helfen, sich über die
+        <p>Die Sommerferien kamen und es ergab sich eine Zeit von drei Wochen, in denen sich die Beiden nicht
+          sahen. Um
+          ihre Freundschaft zu testen und sich selbst eine Change der Reflexion zu geben, beschlossen sie,
+          sich während
+          dieser Zeit weder zu schreiben noch anzurufen. Drei Wochen «Funkstille» sollte beiden helfen, sich
+          über die
           eigenen Gefühle und auch Zukunftspläne, etwas klarer zu werden.</p>
         <h3>Ein Paar</h3>
-        <p>Dieser Text wäre nicht geschrieben worden, wenn die Beiden dann nicht zusammengekommen wären. Und genau das
-          geschah am 2. August 2012. Nach einem Gebetstreffen gingen die beiden spazieren. Aus dem nichts heraus fing es
-          an zu regnen, was die beiden aber eher freute als störte. Es war ein schöner Sommerabend, beide waren langsam
-          nass vom warmen Regen und Raphael tat das lange erwartete. Er ergriff Nathalie bei der Hand und zog sie zu
-          sich hin. Diese war ganz geschockt, denn sie hatten ja abgemacht, sich nicht zu berühren. Keiner von beiden
-          weiss heute noch, was Raphael gefragt oder was Nathalie geantwortet hatte, doch als die Beiden zur Kirche
+        <p>Dieser Text wäre nicht geschrieben worden, wenn die Beiden dann nicht zusammengekommen wären. Und
+          genau das
+          geschah am 2. August 2012. Nach einem Gebetstreffen gingen die beiden spazieren. Aus dem nichts
+          heraus fing es
+          an zu regnen, was die beiden aber eher freute als störte. Es war ein schöner Sommerabend, beide
+          waren langsam
+          nass vom warmen Regen und Raphael tat das lange erwartete. Er ergriff Nathalie bei der Hand und zog
+          sie zu
+          sich hin. Diese war ganz geschockt, denn sie hatten ja abgemacht, sich nicht zu berühren. Keiner von
+          beiden
+          weiss heute noch, was Raphael gefragt oder was Nathalie geantwortet hatte, doch als die Beiden zur
+          Kirche
           zurückliefen betrachteten sie sich eindeutig als Paar.</p>
         <h3>Verlobung</h3>
-        <p>Schon fast drei Jahre galten Nathalie und Raphael als ein Paar. Sie redeten immer wieder oberflächlich über
-          das Heiraten, aber nie wirklich konkret. Das Hindernis war Nathalies Einstellung, dass sie erst effektiv über
-          die Hochzeit reden möchte, wenn Raphael um ihre Hand angehalten hatte. Jedoch wollte sie auch nicht wissen,
+        <p>Schon fast drei Jahre galten Nathalie und Raphael als ein Paar. Sie redeten immer wieder
+          oberflächlich über
+          das Heiraten, aber nie wirklich konkret. Das Hindernis war Nathalies Einstellung, dass sie erst
+          effektiv über
+          die Hochzeit reden möchte, wenn Raphael um ihre Hand angehalten hatte. Jedoch wollte sie auch nicht
+          wissen,
           wann er sie fragen würde. Eines war jedoch sicher: Nicht mehr in diesem Jahr 2015.</p>
-        <p>Raphael hatte aber andere Pläne. Er dachte sich, dass 2017 ein gutes Hochzeitsjahr wäre und um mindestens 2
-          Jahre Vorbereitungszeit zu haben, wäre 2015 das Verlobungs-Jahr. Und er hatte auch schon eine grossartige
-          Idee. Während den Sommerferien besuchten das Paar zusammen mit Nathalies Vater dessen Heimatstadt in Kroatien.
-          Nathalie schwärmte immer von einer Bucht, die etwas abgelegen auf der anderen Inselseite sei und wunderschön
-          klares Wasser hatte. Wegen ihrer Abgelegenheit wurde sie sehr selten von Touristen aufgesucht und klang in
+        <p>Raphael hatte aber andere Pläne. Er dachte sich, dass 2017 ein gutes Hochzeitsjahr wäre und um
+          mindestens 2
+          Jahre Vorbereitungszeit zu haben, wäre 2015 das Verlobungs-Jahr. Und er hatte auch schon eine
+          grossartige
+          Idee. Während den Sommerferien besuchten das Paar zusammen mit Nathalies Vater dessen Heimatstadt in
+          Kroatien.
+          Nathalie schwärmte immer von einer Bucht, die etwas abgelegen auf der anderen Inselseite sei und
+          wunderschön
+          klares Wasser hatte. Wegen ihrer Abgelegenheit wurde sie sehr selten von Touristen aufgesucht und
+          klang in
           Raphaels Kopf nach einem perfekten Ort für den Hochzeitsantrag.</p>
-        <p>Er erzählte dem Vater von Nathalie von seinem Vorhaben und fragte ihn um Erlaubnis. Anschliessend versuchte
-          er einen passenden Ring zu finden. Das stellte sich aber als sehr schwierig heraus, denn er hatte keine Ahnung
-          von Ringen und sie konnte er ja nicht fragen. So stellte er zwei enge Kolleginnen von ihr an, den richtigen
-          Ring herauszufinden. Leider klappte dies nicht ganz bis zum Sommer. Gleichzeitig erwähnte Nathalie einmal,
-          dass wenn er sie in diesem Sommer fragen würde, dann würde sie Nein sagen. Schlussendlich verwarf Raphael
+        <p>Er erzählte dem Vater von Nathalie von seinem Vorhaben und fragte ihn um Erlaubnis. Anschliessend
+          versuchte
+          er einen passenden Ring zu finden. Das stellte sich aber als sehr schwierig heraus, denn er hatte
+          keine Ahnung
+          von Ringen und sie konnte er ja nicht fragen. So stellte er zwei enge Kolleginnen von ihr an, den
+          richtigen
+          Ring herauszufinden. Leider klappte dies nicht ganz bis zum Sommer. Gleichzeitig erwähnte Nathalie
+          einmal,
+          dass wenn er sie in diesem Sommer fragen würde, dann würde sie Nein sagen. Schlussendlich verwarf
+          Raphael
           seinen Plan wieder.</p>
-        <p>«Einen Ring wie diesen würde mir gefallen.», rief Nathalie vor einem Schmuckgeschäft in Zadar, einer grossen
-          Stadt auf dem Festland gegenüber der Heimatinsel ihres Vaters. Da fingen die Rädchen in Raphaels Kopf auf
-          Hochtouren zu laufen. <i>In zwei Tagen würden Ale und Julia, zwei Freunde es Paares, auf ihrer Motoradreise
-            bei ihnen vorbeikommen. Dann könnte man doch mit ihnen noch einmal auf Zadar gehen um in einem Restaurant
-            essen zu gehen. Zuvor würde Julia Nathalie ablenken und Raphael ginge mit Ale in den Schmuckladen und
-            besorgte den Ring. Am nächsten Tag würde man dann früh aufstehen und gemeinsam zu dieser wunderschönen Bucht
+        <p>«Einen Ring wie diesen würde mir gefallen.», rief Nathalie vor einem Schmuckgeschäft in Zadar, einer
+          grossen
+          Stadt auf dem Festland gegenüber der Heimatinsel ihres Vaters. Da fingen die Rädchen in Raphaels
+          Kopf auf
+          Hochtouren zu laufen. <i>In zwei Tagen würden Ale und Julia, zwei Freunde es Paares, auf ihrer
+            Motoradreise
+            bei ihnen vorbeikommen. Dann könnte man doch mit ihnen noch einmal auf Zadar gehen um in einem
+            Restaurant
+            essen zu gehen. Zuvor würde Julia Nathalie ablenken und Raphael ginge mit Ale in den
+            Schmuckladen und
+            besorgte den Ring. Am nächsten Tag würde man dann früh aufstehen und gemeinsam zu dieser
+            wunderschönen Bucht
             gehen.</i>
-          Raphael weihte die beiden Freunde ein und so wurde es gemacht. Nathalie kam es zwar etwas komisch vor, dass
-          die Gäste unbedingt morgens um 5 Uhr aufstehen wollten um zu dieser Bucht zu laufen, vermutete aber nichts.
+          Raphael weihte die beiden Freunde ein und so wurde es gemacht. Nathalie kam es zwar etwas komisch
+          vor, dass
+          die Gäste unbedingt morgens um 5 Uhr aufstehen wollten um zu dieser Bucht zu laufen, vermutete aber
+          nichts.
         </p>
-        <p>Bei der Bucht angekommen genossen die vier das klare Wasser und als die Sonne in die Bucht hinein brach,
-          sonnten sie sich ein wenig. Raphael hatte im seichten Wasser kleine Fische, die sich sehr gut tarnen, entdeckt
-          und nutzte diese als ein Vorwand um Nathalie von ihrem «Sonn-Platz» zu ihm zu locken. Diese stand auf, kam
-          etwas genervt zu ihm und fragte sich, warum er ihr jetzt unbedingt diese «unsichtbaren» Fische zeigen möchte.
-          Da ging er plötzlich im Wasser auf seine Knie, streckte ihr einen Ring entgegen und fragte: «Möchtest du mich
+        <p>Bei der Bucht angekommen genossen die vier das klare Wasser und als die Sonne in die Bucht hinein
+          brach,
+          sonnten sie sich ein wenig. Raphael hatte im seichten Wasser kleine Fische, die sich sehr gut
+          tarnen, entdeckt
+          und nutzte diese als ein Vorwand um Nathalie von ihrem «Sonn-Platz» zu ihm zu locken. Diese stand
+          auf, kam
+          etwas genervt zu ihm und fragte sich, warum er ihr jetzt unbedingt diese «unsichtbaren» Fische
+          zeigen möchte.
+          Da ging er plötzlich im Wasser auf seine Knie, streckte ihr einen Ring entgegen und fragte:
+          «Möchtest du mich
           heiraten?»</p>
-        <p>Die Luft war angespannt und als Nathalie gefühlte 5min (in Wirklichkeit war es nur eine halbe Minute) nichts
-          sagte, wurde Raphael immer nervöser. Nathalie war geschockt. Das hatte sie gar nicht erwartet. Doch der Moment
-          war zu schön um ihn jetzt schon mit einer Antwort zu unterbrechen. Schlussendlich sagte sie Ja und die beiden
+        <p>Die Luft war angespannt und als Nathalie gefühlte 5min (in Wirklichkeit war es nur eine halbe Minute)
+          nichts
+          sagte, wurde Raphael immer nervöser. Nathalie war geschockt. Das hatte sie gar nicht erwartet. Doch
+          der Moment
+          war zu schön um ihn jetzt schon mit einer Antwort zu unterbrechen. Schlussendlich sagte sie Ja und
+          die beiden
           küssten sich als Verlobte.</p>
       </div>
       <div id="braut">
         <wedding-portrait title="Nathalie" img="/src/image/1/braut.png" textalign="left" imgalign="last" size="100" arrangement="horizontal" invert="true">
-          <p>Nathalie ist eine wunderschöne Frau, die gerne neue Dinge erforscht. Sie ist gerne unter Leute und kann
-            Stimmung machen, weiss aber sehr genau, wann sie Ruhe braucht und zieht sich dann auch zurück. Sie hat klare
-            Grenzen und Werte in ihrem Leben und ist der Meinung die Welt wäre besser dran, wenn jeder seine ehrliche
-            Meinung äussern würde. Für Raphael ist sie eine wunderbare Ergänzung in diversen Bereichen wie emotionale
-            Leidenschaft oder Durchhaltewillen. Er liebt ihre aufbrausend und doch so zärtliche Art. Das italienische
+          <p>Nathalie ist eine wunderschöne Frau, die gerne neue Dinge erforscht. Sie ist gerne unter Leute
+            und kann
+            Stimmung machen, weiss aber sehr genau, wann sie Ruhe braucht und zieht sich dann auch zurück.
+            Sie hat klare
+            Grenzen und Werte in ihrem Leben und ist der Meinung die Welt wäre besser dran, wenn jeder seine
+            ehrliche
+            Meinung äussern würde. Für Raphael ist sie eine wunderbare Ergänzung in diversen Bereichen wie
+            emotionale
+            Leidenschaft oder Durchhaltewillen. Er liebt ihre aufbrausend und doch so zärtliche Art. Das
+            italienische
             Blut kommt bei ihr vorzüglich zur Geltung.</p>
-          <p>Als Medizinische Praxisassistentin in einer Notfall-Praxis liebt sie Action in Form von medizinischen
-            Notfällen. Sowohl bei der Arbeit als auch im Privatleben ist sie sehr speditiv und kennt ihre Grenzen. Sie
-            kann gut Prioritäten setzen, wie man auch am Bräutigam erkennen kann. Neben blutigen Wunden ist sie
-            fasziniert von vielen weiblichen Dingen wie Mode, Beauty-Produkte und Tee. Auf der anderen Seite hat sie
+          <p>Als Medizinische Praxisassistentin in einer Notfall-Praxis liebt sie Action in Form von
+            medizinischen
+            Notfällen. Sowohl bei der Arbeit als auch im Privatleben ist sie sehr speditiv und kennt ihre
+            Grenzen. Sie
+            kann gut Prioritäten setzen, wie man auch am Bräutigam erkennen kann. Neben blutigen Wunden ist
+            sie
+            fasziniert von vielen weiblichen Dingen wie Mode, Beauty-Produkte und Tee. Auf der anderen Seite
+            hat sie
             Leidenschaft für Video-Gaming, diverse japanische Kultur-Elemente, wie Mangas oder Kimonos und
             Kampfsport.</p>
           <p>Der Glaube an Gott ist ihre Lebensgrundlage. Sie ist begeistert von der Bibel und liebt es, die
-            wissenschaftlichen und historischen Aspekte der biblischen Texte zu erforschen. Ihre grösste Faszination
-            gilt aber Gott als Schöpfer. Die Natur und alles Geschaffene lässt ihr Herz höherschlagen. So sehr, dass sie
-            sich intensiv mit ihrem Hobby Fotografie auseinandersetzt um dieses für sie faszinierende Geschaffene
+            wissenschaftlichen und historischen Aspekte der biblischen Texte zu erforschen. Ihre grösste
+            Faszination
+            gilt aber Gott als Schöpfer. Die Natur und alles Geschaffene lässt ihr Herz höherschlagen. So
+            sehr, dass sie
+            sich intensiv mit ihrem Hobby Fotografie auseinandersetzt um dieses für sie faszinierende
+            Geschaffene
             einzufangen und noch tiefer zu bestaunen.</p>
         </wedding-portrait>
       </div>
       <div id="braeutigam">
         <wedding-portrait title="Raphael" img="/src/image/1/braeutigam.png" textalign="left" imgalign="first" size="100" arrangement="horizontal">
-          <p>Raphael, oder von Nathalie liebevoll als Eroe (ital. Für Held) betitelt, hat viele Eigenschaften, die sie
-            an ihm liebt und schätzt. Das Wichtigste ist sein unerschütterlicher Glauben an Jesus und sein Wirken. Das
-            ist es was Nathalie so an ihm begeistert. Man sieht ihm die Faszination für den Glauben richtig an und dabei
-            wirkt er so «normal» und ausgeglichen. Positives Denken ist seine Stärke (manchmal ein grosses Ärgernis für
-            Nathalie), er sieht überall etwas Gutes. Nathalie kann gut auf 180 sein, und er lächelt sie einfach nur an
+          <p>Raphael, oder von Nathalie liebevoll als Eroe (ital. Für Held) betitelt, hat viele Eigenschaften,
+            die sie
+            an ihm liebt und schätzt. Das Wichtigste ist sein unerschütterlicher Glauben an Jesus und sein
+            Wirken. Das
+            ist es was Nathalie so an ihm begeistert. Man sieht ihm die Faszination für den Glauben richtig
+            an und dabei
+            wirkt er so «normal» und ausgeglichen. Positives Denken ist seine Stärke (manchmal ein grosses
+            Ärgernis für
+            Nathalie), er sieht überall etwas Gutes. Nathalie kann gut auf 180 sein, und er lächelt sie
+            einfach nur an
             und erklärt ganz ruhig seinen Standpunkt. Darin ist er eine wunderbare Ergänzung für sie.</p>
-          <p>Raphael ist einer dieser Menschen, die mit Smalltalk überhaupt nichts anfangen können. Er verwickelt sich
-            selten mit Menschen in ein Gespräch über alltägliche Dinge wie das Wetter. Nein, er möchte gleich wissen was
-            einem auf der Seele brennt und am liebesten, für was das Herz des Anderen schlägt. Oft kommt er so auf sein
-            Lieblings Thema zu sprechen: der Glaube an Gott. Bei diesem Thema wird der ansonsten nicht so gesprächige
+          <p>Raphael ist einer dieser Menschen, die mit Smalltalk überhaupt nichts anfangen können. Er
+            verwickelt sich
+            selten mit Menschen in ein Gespräch über alltägliche Dinge wie das Wetter. Nein, er möchte
+            gleich wissen was
+            einem auf der Seele brennt und am liebesten, für was das Herz des Anderen schlägt. Oft kommt er
+            so auf sein
+            Lieblings Thema zu sprechen: der Glaube an Gott. Bei diesem Thema wird der ansonsten nicht so
+            gesprächige
             Raphael plötzlich ganz offen und redefreudig.</p>
-          <p>Ansonsten ist er wohl ein richtiger Junge, der Geschichten in Form von Mangas, Bücher und Videospiele mag.
-            Etwas könnte neben ihm explodieren, wenn er in ein Videogame vertieft ist, und er würde es nicht bemerken!
-            Apropos explodieren: Er mag Filme mit viel Action, ist aber eher zurückhaltend mit Aktivitäten wie «im Wald
-            übernachten» oder Wandern. Er geht lieber in Hotels oder zu Freunden in die Ferien als irgendwo im Freien zu
-            schlafen und dabei nur von Mücken zerstochen zu werden. Er mag es, einfach nichts zu tun und ein Buch (egal
+          <p>Ansonsten ist er wohl ein richtiger Junge, der Geschichten in Form von Mangas, Bücher und
+            Videospiele mag.
+            Etwas könnte neben ihm explodieren, wenn er in ein Videogame vertieft ist, und er würde es nicht
+            bemerken!
+            Apropos explodieren: Er mag Filme mit viel Action, ist aber eher zurückhaltend mit Aktivitäten
+            wie «im Wald
+            übernachten» oder Wandern. Er geht lieber in Hotels oder zu Freunden in die Ferien als irgendwo
+            im Freien zu
+            schlafen und dabei nur von Mücken zerstochen zu werden. Er mag es, einfach nichts zu tun und ein
+            Buch (egal
             ob Roman oder Manga) zu lesen und sich 2 Wochen lang am gleichen Ort zu befinden.</p>
-          <p>Er ist der Mann, der Nathalie immer wieder zum Staunen bringt und über vieles lacht. Bei ihm fühlt sie sich
+          <p>Er ist der Mann, der Nathalie immer wieder zum Staunen bringt und über vieles lacht. Bei ihm
+            fühlt sie sich
             zuhause und kommt an.</p>
         </wedding-portrait>
       </div>
       <div id="gallery">
-      <h2>Bilder-Galerie</h2>
+        <h2>Bilder-Galerie</h2>
         <!--<cat-slider disable-slider-shadow="true">-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7317.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7356.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7402.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7412.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7413.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7444.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7450.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7475.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7477.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7500.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7512.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7541.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7562.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7572.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7593.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7612.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7625.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7638.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7645.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7684.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7707.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7821.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7831.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7898.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_7925.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_8021.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_8042.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_8044.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_8092.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_8129.jpg"><cat-text></cat-text></cat-image>-->
-          <!--<cat-image src="/src/image/1/gallery/IMG_8171.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7317.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7356.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7402.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7412.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7413.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7444.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7450.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7475.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7477.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7500.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7512.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7541.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7562.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7572.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7593.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7612.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7625.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7638.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7645.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7684.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7707.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7821.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7831.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7898.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_7925.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_8021.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_8042.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_8044.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_8092.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_8129.jpg"><cat-text></cat-text></cat-image>-->
+        <!--<cat-image src="/src/image/1/gallery/IMG_8171.jpg"><cat-text></cat-text></cat-image>-->
         <!--</cat-slider>-->
 
         <paper-carousel items="1" dottext="false" dots="false">
@@ -21891,10 +22063,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    Polymer({
-      is: 'wedding-brautpaar'
+      Polymer({
+          is: 'wedding-brautpaar'
 
-    });
+      });
   </script>
 </dom-module></div>
 <wedding-brautpaar></wedding-brautpaar>

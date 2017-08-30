@@ -28,44 +28,60 @@
         padding-top: 1vmin;
       }
 
+      .weather {
+        background: var(--primary-color);
+        color: var(--secondary-text-color);
+        margin-top: 1vmin;
+        padding: 4vw;
+        text-align: center;
+      }
+
+      .weather a {
+        color: var(--dark-text-color) !important;
+      }
+
 
     </style>
     <!-- local DOM -->
-      <wedding-anchorimg title="Nathalie + Raphael"
-                         anchor="/brautpaar.html"
-                         img="/src/image/1/eyecatcher-bw.jpg"
-                         width="100"
-                         height="60"></wedding-anchorimg>
-      <div class="lower-half layout horizontal">
-        <wedding-anchorimg title="Trauung"
-                           anchor="/trauung.html"
-                           img="/src/image/2/eyecatcher-bw.jpg"
-                           width="40"
-                           height="40"></wedding-anchorimg>
-        <div class="three-box layout horizontal wrap">
-          <wedding-anchorimg title="Anmeldung"
-                             anchor="/anmeldung.html"
-                             img="/src/image/5/eyecatcher-bw.jpg"
-                             width="50"
-                             height="20"></wedding-anchorimg>
-          <wedding-anchorimg title="Geschenke"
-                             anchor="/geschenke.html"
-                             img="/src/image/4/eyecatcher-bw.jpg"
-                             width="50"
-                             height="20"></wedding-anchorimg>
-          <wedding-anchorimg title="Organisation"
-                             anchor="/organisation.html"
-                             img="/src/image/3/eyecatcher-bw.jpg"
-                             width="100"
-                             height="20"></wedding-anchorimg>
-        </div>
+    <wedding-anchorimg title="Nathalie + Raphael"
+                       anchor="/brautpaar.html"
+                       img="/src/image/1/eyecatcher-bw.jpg"
+                       width="100"
+                       height="60"></wedding-anchorimg>
+    <div class="weather">
+      <h3>Die Trauung findet aufgrund vorgängigem schlechtem Wetter <a
+          href="/trauung.html#kirchlich">in der evangelischen Kirche Affeltrangen</a> statt.</h3>
+    </div>
+    <div class="lower-half layout horizontal">
+      <wedding-anchorimg title="Trauung"
+                         anchor="/trauung.html"
+                         img="/src/image/2/eyecatcher-bw.jpg"
+                         width="40"
+                         height="40"></wedding-anchorimg>
+      <div class="three-box layout horizontal wrap">
+        <wedding-anchorimg title="Anmeldung"
+                           anchor="/anmeldung.html"
+                           img="/src/image/5/eyecatcher-bw.jpg"
+                           width="50"
+                           height="20"></wedding-anchorimg>
+        <wedding-anchorimg title="Geschenke"
+                           anchor="/geschenke.html"
+                           img="/src/image/4/eyecatcher-bw.jpg"
+                           width="50"
+                           height="20"></wedding-anchorimg>
+        <wedding-anchorimg title="Organisation"
+                           anchor="/organisation.html"
+                           img="/src/image/3/eyecatcher-bw.jpg"
+                           width="100"
+                           height="20"></wedding-anchorimg>
       </div>
+    </div>
 
   </template>
 
   <script>
-    Polymer({
-      is: 'wedding-homepage'
-    });
+      Polymer({
+          is: 'wedding-homepage'
+      });
   </script>
 </dom-module>

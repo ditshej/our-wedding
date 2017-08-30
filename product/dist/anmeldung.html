@@ -838,7 +838,7 @@ default:
 return value != null ? value : undefined;
 }
 }
-});Polymer.version = "1.8.1";Polymer.Base._addFeature({
+});Polymer.version = "1.9.3";Polymer.Base._addFeature({
 _registerFeatures: function () {
 this._prepIs();
 this._prepBehaviors();
@@ -866,10 +866,83 @@ this._marshalBehaviors();
 
 
 
-<script>Polymer.Base._addFeature({
+<script>(function () {
+function resolveCss(cssText, ownerDocument) {
+return cssText.replace(CSS_URL_RX, function (m, pre, url, post) {
+return pre + '\'' + resolve(url.replace(/["']/g, ''), ownerDocument) + '\'' + post;
+});
+}
+function resolveAttrs(element, ownerDocument) {
+for (var name in URL_ATTRS) {
+var a$ = URL_ATTRS[name];
+for (var i = 0, l = a$.length, a, at, v; i < l && (a = a$[i]); i++) {
+if (name === '*' || element.localName === name) {
+at = element.attributes[a];
+v = at && at.value;
+if (v && v.search(BINDING_RX) < 0) {
+at.value = a === 'style' ? resolveCss(v, ownerDocument) : resolve(v, ownerDocument);
+}
+}
+}
+}
+}
+function resolve(url, ownerDocument) {
+if (url && ABS_URL.test(url)) {
+return url;
+}
+var resolver = getUrlResolver(ownerDocument);
+resolver.href = url;
+return resolver.href || url;
+}
+var tempDoc;
+var tempDocBase;
+function resolveUrl(url, baseUri) {
+if (!tempDoc) {
+tempDoc = document.implementation.createHTMLDocument('temp');
+tempDocBase = tempDoc.createElement('base');
+tempDoc.head.appendChild(tempDocBase);
+}
+tempDocBase.href = baseUri;
+return resolve(url, tempDoc);
+}
+function getUrlResolver(ownerDocument) {
+return ownerDocument.body.__urlResolver || (ownerDocument.body.__urlResolver = ownerDocument.createElement('a'));
+}
+function pathFromUrl(url) {
+return url.substring(0, url.lastIndexOf('/') + 1);
+}
+var CSS_URL_RX = /(url\()([^)]*)(\))/g;
+var URL_ATTRS = {
+'*': [
+'href',
+'src',
+'style',
+'url'
+],
+form: ['action']
+};
+var ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
+var BINDING_RX = /\{\{|\[\[/;
+Polymer.ResolveUrl = {
+resolveCss: resolveCss,
+resolveAttrs: resolveAttrs,
+resolveUrl: resolveUrl,
+pathFromUrl: pathFromUrl
+};
+Polymer.rootPath = Polymer.Settings.rootPath || pathFromUrl(document.baseURI || window.location.href);
+}());Polymer.Base._addFeature({
 _prepTemplate: function () {
+var module;
 if (this._template === undefined) {
-this._template = Polymer.DomModule.import(this.is, 'template');
+module = Polymer.DomModule.import(this.is);
+this._template = module && module.querySelector('template');
+}
+if (module) {
+var assetPath = module.getAttribute('assetpath') || '';
+var importURL = Polymer.ResolveUrl.resolveUrl(assetPath, module.ownerDocument.baseURI);
+this._importPath = Polymer.ResolveUrl.pathFromUrl(importURL);
+} else {
+this._importPath = '';
 }
 if (this._template && this._template.hasAttribute('is')) {
 this._warn(this._logf('_prepTemplate', 'top-level Polymer template ' + 'must not be a type-extension, found', this._template, 'Move inside simple <template>.'));
@@ -889,6 +962,7 @@ return dom;
 }
 });(function () {
 var baseAttachedCallback = Polymer.Base.attachedCallback;
+var baseDetachedCallback = Polymer.Base.detachedCallback;
 Polymer.Base._addFeature({
 _hostStack: [],
 ready: function () {
@@ -968,6 +1042,13 @@ this._beforeAttached();
 baseAttachedCallback.call(this);
 } else {
 this._attachedPending = true;
+}
+},
+detachedCallback: function () {
+if (this._readied) {
+baseDetachedCallback.call(this);
+} else {
+this._attachedPending = false;
 }
 }
 });
@@ -3259,65 +3340,6 @@ return root;
 }
 }
 };
-}());(function () {
-function resolveCss(cssText, ownerDocument) {
-return cssText.replace(CSS_URL_RX, function (m, pre, url, post) {
-return pre + '\'' + resolve(url.replace(/["']/g, ''), ownerDocument) + '\'' + post;
-});
-}
-function resolveAttrs(element, ownerDocument) {
-for (var name in URL_ATTRS) {
-var a$ = URL_ATTRS[name];
-for (var i = 0, l = a$.length, a, at, v; i < l && (a = a$[i]); i++) {
-if (name === '*' || element.localName === name) {
-at = element.attributes[a];
-v = at && at.value;
-if (v && v.search(BINDING_RX) < 0) {
-at.value = a === 'style' ? resolveCss(v, ownerDocument) : resolve(v, ownerDocument);
-}
-}
-}
-}
-}
-function resolve(url, ownerDocument) {
-if (url && ABS_URL.test(url)) {
-return url;
-}
-var resolver = getUrlResolver(ownerDocument);
-resolver.href = url;
-return resolver.href || url;
-}
-var tempDoc;
-var tempDocBase;
-function resolveUrl(url, baseUri) {
-if (!tempDoc) {
-tempDoc = document.implementation.createHTMLDocument('temp');
-tempDocBase = tempDoc.createElement('base');
-tempDoc.head.appendChild(tempDocBase);
-}
-tempDocBase.href = baseUri;
-return resolve(url, tempDoc);
-}
-function getUrlResolver(ownerDocument) {
-return ownerDocument.body.__urlResolver || (ownerDocument.body.__urlResolver = ownerDocument.createElement('a'));
-}
-var CSS_URL_RX = /(url\()([^)]*)(\))/g;
-var URL_ATTRS = {
-'*': [
-'href',
-'src',
-'style',
-'url'
-],
-form: ['action']
-};
-var ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
-var BINDING_RX = /\{\{|\[\[/;
-Polymer.ResolveUrl = {
-resolveCss: resolveCss,
-resolveAttrs: resolveAttrs,
-resolveUrl: resolveUrl
-};
 }());Polymer.Path = {
 root: function (path) {
 var dotIndex = path.indexOf('.');
@@ -5103,6 +5125,8 @@ node._configValue(name, value);
 }
 },
 _afterClientsReady: function () {
+this.importPath = this._importPath;
+this.rootPath = Polymer.rootPath;
 this._executeStaticEffects();
 this._applyConfig(this._config, this._aboveConfig);
 this._flushHandlers();
@@ -5441,13 +5465,7 @@ _getPathParts: Polymer.Base._getPathParts
 });
 }());Polymer.Base._addFeature({
 resolveUrl: function (url) {
-var module = Polymer.DomModule.import(this.is);
-var root = '';
-if (module) {
-var assetPath = module.getAttribute('assetpath') || '';
-root = Polymer.ResolveUrl.resolveUrl(assetPath, module.ownerDocument.baseURI);
-}
-return Polymer.ResolveUrl.resolveUrl(url, root);
+return Polymer.ResolveUrl.resolveUrl(url, this._importPath);
 }
 });Polymer.CssParse = function () {
 return {
@@ -6030,6 +6048,11 @@ this._transformRule(rule, this._transformDocumentSelector);
 },
 normalizeRootSelector: function (rule) {
 rule.selector = rule.selector.replace(ROOT, 'html');
+var parts = rule.selector.split(COMPLEX_SELECTOR_SEP);
+parts = parts.filter(function (part) {
+return !part.match(HOST_OR_HOST_GT_STAR);
+});
+rule.selector = parts.join(COMPLEX_SELECTOR_SEP);
 },
 _transformDocumentSelector: function (selector) {
 return selector.match(SCOPE_JUMP) ? this._transformComplexSelector(selector, SCOPE_DOC_SELECTOR) : this._transformSimpleSelector(selector.trim(), SCOPE_DOC_SELECTOR);
@@ -6059,6 +6082,7 @@ var CLASS = 'class';
 var CONTENT_START = new RegExp('^(' + CONTENT + ')');
 var SELECTOR_NO_MATCH = 'should_not_match';
 var SLOTTED_PAREN = /(?:::slotted)(?:\(((?:\([^)(]*\)|[^)(]*)+?)\))/g;
+var HOST_OR_HOST_GT_STAR = /:host(?:\s*>\s*\*)?/;
 return api;
 }();Polymer.StyleExtends = function () {
 var styleUtil = Polymer.StyleUtil;
@@ -7772,9 +7796,17 @@ this._detachInstance(i);
 attached: function () {
 if (this.__isDetached) {
 this.__isDetached = false;
-var parent = Polymer.dom(Polymer.dom(this).parentNode);
+var refNode;
+var parentNode = Polymer.dom(this).parentNode;
+if (parentNode.localName == this.is) {
+refNode = parentNode;
+parentNode = Polymer.dom(parentNode).parentNode;
+} else {
+refNode = this;
+}
+var parent = Polymer.dom(parentNode);
 for (var i = 0; i < this._instances.length; i++) {
-this._attachInstance(i, parent);
+this._attachInstance(i, parent, refNode);
 }
 }
 },
@@ -8058,10 +8090,10 @@ Polymer.dom(inst.root).appendChild(el);
 return inst;
 }
 },
-_attachInstance: function (idx, parent) {
+_attachInstance: function (idx, parent, refNode) {
 var inst = this._instances[idx];
 if (!inst.isPlaceholder) {
-parent.insertBefore(inst.root, this);
+parent.insertBefore(inst.root, refNode);
 }
 },
 _detachAndRemoveInstance: function (idx) {
@@ -8094,6 +8126,12 @@ inst = this._stampInstance(idx, key);
 var beforeRow = this._instances[idx + 1];
 var beforeNode = beforeRow && !beforeRow.isPlaceholder ? beforeRow._children[0] : this;
 var parentNode = Polymer.dom(this).parentNode;
+if (parentNode.localName == this.is) {
+if (beforeNode == this) {
+beforeNode = parentNode;
+}
+parentNode = Polymer.dom(parentNode).parentNode;
+}
 Polymer.dom(parentNode).insertBefore(inst.root, beforeNode);
 this._instances[idx] = inst;
 return inst;
@@ -8289,7 +8327,11 @@ _queueRender: function () {
 this._debounceTemplate(this._render);
 },
 detached: function () {
-if (!this.parentNode || this.parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE && (!Polymer.Settings.hasShadow || !(this.parentNode instanceof ShadowRoot))) {
+var parentNode = this.parentNode;
+if (parentNode && parentNode.localName == this.is) {
+parentNode = Polymer.dom(parentNode).parentNode;
+}
+if (!parentNode || parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE && (!Polymer.Settings.hasShadow || !(parentNode instanceof ShadowRoot))) {
 this._teardownInstance();
 }
 },
@@ -8322,20 +8364,26 @@ this._lastIf = this.if;
 }
 },
 _ensureInstance: function () {
+var refNode;
 var parentNode = Polymer.dom(this).parentNode;
+if (parentNode && parentNode.localName == this.is) {
+refNode = parentNode;
+parentNode = Polymer.dom(parentNode).parentNode;
+} else {
+refNode = this;
+}
 if (parentNode) {
-var parent = Polymer.dom(parentNode);
 if (!this._instance) {
 this._instance = this.stamp();
 var root = this._instance.root;
-parent.insertBefore(root, this);
+Polymer.dom(parentNode).insertBefore(root, refNode);
 } else {
 var c$ = this._instance._children;
 if (c$ && c$.length) {
-var lastChild = Polymer.dom(this).previousSibling;
+var lastChild = Polymer.dom(refNode).previousSibling;
 if (lastChild !== c$[c$.length - 1]) {
 for (var i = 0, n; i < c$.length && (n = c$[i]); i++) {
-parent.insertBefore(n, this);
+Polymer.dom(parentNode).insertBefore(n, refNode);
 }
 }
 }
@@ -8400,8 +8448,15 @@ _registerFeatures: function () {
 this._prepConstructor();
 },
 _insertChildren: function () {
-var parentDom = Polymer.dom(Polymer.dom(this).parentNode);
-parentDom.insertBefore(this.root, this);
+var refNode;
+var parentNode = Polymer.dom(this).parentNode;
+if (parentNode.localName == this.is) {
+refNode = parentNode;
+parentNode = Polymer.dom(parentNode).parentNode;
+} else {
+refNode = this;
+}
+Polymer.dom(parentNode).insertBefore(this.root, refNode);
 },
 _removeChildren: function () {
 if (this._children) {
@@ -9672,7 +9727,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       /**
-       * True if this element is currently notifying its descedant elements of
+       * True if this element is currently notifying its descendant elements of
        * resize.
        */
       _notifyingDescendant: {
@@ -9771,7 +9826,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return;
       }
 
-      // NOTE(cdata): In ShadowDOM, event retargetting makes echoing of the
+      // NOTE(cdata): In ShadowDOM, event retargeting makes echoing of the
       // otherwise non-bubbling event "just work." We do it manually here for
       // the case where Polymer is not using shadow roots for whatever reason:
       if (!Polymer.Settings.useShadow) {
@@ -9886,7 +9941,6 @@ within `fitInto` boundaries, while preserving the element's CSS margin values.
 @demo demo/index.html
 @polymerBehavior
 */
-
   Polymer.IronFitBehavior = {
 
     properties: {
@@ -12549,6 +12603,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     var lastScrollableNodes = [];
 
+    var scrollEvents = [
+      // Modern `wheel` event for mouse wheel scrolling:
+      'wheel',
+      // Older, non-standard `mousewheel` event for some FF:
+      'mousewheel',
+      // IE:
+      'DOMMouseScroll',
+      // Touch enabled devices
+      'touchstart',
+      'touchmove'
+    ];
+
     /**
      * The IronDropdownScrollManager is intended to provide a central source
      * of authority and control over which elements in a document are currently
@@ -12717,24 +12783,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _lockScrollInteractions: function() {
         this._boundScrollHandler = this._boundScrollHandler ||
           this._scrollInteractionHandler.bind(this);
-        // Modern `wheel` event for mouse wheel scrolling:
-        document.addEventListener('wheel', this._boundScrollHandler, true);
-        // Older, non-standard `mousewheel` event for some FF:
-        document.addEventListener('mousewheel', this._boundScrollHandler, true);
-        // IE:
-        document.addEventListener('DOMMouseScroll', this._boundScrollHandler, true);
-        // Save the lastScrollableNodes on touchstart, to be used on touchmove.
-        document.addEventListener('touchstart', this._boundScrollHandler, true);
-        // Mobile devices can scroll on touch move:
-        document.addEventListener('touchmove', this._boundScrollHandler, true);
+        for (var i = 0, l = scrollEvents.length; i < l; i++) {
+          // NOTE: browsers that don't support objects as third arg will
+          // interpret it as boolean, hence useCapture = true in this case. 
+          document.addEventListener(scrollEvents[i], this._boundScrollHandler, {
+            capture: true,
+            passive: false
+          });
+        }
       },
 
       _unlockScrollInteractions: function() {
-        document.removeEventListener('wheel', this._boundScrollHandler, true);
-        document.removeEventListener('mousewheel', this._boundScrollHandler, true);
-        document.removeEventListener('DOMMouseScroll', this._boundScrollHandler, true);
-        document.removeEventListener('touchstart', this._boundScrollHandler, true);
-        document.removeEventListener('touchmove', this._boundScrollHandler, true);
+        for (var i = 0, l = scrollEvents.length; i < l; i++) {
+          // NOTE: browsers that don't support objects as third arg will
+          // interpret it as boolean, hence useCapture = true in this case.
+          document.removeEventListener(scrollEvents[i], this._boundScrollHandler, {
+            capture: true,
+            passive: false
+          });
+        }
       },
 
       /**
@@ -14393,14 +14460,27 @@ The layout class stylesheet provides a simple set of class-based flexbox rules, 
 let you specify layout properties directly in markup. You must include this file
 in every element that needs to use them.
 
-  Sample use:
+    Sample use:
 
-      <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-      <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    ```
+    <custom-element-demo>
+      <template>
+        <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+        <next-code-block></next-code-block>
+      </template>
+    </custom-element-demo>
+    ```
 
-      <div class="layout horizontal layout-start">
-        <div>cross axis start alignment</div>
-      </div>
+    ```html
+    <link rel="import" href="iron-flex-layout-classes.html">
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+      .test { width: 100px; }
+    </style>
+    <div class="layout horizontal center-center">
+      <div class="test">horizontal layout center alignment</div>
+    </div>
+    ```
 
 2. [Custom CSS mixins](https://github.com/PolymerElements/iron-flex-layout/blob/master/iron-flex-layout.html).
 The mixin stylesheet includes custom CSS mixins that can be applied inside a CSS rule using the `@apply` function.
@@ -14476,7 +14556,7 @@ A complete [guide](https://elements.polymer-project.org/guides/flex-layout) to `
       -webkit-flex-wrap: wrap;
       flex-wrap: wrap;
     };
-    
+
     --layout-no-wrap: {
       -ms-flex-wrap: nowrap;
       -webkit-flex-wrap: nowrap;
@@ -14994,7 +15074,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     observers: [
-      '_detectKeyboardFocus(focused)',
+      '_focusChanged(focused)',
       '_activeChanged(active, ariaActiveAttribute)'
     ],
 
@@ -15012,6 +15092,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._userActivate(!this.active);
       } else {
         this.active = false;
+      }
+    },
+
+    _focusChanged: function(focused) {
+      this._detectKeyboardFocus(focused);
+
+      if (!focused) {
+        this._setPressed(false);
       }
     },
 
@@ -16380,6 +16468,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         svg.setAttribute('viewBox', viewBox);
         svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svg.setAttribute('focusable', 'false');
         // TODO(dfreedm): `pointer-events: none` works around https://crbug.com/370136
         // TODO(sjmiles): inline style may not be ideal, but avoids requiring a shadow-root
         svg.style.cssText = cssText;
@@ -18005,7 +18094,7 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
+--><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
 <style is="custom-style">
 
   :root {
@@ -18573,6 +18662,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         /* for wedding-eyecatcher */
         --wedding-eyecatcher-h1-color: var(--secondary-color);
+        --wedding-eyecatcher-banner-color: var(--primary-color);
+        --wedding-eyecatcher-banner-text-color: var(--secondary-text-color);
 
         /* height for Sticky Footer */
         height: 100%;
@@ -18660,7 +18751,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="page-wrapper">
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
-      <wedding-eyecatcher title="Anmeldung" img="/src/image/5/eyecatcher.jpg"></wedding-eyecatcher>
+      <wedding-eyecatcher title="Anmeldung" img="/src/image/5/eyecatcher.jpg" contentpadding="true">
+        <h3>Die Trauung findet aufgrund vorgängigem schlechtem Wetter <a href="/trauung.html#kirchlich">in der evangelischen Kirche Affeltrangen</a> statt.</h3>
+      </wedding-eyecatcher>
 
       <div class="hidden">
         <!-- hidden div to set first section to alternative color

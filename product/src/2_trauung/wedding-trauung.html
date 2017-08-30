@@ -14,6 +14,11 @@
 
         /* height for Sticky Footer */
         height: 100%;
+
+        /* for wedding-eyecatcher */
+        --wedding-eyecatcher-banner-color: var(--primary-color);
+        --wedding-eyecatcher-banner-text-color: var(--secondary-text-color);
+
       }
 
       /* set background and color manually */
@@ -54,9 +59,9 @@
 
       /* size behaviour */
       .light, .dark {
-        width: 50%;
+        width: 100%;
         padding: 2vw;
-        margin: 1vw;
+        margin: 1vw 0;
       }
 
       @media (max-width: 800px) {
@@ -81,7 +86,11 @@
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
       <wedding-eyecatcher title="Trauung"
-                          img="/src/image/2/eyecatcher.jpg"></wedding-eyecatcher>
+                          img="/src/image/2/eyecatcher.jpg"
+                          contentpadding=true>
+        <h3>Die Trauung findet aufgrund vorgängigem schlechtem Wetter <a
+            href="/trauung.html#kirchlich">in der evangelischen Kirche Affeltrangen</a> statt.</h3>
+      </wedding-eyecatcher>
       <div class="hidden">
         <!-- hidden div to set first section to alternative color
            (this one would have the normal color, so te next will be alternative) -->
@@ -93,49 +102,30 @@
           15:30</b> wird das Standesamt die rechtliche Ehe zwischen Raphael Weiss und Nathalie Abategiovanni
           bekräftigen.
           Jeder der möchte ist herzlich eingeladen an diesem Moment teilzuhaben.</p>
-        <p>Anschliessend wird das Brautpaar mit einigen ausgelesenen Personen in einem kleinen Rahmen die erworbenen
+        <p>Anschliessend wird das Brautpaar mit einigen ausgelesenen Personen in einem kleinen Rahmen die
+          erworbenen
           Zivilstandsdokumente gebührend feiern.</p>
       </div>
       <div id="kirchlich">
         <h2>Kirchliche Trauung</h2>
-        <p>Die zwei Wochen nach der zivilen Trauung plant das Brautpaar sich nicht zu sehen. Sie möchten eine grosse
+        <p>Die zwei Wochen nach der zivilen Trauung plant das Brautpaar sich nicht zu sehen. Sie möchten eine
+          grosse
           Vorfreude und Spannung erzeugen und werden beide mit Poltern und ausruhen beschäftigt sein.</p>
-        <p>Am <b>2. September um 15:00 Uhr</b> ist es endlich so weit. Fünf Jahre und einen Monat Freundschaft werden
-          mit der Entstehung einer neuen Familie gekrönt. <b>Bitte meldet euch bis zum 16. April 2017 an</b>, damit wir
+        <p>Am <b>2. September um 15:00 Uhr</b> ist es endlich so weit. Fünf Jahre und einen Monat Freundschaft
+          werden
+          mit der Entstehung einer neuen Familie gekrönt. Bitte meldet euch bis zum 16. April 2017 an,
+          damit wir
           abschätzen können, wie viele Personen auftauchen werden.</p>
-        <p>Je nachdem ob wir von Gott einen sonnigen oder regnerischen Tag geschenkt bekommen, wird die Trauung an einem
-          anderen Ort stattfinden. Um welchen der beiden folgenden Orte es sich dabei handelt, kannst du zwei Tage vor
-          der Trauung auf dieser Webseite nachsehen.</p>
-        <p>Fragst du dich, was du anziehen sollst, dann liegst du mit festlichen und elegangen Kleidern bestimmt nicht
-          falsch. Und wenn du dich gerne <i>sehr</i> passend kleidest, dann greifst du am besten zu Pastell-Farben.</p>
+        <p><b>Die Trauung findet aufgrund vorgängigem schlechtem Wetter in der evangelischen Kirche Affeltrangen
+          statt.</b></p>
+        <p>Fragst du dich, was du anziehen sollst, dann liegst du mit festlichen und elegangen Kleidern bestimmt
+          nicht
+          falsch. Und wenn du dich gerne <i>sehr</i> passend kleidest, dann greifst du am besten zu
+          Pastell-Farben.</p>
+        <!--TODO: auf https://console.developers.google.com/apis/credentials?project=raphi-nahli-ch den GoogleMapsApiKey auf raphi.nahli.ch eingrenzen-->
         <div id="light-dark-wrapper" class="layout horizontal">
           <div class="light">
-            <h3>bei gutem Wetter</h3>
-            <!--TODO: auf https://console.developers.google.com/apis/credentials?project=raphi-nahli-ch den GoogleMapsApiKey auf raphi.nahli.ch eingrenzen-->
-            <a href="https://www.google.ch/maps/place/Boltshausen+12,+8561+Ottoberg">
-              <google-map latitude="47.5811795"
-                          longitude="9.0824774"
-                          zoom="10"
-                          api-key="AIzaSyDCel2Gvos95rdYcPQnzirEMVtOBS862VI">
-                <google-map-marker latitude="47.5811795"
-                                   longitude="9.0824774"
-                                   title="Hofgut Büchi"
-                                   click-events=true></google-map-marker>
-              </google-map>
-              <h4>Hofgut Büchi</h4>
-              <div>
-                <p>Boltshausen 12</p>
-                <p>8561 Ottoberg</p>
-              </div>
-            </a>
-            <p>Auf der Apfelbaum-Wiese des Hofguts der Familie Büchi dürfen wir bei gutem Wetter eine Openair-Hochzeit
-              erleben. Am Rand der Wiese werden Parkfelder gekennzeichnet sein. Es empfiehlt sich Fahrgemeinschaften zu
-              gründen.</p>
-            <p>Anschliessend an die Trauung sind alle Gäste zu süssen und salzigen Snacks auf dem Vorplatz des Hofguts
-              eingeladen.</p>
-          </div>
-          <div class="dark">
-            <h3>bei schlechtem Wetter</h3>
+            <h3>Trauort</h3>
             <a href="https://www.google.ch/maps/place/Kirchweg+3,+9556+Affeltrangen">
               <google-map latitude="47.5262918"
                           longitude="9.0291027"
@@ -152,10 +142,14 @@
                 <p>9556 Affeltrangen</p>
               </div>
             </a>
-            <p>Sollte es aus Strömen regnen, dürfen wir die Trauung in der evangelischen Kirche von Affeltrangen
-              erleben. In einer kleinen schönen Kirche ist sogar unser Trau-Bibelvers in einem Bogen an die Decke
-              geschrieben. Die Kirche fasst ca. 150 Personen. Es lohnt sich also früh genug aufzukreuzen.</p>
-            <p>Anschliessend wird im Gemeindezentrum nebenan süsse und salzige Snacks angeboten. Dazu sind alle Gäste
+            <p>Wir dürfen die Trauung in der evangelischen Kirche von
+              Affeltrangen
+              erleben. In einer kleinen schönen Kirche ist sogar unser Trau-Bibelvers in einem Bogen an
+              die Decke
+              geschrieben. Die Kirche fasst ca. 150 Personen. Es lohnt sich also früh genug
+              aufzukreuzen.</p>
+            <p>Anschliessend wird im Gemeindezentrum nebenan süsse und salzige Snacks angeboten. Dazu sind
+              alle Gäste
               herzlich eingeladen.</p>
           </div>
         </div>
@@ -164,12 +158,37 @@
         <h2>Das Hochzeit-Fest</h2>
         <p>Für alle Gäste, die auf ihren Einladungskarten einen Stempel mit der Aufschrift <b>«auch zum Fest
           eingeladen»</b>
-          finden und sich <b>bis am 16. April 2017 angemeldet</b> haben, geht das Feiern auch nach der Trauung und dem
+          finden und sich <b>bis am 16. April 2017 angemeldet</b> haben, geht das Feiern auch nach der Trauung
+          und dem
           Snack
-          weiter. Bei schlechtem Wetter treffen wir uns <b>um 19:00 Uhr</b> auf dem <b>Büchi Hofgut</b> und bei gutem
-          Wetter sind ja
-          schon dort. Mit Salaten, Pizza aus dem Holzofen und reichhaltigem Dessert werden wir verwöhnt werden. Wie der
+          weiter. Wir treffen uns <b>um 19:00 Uhr</b> auf dem <b>Büchi Hofgut</b>.
+          Mit Salaten, Pizza aus dem Holzofen und reichhaltigem Dessert werden wir verwöhnt
+          werden. Wie der
           Abend ablaufen wird weiss das Brautpaar nicht und es soll auch eine Überraschung bleiben.</p>
+        <div id="light-dark-wrapper" class="layout horizontal">
+          <div class="dark">
+            <h3>Festort</h3>
+            <a href="https://www.google.ch/maps/place/Boltshausen+12,+8561+Ottoberg">
+              <google-map latitude="47.5811795"
+                          longitude="9.0824774"
+                          zoom="10"
+                          api-key="AIzaSyDCel2Gvos95rdYcPQnzirEMVtOBS862VI">
+                <google-map-marker latitude="47.5811795"
+                                   longitude="9.0824774"
+                                   title="Hofgut Büchi"
+                                   click-events=true></google-map-marker>
+              </google-map>
+              <h4>Hofgut Büchi</h4>
+              <div>
+                <p>Boltshausen 12</p>
+                <p>8561 Ottoberg</p>
+              </div>
+            </a>
+            <p>Am Rand der Wiese werden Parkfelder gekennzeichnet sein. Es empfiehlt sich
+              Fahrgemeinschaften zu
+              gründen.</p>
+          </div>
+        </div>
       </div>
 
       <!-- push to create Sticky Footer -->
@@ -180,8 +199,8 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'wedding-trauung'
-    });
+      Polymer({
+          is: 'wedding-trauung'
+      });
   </script>
 </dom-module>

@@ -16,6 +16,8 @@
 
         /* for wedding-eyecatcher */
         --wedding-eyecatcher-h1-color: var(--secondary-color);
+        --wedding-eyecatcher-banner-color: var(--primary-color);
+        --wedding-eyecatcher-banner-text-color: var(--secondary-text-color);
 
         /* height for Sticky Footer */
         height: 100%;
@@ -39,7 +41,11 @@
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
       <wedding-eyecatcher title="Geschenke"
-                          img="/src/image/4/eyecatcher.jpg"></wedding-eyecatcher>
+                          img="/src/image/4/eyecatcher.jpg"
+                          contentpadding=true>
+        <h3>Die Trauung findet aufgrund vorgängigem schlechtem Wetter <a
+            href="/trauung.html#kirchlich">in der evangelischen Kirche Affeltrangen</a> statt.</h3>
+      </wedding-eyecatcher>
       <div class="hidden">
         <!-- hidden div to set first section to alternative color
            (this one would have the normal color, so te next will be alternative) -->
@@ -64,56 +70,56 @@
   </template>
 
   <script>
-    Polymer({
-      is: 'wedding-geschenke',
+      Polymer({
+          is: 'wedding-geschenke',
 
-      ready: function () {
-        /* fetch the DOM-Element to put the <wedding-present>-Elemenets in */
-        var $presentContainer = $(this.$.presentscontainer);
+          ready: function () {
+              /* fetch the DOM-Element to put the <wedding-present>-Elemenets in */
+              var $presentContainer = $(this.$.presentscontainer);
 
-        /** ajax request to get presents-data form "/getpresent" in json */
-        $.ajax('/getpresent', {
-          type: 'GET',
-          contentType: 'json',
-          success: function (data) {
-            /* Create <wedding-present>-Elements with given Data */
-            createPresents(data, $presentContainer);
-          },
-          error: function () {
-            console.log('error');
-          }
-        });
-
-
-        /**
-         * Create <wedding-present>-Elements with given Data
-         * @param presentsArray (array) Array with objects{ title, description, cost, img }
-         * @param $container (jQuery-Object) Object to add <wedding-presents>-Elements
-         */
-        var createPresents = function createPresents(presentsArray, $container) {
-          /* for every Element in the given presentArray create a <wedding-present>-Element and add it to the Container */
-          for (var i = 0; i < presentsArray.length; i++) {
-            /* create class to hide element, if sold is set to true in presentArray */
-            var sold = presentsArray[i].sold,
-                    /* define <wedding-present>-Element */
-              $weddingPresentElement = $('<wedding-present></wedding-present>', {
-                id: presentsArray[i].id,
-                title: presentsArray[i].title,
-                img: presentsArray[i].img,
-                imgalt: presentsArray[i].img.slice(0, -4),
-                description: presentsArray[i].description,
-                cost: presentsArray[i].cost,
-                sold: presentsArray[i].sold
+              /** ajax request to get presents-data form "/getpresent" in json */
+              $.ajax('/getpresent', {
+                  type: 'GET',
+                  contentType: 'json',
+                  success: function (data) {
+                      /* Create <wedding-present>-Elements with given Data */
+                      createPresents(data, $presentContainer);
+                  },
+                  error: function () {
+                      console.log('error');
+                  }
               });
-            /* append <wedding-present>-Element to the Container */
-            $container.append($weddingPresentElement);
-            console.log(presentsArray[i].id);
+
+
+              /**
+               * Create <wedding-present>-Elements with given Data
+               * @param presentsArray (array) Array with objects{ title, description, cost, img }
+               * @param $container (jQuery-Object) Object to add <wedding-presents>-Elements
+               */
+              var createPresents = function createPresents(presentsArray, $container) {
+                  /* for every Element in the given presentArray create a <wedding-present>-Element and add it to the Container */
+                  for (var i = 0; i < presentsArray.length; i++) {
+                      /* create class to hide element, if sold is set to true in presentArray */
+                      var sold = presentsArray[i].sold,
+                          /* define <wedding-present>-Element */
+                          $weddingPresentElement = $('<wedding-present></wedding-present>', {
+                              id: presentsArray[i].id,
+                              title: presentsArray[i].title,
+                              img: presentsArray[i].img,
+                              imgalt: presentsArray[i].img.slice(0, -4),
+                              description: presentsArray[i].description,
+                              cost: presentsArray[i].cost,
+                              sold: presentsArray[i].sold
+                          });
+                      /* append <wedding-present>-Element to the Container */
+                      $container.append($weddingPresentElement);
+                      console.log(presentsArray[i].id);
+                  }
+              };
+
+
           }
-        };
 
-
-      }
-
-    });
+      });
   </script>
 </dom-module>

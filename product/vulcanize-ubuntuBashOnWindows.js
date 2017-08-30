@@ -27,7 +27,7 @@ if (files) { /* checks if there are files specified */
   for (var i = 0; i < files.length; i++) {
     /* gets current file-name */
     var currentFile = files[i];
-    var absDir = '/home/ditshej/programieren/personal/our-wedding/product';
+    var absDir = '/mnt/c/xampp/htdocs/projects/personal/raphi.nahli.ch/our-wedding/product';
     /* executes the big stuff */
     vulcFunction(currentFile, absDir);
 

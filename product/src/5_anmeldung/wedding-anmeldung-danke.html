@@ -13,6 +13,8 @@
 
         /* for wedding-eyecatcher */
         --wedding-eyecatcher-h1-color: var(--secondary-color);
+        --wedding-eyecatcher-banner-color: var(--primary-color);
+        --wedding-eyecatcher-banner-text-color: var(--secondary-text-color);
 
         /* height for Sticky Footer */
         height: 100%;
@@ -30,7 +32,11 @@
       <!-- local DOM -->
       <wedding-navigation></wedding-navigation>
       <wedding-eyecatcher title="Anmeldung"
-                          img="/src/image/5/eyecatcher.jpg"></wedding-eyecatcher>
+                          img="/src/image/5/eyecatcher.jpg"
+                          contentpadding=true>
+        <h3>Die Trauung findet aufgrund vorgängigem schlechtem Wetter <a
+            href="/trauung.html#kirchlich">in der evangelischen Kirche Affeltrangen</a> statt.</h3>
+      </wedding-eyecatcher>
 
       <div class="container">
         <h2>Vielen Dank für deine Anmeldung</h2>
